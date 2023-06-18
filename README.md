@@ -61,4 +61,5 @@
 
 
 ## ERD
-https://dbdiagram.io/d/648b9305722eb774940cd9f9
+https://www.erdcloud.com/d/J3yFTcYwZDscXNmSY
+![weGather](https://github.com/gyureal/weGather/assets/78974381/f59b336a-1c7d-42a5-bb23-1bc9bd2d9b0a)
