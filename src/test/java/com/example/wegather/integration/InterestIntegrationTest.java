@@ -8,6 +8,7 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.util.List;
 import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -57,6 +58,63 @@ public class InterestIntegrationTest extends IntegrationTest {
 
     assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_BAD_REQUEST);
   }
+
+  @Test
+  @DisplayName("전체 관심사를 조회합니다.")
+  void readAllInterestSuccessfully() {
+    // given
+    InterestDto baseball = insertInterest("야구");
+    InterestDto running = insertInterest("달리기");
+
+    // when
+    ExtractableResponse<Response> response = RestAssured
+        .given().log().all()
+        .contentType(ContentType.JSON)
+        .when().get("/interests")
+        .then().log().all()
+        .extract();
+
+    //then
+    assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_OK);
+    List<InterestDto> list = response.body().jsonPath().getList(".", InterestDto.class);
+    assertThat(list).hasSize(2);
+    assertThat(list).usingRecursiveComparison().isEqualTo(List.of(baseball, running));
+  }
+
+  @Test
+  @DisplayName("id로 관심사를 조회합니다.")
+  void readOneInterestByIdSuccessfully() {
+    InterestDto swimming = insertInterest("수영");
+
+    ExtractableResponse<Response> response = RestAssured
+        .given().log().all()
+        .pathParam("id", swimming.getId())
+        .contentType(ContentType.JSON)
+        .when().get("/interests/{id}")
+        .then().log().all()
+        .extract();
+
+    assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_OK);
+    assertThat(response.body().as(InterestDto.class))
+        .usingRecursiveComparison().isEqualTo(swimming);
+  }
+
+  @Test
+  @DisplayName("id로 관심사를 삭제합니다.")
+  void deleteInterestByIdSuccessfully() {
+    InterestDto swimming = insertInterest("수영");
+
+    ExtractableResponse<Response> response = RestAssured
+        .given().log().all()
+        .pathParam("id", swimming.getId())
+        .contentType(ContentType.JSON)
+        .when().delete("/interests/{id}")
+        .then().log().all()
+        .extract();
+
+    assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_NO_CONTENT);
+  }
+
 
   private InterestDto insertInterest(String interestName) {
     CreateInterestRequest request = CreateInterestRequest.builder()
