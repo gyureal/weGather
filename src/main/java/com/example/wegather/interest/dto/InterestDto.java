@@ -1,6 +1,6 @@
 package com.example.wegather.interest.dto;
 
-import com.example.wegather.interest.Interest;
+import com.example.wegather.interest.domain.Interest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

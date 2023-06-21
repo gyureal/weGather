@@ -1,4 +1,4 @@
-package com.example.wegather.interest;
+package com.example.wegather.interest.domain;
 
 import com.example.wegather.global.BaseTimeEntity;
 import javax.persistence.Column;
@@ -6,8 +6,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

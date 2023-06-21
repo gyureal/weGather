@@ -1,5 +1,6 @@
-package com.example.wegather.interest;
+package com.example.wegather.interest.web;
 
+import com.example.wegather.interest.domain.InterestService;
 import com.example.wegather.interest.dto.CreateInterestRequest;
 import com.example.wegather.interest.dto.InterestDto;
 import java.net.URI;

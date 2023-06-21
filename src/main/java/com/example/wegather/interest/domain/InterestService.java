@@ -1,5 +1,7 @@
-package com.example.wegather.interest;
+package com.example.wegather.interest.domain;
 
+import com.example.wegather.interest.domain.Interest;
+import com.example.wegather.interest.domain.InterestRepository;
 import com.example.wegather.interest.dto.CreateInterestRequest;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
