@@ -23,16 +23,7 @@ public class Interest extends BaseTimeEntity {
     this.name = name;
   }
 
-  private Interest(Long id, String name) {
-    this.id = id;
-    this.name = name;
-  }
-
   public static Interest of(String name) {
     return new Interest(name);
-  }
-
-  public static Interest of(Long id, String name) {
-    return new Interest(id, name);
   }
 }

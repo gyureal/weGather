@@ -1,7 +1,8 @@
 package com.example.wegather.interest.domain;
 
-import com.example.wegather.interest.domain.Interest;
-import com.example.wegather.interest.domain.InterestRepository;
+import static com.example.wegather.global.Message.Error.*;
+
+import com.example.wegather.global.Message.Error;
 import com.example.wegather.interest.dto.CreateInterestRequest;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -11,8 +12,6 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class InterestService {
 
-  private static final String INTEREST_NAME_ALREADY_EXISTS = "관심사 이름이 이미 존재합니다.";
-  private static final String INTEREST_NOT_FOUND = "해당 관심사를 찾을 수 없습니다.";
   private final InterestRepository interestRepository;
 
   /**
