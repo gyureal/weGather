@@ -3,12 +3,17 @@ package com.example.wegather.member.domain.vo;
 import static com.example.wegather.global.Message.Error.PASSWORD_RULE_VIOLATION;
 
 import java.util.regex.Pattern;
+import javax.persistence.Embeddable;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@Embeddable
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Password {
   private static final Pattern PASSWORD_RULE = Pattern.compile("^[A-Za-z0-9]{4,12}$");
-  private final String value;
+  private String value;
 
   private Password(String value) {
     validatePasswordRule(value);

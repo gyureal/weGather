@@ -2,14 +2,19 @@ package com.example.wegather.global.vo;
 
 import static com.example.wegather.global.Message.Error.STREET_ADDRESS_MUST_NOT_EMPTY;
 
+import javax.persistence.Embeddable;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.util.StringUtils;
 
 @Getter
+@Embeddable
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Address {
-  private final String streetAddress; // 도로명주소
-  private final Double longitude;   // 경도
-  private final Double latitude;   // 위도
+  private String streetAddress; // 도로명주소
+  private Double longitude;   // 경도
+  private Double latitude;   // 위도
 
   public Address(String streetAddress, Double longitude, Double latitude) {
     validateAddress(streetAddress, longitude, latitude);
