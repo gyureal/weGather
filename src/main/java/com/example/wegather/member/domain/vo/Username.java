@@ -1,12 +1,13 @@
 package com.example.wegather.member.domain.vo;
 
+import static com.example.wegather.global.Message.Error.USERNAME_RULE_VIOLATION;
+
+import java.util.regex.Pattern;
 import lombok.Getter;
-import org.springframework.util.StringUtils;
 
 @Getter
 public class Username {
-
-  private static final String USERNAME_MUST_GREATER_THAN_FIVE = "사용자 아이디는 5글자 이상이어야합니다.";
+  private static final Pattern USERNAME_RULE = Pattern.compile("^[a-z0-9]{4,12}$");
   private final String value;
 
   private Username(String value) {
@@ -14,20 +15,19 @@ public class Username {
     this.value = value;
   }
 
-  public Username of(String value) {
+  /**
+   * username 을 생성합니다.버
+   * 영문소문자, 숫자로 이루어진 4자 - 12자 사이의 글자
+   * @throws IllegalArgumentException 회원 아이디 규칙에 맞지 않을 경우 예외를 던집니다.
+   * @param value
+   */
+  public static Username of(String value) {
     return new Username(value);
   }
 
-  /**
-   * username 네이밍 규칙 유효성 검사
-   * 1. 값이 없으면 안됩니다.
-   * 2. 5글자 이상이어야 합니다.
-   * @throws IllegalArgumentException 사용자 아이디가 5글자 아싱아 아닐때 예외를 던집니다.
-   * @param value
-   */
   void validateNamingRule(String value) {
-    if (!StringUtils.hasText(value) && value.length() > 5) {
-      throw new IllegalArgumentException(USERNAME_MUST_GREATER_THAN_FIVE);
+    if (!USERNAME_RULE.matcher(value).matches()) {
+      throw new IllegalArgumentException(USERNAME_RULE_VIOLATION);
     }
   }
 }
