@@ -51,15 +51,25 @@
     - 게시판형 or 실시간 채팅
 - 정모 인원 수 제한 두기
 
+
 ---
-
-문의 사항:
-
-1. **소모임 검색수**를 소모임 테이블에 저장해 두어야 하는 것이 나을까요? 어디에 저장해 두어야할까요? 해당 기능에 엘라스틱 서치를 활용할 수 있나요?
-2. **소모임 현재 참여자수**를 소모임 테이블에서 관리해야할까요? 아니면 따로 관리하지 않고 소모임 참여자 테이블의 수를 카운팅 할까요?
-
-
 
 ## ERD
 https://www.erdcloud.com/d/J3yFTcYwZDscXNmSY
 ![weGather](https://github.com/gyureal/weGather/assets/78974381/f59b336a-1c7d-42a5-bb23-1bc9bd2d9b0a)
+
+---
+## Trouble Shooting
+
+### 테스트에서 다른 타입 비교 시, 주의할점
+두 타입 사이에 필드 수가 다른 경우, 아래와 같이 테스트가 fail이 된다.
+아래의 코드는 회원추가 시, 입력값으로 사용한 joinMemberRequest 와 회원추가 후 결과로 리턴된 memberDto를 recusiveComparison() 을 사용해서 비교하는 코드이다.
+<img width="486" alt="image" src="https://github.com/gyureal/weGather/assets/78974381/94ef7080-1864-4e3d-b636-c56154d412b9">
+타입은 비교하지 않고, 두 타입의 필드의 이름을 기준으로 값을 비교하지만, 필드의 수가 다른 경우에 아래 fail이 된다.
+<img width="855" alt="image" src="https://github.com/gyureal/weGather/assets/78974381/d0be9732-3385-46b0-aadf-3c50659a2caa">
+해결책은 두 타입에서 일치하지 않는 필드는 ignoringFields() 에 명시해서 비교에서 제외시키거나, null 인 컬럼은 비교하지 않는 ignoringActualNullFields()를 추가해 주어야한다.
+<img width="476" alt="image" src="https://github.com/gyureal/weGather/assets/78974381/10504258-e76a-4241-b55f-18c4e06a6d80">
+
+
+
+
