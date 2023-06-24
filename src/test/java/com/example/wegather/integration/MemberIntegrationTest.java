@@ -15,6 +15,8 @@ import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 
 @DisplayName("회원 통합테스트")
 public class MemberIntegrationTest extends IntegrationTest {
@@ -97,9 +99,13 @@ public class MemberIntegrationTest extends IntegrationTest {
   @DisplayName("전체 회원을 조회합니다.")
   void readAllMembersSuccessfully() {
     // given
+    int size = 2;
+    int page = 0;
+
     // when
     ExtractableResponse<Response> response = RestAssured
         .given().log().all()
+        .queryParam("size", size, "page", page)
         .contentType(ContentType.JSON)
         .when().get("/members")
         .then().log().all()
@@ -107,9 +113,16 @@ public class MemberIntegrationTest extends IntegrationTest {
 
     //then
     assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_OK);
-    List<MemberDto> list = response.body().jsonPath().getList(".", MemberDto.class);
-    assertThat(list).hasSize(3);
-    assertThat(list).usingRecursiveComparison().isEqualTo(List.of(member01, member02, member03));
+    // 리턴 객체 검증
+    List<MemberDto> list = response.jsonPath().getList("content", MemberDto.class);
+    assertThat(list).hasSize(2);
+    assertThat(list).usingRecursiveComparison().isEqualTo(List.of(member01, member02));
+
+    // 페이징 관련 리턴값 검증
+    int pageSize = (int) response.path("pageable.pageSize");
+    int pageNumber = (int) response.path("pageable.pageNumber");
+    assertThat(pageSize).isEqualTo(size);
+    assertThat(pageNumber).isEqualTo(page);
   }
 
   @Test

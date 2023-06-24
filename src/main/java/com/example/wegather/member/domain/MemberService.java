@@ -39,8 +39,8 @@ public class MemberService {
         .build());
   }
 
-  public List<Member> getAllInterests() {
-    return memberRepository.findAll();
+  public Page<Member> getAllInterests(Pageable pageable) {
+    return memberRepository.findAll(pageable);
   }
 
   public Member getMember(Long id) {

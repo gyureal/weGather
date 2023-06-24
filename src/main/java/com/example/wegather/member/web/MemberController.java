@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,13 +41,16 @@ public class MemberController {
   }
 
   /**
-   * 전체 회원을 조회합니다.  //TODO: 페이징 넣기
+   * 전체 회원을 조회합니다.
+   * @param pageRequest
+   * - size: 페이지 사이즈
+   * - page: 페이지 번호
+   * - sort: 정렬 기준
    * @return 전체 관심사 목록
    */
   @GetMapping
-  public ResponseEntity<List<MemberDto>> readAllMember() {
-    return ResponseEntity.ok(memberService.getAllInterests()
-        .stream().map(MemberDto::from).collect(Collectors.toList()));
+  public ResponseEntity<Page<MemberDto>> readAllMember(Pageable pageRequest) {
+    return ResponseEntity.ok(memberService.getAllInterests(pageRequest).map(MemberDto::from));
   }
 
   /**
