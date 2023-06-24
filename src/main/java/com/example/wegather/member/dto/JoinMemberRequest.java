@@ -23,5 +23,4 @@ public class JoinMemberRequest {
   private Double latitude;
   @NotNull
   private MemberType memberType;
-  private String profileImage;
 }

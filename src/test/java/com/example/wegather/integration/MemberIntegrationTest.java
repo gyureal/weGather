@@ -15,8 +15,6 @@ import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 
 @DisplayName("회원 통합테스트")
 public class MemberIntegrationTest extends IntegrationTest {
@@ -44,7 +42,6 @@ public class MemberIntegrationTest extends IntegrationTest {
         .longitude(123.12312)
         .latitude(23.131)
         .memberType(USER)
-        .profileImage("/image/test/1")
         .build();
 
     ExtractableResponse<Response> response = RestAssured
@@ -59,7 +56,7 @@ public class MemberIntegrationTest extends IntegrationTest {
     MemberDto memberDto = response.body().as(MemberDto.class);
     assertThat(memberDto)
         .usingRecursiveComparison()
-        .ignoringFields("id")
+        .ignoringFields("id", "profileImage")
         .ignoringActualNullFields()
         .isEqualTo(request);
   }
@@ -80,7 +77,6 @@ public class MemberIntegrationTest extends IntegrationTest {
         .longitude(123.12312)
         .latitude(23.131)
         .memberType(USER)
-        .profileImage("/image/test/1")
         .build();
 
     // when
@@ -172,7 +168,6 @@ public class MemberIntegrationTest extends IntegrationTest {
         .longitude(123.12312)
         .latitude(23.131)
         .memberType(memberType)
-        .profileImage("/image/test/1")
         .build();
 
     return RestAssured

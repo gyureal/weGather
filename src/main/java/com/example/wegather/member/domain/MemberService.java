@@ -35,7 +35,7 @@ public class MemberService {
                 , request.getLongitude()
                 , request.getLatitude()))
             .memberType(request.getMemberType())
-            .profileImage(Image.of(request.getProfileImage()))
+            .profileImage(Image.of("default.jpg"))
         .build());
   }
 
