@@ -59,5 +59,9 @@ public class Member extends BaseTimeEntity {
   @Embedded
   @AttributeOverride(name = "value", column = @Column(name = "interests"))
   Interests interests;
+
+  public void changeProfileImage(String storeImagePath) {
+    profileImage = Image.of(storeImagePath);
+  }
 }
 

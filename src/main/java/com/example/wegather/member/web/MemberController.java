@@ -15,7 +15,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/members")
@@ -71,4 +73,19 @@ public class MemberController {
     memberService.deleteMember(id);
     return ResponseEntity.noContent().build();
   }
+
+  /**
+   * 회원의 프로필 사진을 업데이트 합니다.
+   * @param id
+   * @param profileImage
+   * @return
+   */
+  @PostMapping("/{id}/image")
+  public ResponseEntity<Void> updateProfileImage(@PathVariable Long id, @RequestParam MultipartFile profileImage) {
+    memberService.updateProfileImage(id, profileImage);
+    return ResponseEntity.ok().build();
+  }
+
+
+
 }
