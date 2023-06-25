@@ -1,1 +1,3 @@
 TRUNCATE TABLE interest;
+TRUNCATE TABLE member;
+
