@@ -4,7 +4,6 @@ import static com.example.wegather.member.domain.vo.MemberType.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.example.wegather.global.dto.AddressRequest;
-import com.example.wegather.global.dto.AddressRequest.AddressRequestBuilder;
 import com.example.wegather.member.domain.Member;
 import com.example.wegather.member.domain.MemberRepository;
 import com.example.wegather.member.domain.vo.MemberType;
@@ -16,7 +15,6 @@ import io.restassured.http.ContentType;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import io.restassured.specification.MultiPartSpecification;
-import java.io.File;
 import java.util.List;
 import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,12 +22,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.annotation.Rollback;
-import org.springframework.util.MimeType;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springframework.web.multipart.MultipartRequest;
 
 @DisplayName("회원 통합테스트")
 public class MemberIntegrationTest extends IntegrationTest {
@@ -44,9 +37,9 @@ public class MemberIntegrationTest extends IntegrationTest {
 
   @BeforeEach
   void init() {
-    member01 = insertMember("test01", "김지유", USER);
-    member02 = insertMember("test02", "김진주", USER);
-    member03 = insertMember("test03", "박세미", USER);
+    member01 = insertMember("test01", "김지유", ROLE_USER);
+    member02 = insertMember("test02", "김진주", ROLE_USER);
+    member03 = insertMember("test03", "박세미", ROLE_USER);
   }
 
   @Test
@@ -60,7 +53,7 @@ public class MemberIntegrationTest extends IntegrationTest {
         .streetAddress("서울시 강남구 백양대로 123-12")
         .longitude(123.12312)
         .latitude(23.131)
-        .memberType(USER)
+        .memberType(ROLE_USER)
         .build();
 
     ExtractableResponse<Response> response = RestAssured
@@ -85,7 +78,7 @@ public class MemberIntegrationTest extends IntegrationTest {
   void joinMemberFailWhenUsernameAlreadyExists() {
     // given
     String username = "duplicate1";
-    insertMember(username, "김지유", USER);
+    insertMember(username, "김지유", ROLE_USER);
 
     JoinMemberRequest request = JoinMemberRequest.builder()
         .username(username)
@@ -95,7 +88,7 @@ public class MemberIntegrationTest extends IntegrationTest {
         .streetAddress("서울시 강남구 백양대로 123-12")
         .longitude(123.12312)
         .latitude(23.131)
-        .memberType(USER)
+        .memberType(ROLE_USER)
         .build();
 
     // when
