@@ -27,11 +27,11 @@ public class MemberController {
   private final MemberService memberService;
   /**
    * 회원을 새로 추가합니다.
-   * @throws IllegalArgumentException
-   *           - 회원 username 이 중복된 경우
-   *           - username, password, phoneNumber, address 등이 형식에 맞지 않는 경우
    * @param request 회원가입시 입력되는 회원정보
    * @return 생성된 회원
+   * @throws IllegalArgumentException
+   *    회원 username 이 중복된 경우
+   *    username, password, phoneNumber, address 등이 형식에 맞지 않는 경우
    */
   @PostMapping
   public ResponseEntity<MemberDto> createMember(@Valid @RequestBody JoinMemberRequest request) {
@@ -43,9 +43,9 @@ public class MemberController {
   /**
    * 전체 회원을 조회합니다.
    * @param pageRequest
-   * - size: 페이지 사이즈
-   * - page: 페이지 번호
-   * - sort: 정렬 기준
+   *    size: 페이지 사이즈
+   *    page: 페이지 번호
+   *    sort: 정렬 기준
    * @return 전체 관심사 목록
    */
   @GetMapping
@@ -55,9 +55,9 @@ public class MemberController {
 
   /**
    * id로 관심사를 조회합니다.
-   * @throws IllegalArgumentException id에 해당하는 관심사가 없는 경우 예외를 던집니다.
    * @param id
    * @return
+   * @throws IllegalArgumentException id에 해당하는 관심사가 없는 경우 예외를 던집니다.
    */
   @GetMapping("/{id}")
   public ResponseEntity<MemberDto> readMemberById(@PathVariable Long id) {

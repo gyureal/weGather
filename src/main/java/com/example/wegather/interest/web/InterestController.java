@@ -25,9 +25,9 @@ public class InterestController {
 
   /**
    * 관심사를 새로 추가합니다.
-   * @throws IllegalArgumentException 관심사 이름이 이미 존재하는 경우 예외를 던집니다.
    * @param request 관심사명
    * @return 생성된 관심사
+   * @throws IllegalArgumentException 관심사 이름이 이미 존재하는 경우 예외를 던집니다.
    */
   @PostMapping
   public ResponseEntity<InterestDto> createInterest(@Valid @RequestBody CreateInterestRequest request) {
@@ -48,9 +48,9 @@ public class InterestController {
 
   /**
    * id로 관심사를 조회합니다.
-   * @throws IllegalArgumentException id에 해당하는 관심사가 없는 경우 예외를 던집니다.
    * @param id
    * @return
+   * @throws IllegalArgumentException id에 해당하는 관심사가 없는 경우 예외를 던집니다.
    */
   @GetMapping("/{id}")
   public ResponseEntity<InterestDto> readInterestById(@PathVariable Long id) {
