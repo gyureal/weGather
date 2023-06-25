@@ -4,6 +4,7 @@ import static com.example.wegather.global.Message.Error.MEMBER_NOT_FOUND;
 import static com.example.wegather.global.Message.Error.USERNAME_DUPLICATED;
 
 import com.example.wegather.global.customException.ImageUploadException;
+import com.example.wegather.global.dto.AddressRequest;
 import com.example.wegather.global.upload.FileStore;
 import com.example.wegather.global.upload.UploadFile;
 import com.example.wegather.global.vo.Address;
@@ -71,5 +72,11 @@ public class MemberService {
     }
 
     member.changeProfileImage(uploadFile.getStoreFileName());
+  }
+
+  @Transactional
+  public void updateMemberAddress(Long id, AddressRequest addressRequest) {
+    Member member = getMember(id);
+    member.changeAddress(addressRequest.convertAddressEntity());
   }
 }

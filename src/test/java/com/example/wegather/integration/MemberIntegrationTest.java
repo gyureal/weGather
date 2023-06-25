@@ -3,6 +3,8 @@ package com.example.wegather.integration;
 import static com.example.wegather.member.domain.vo.MemberType.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.example.wegather.global.dto.AddressRequest;
+import com.example.wegather.global.dto.AddressRequest.AddressRequestBuilder;
 import com.example.wegather.member.domain.Member;
 import com.example.wegather.member.domain.MemberRepository;
 import com.example.wegather.member.domain.vo.MemberType;
@@ -202,6 +204,29 @@ public class MemberIntegrationTest extends IntegrationTest {
         .orElseThrow(() -> new RuntimeException("회원이 없습니다."));
     System.out.println("storedImage : " + findMember.getProfileImage().getValue());
     assertThat(findMember.getProfileImage().getValue()).isNotEqualTo(DEFAULT_IMAGE_NAME);
+  }
+
+  @Test
+  @DisplayName("회원의 주소를 수정합니다.")
+  void changeAddressSuccessfully() {
+    // given
+    AddressRequest addressRequest = AddressRequest.builder()
+        .streetAddress("서울시 중앙대로 123-123")
+        .longitude(203.123)
+        .latitude(123.123)
+        .build();
+    // when
+    ExtractableResponse<Response> response = RestAssured
+        .given().log().all()
+        .pathParam("id", member01.getId())
+        .body(addressRequest)
+        .contentType(ContentType.JSON)
+        .when().post("/members/{id}/address")
+        .then().log().all()
+        .extract();
+
+    // then
+    assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_OK);
   }
 
 

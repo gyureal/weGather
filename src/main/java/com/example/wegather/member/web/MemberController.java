@@ -1,5 +1,6 @@
 package com.example.wegather.member.web;
 
+import com.example.wegather.global.dto.AddressRequest;
 import com.example.wegather.member.domain.MemberService;
 import com.example.wegather.member.dto.JoinMemberRequest;
 import com.example.wegather.member.dto.MemberDto;
@@ -86,6 +87,20 @@ public class MemberController {
     return ResponseEntity.ok().build();
   }
 
-
+  /**
+   *
+   * @param id
+   * @param addressRequest
+   * @throws IllegalArgumentException
+   *     일치하는 회원이 없을 때
+   *     주소의 형식이 맞지 않을 때
+   * @return
+   */
+  @PostMapping("/{id}/address")
+  public ResponseEntity<Void> updateMemberAddress(@PathVariable Long id, @RequestBody
+      AddressRequest addressRequest) {
+    memberService.updateMemberAddress(id, addressRequest);
+    return ResponseEntity.ok().build();
+  }
 
 }

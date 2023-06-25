@@ -63,5 +63,9 @@ public class Member extends BaseTimeEntity {
   public void changeProfileImage(String storeImagePath) {
     profileImage = Image.of(storeImagePath);
   }
+
+  public void changeAddress(Address address) {
+    this.address = address;
+  }
 }
 
