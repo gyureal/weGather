@@ -79,6 +79,9 @@ public class MemberController {
    * 회원의 프로필 사진을 업데이트 합니다.
    * @param id
    * @param profileImage
+   * @throws IllegalArgumentException 회원이 존재하지 않은 경우
+   * @throws com.example.wegather.global.customException.ImageUploadException
+   *     이미지 업로드에 실패할 경우
    * @return
    */
   @PostMapping("/{id}/image")
