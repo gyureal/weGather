@@ -71,6 +71,63 @@ https://www.erdcloud.com/d/J3yFTcYwZDscXNmSY
 해결책은 두 타입에서 일치하지 않는 필드는 ignoringFields() 에 명시해서 비교에서 제외시키거나, null 인 컬럼은 비교하지 않는 ignoringActualNullFields()를 추가해 주어야한다.<br/>
 <img width="476" alt="image" src="https://github.com/gyureal/weGather/assets/78974381/10504258-e76a-4241-b55f-18c4e06a6d80">
 
+<br/> <br/> <br/>
 
 
+## 통합테스트 시, 테스트 격리
+
+dirtiesContext 사용시 문제점
+
+- 성능 이슈
+- 인메모리 DB가 아닌 DB의 인스턴스를 사용하는 경우 초기화 되지 않음 (컨텍스트 로딩 시 초기화 설정이 없는 경우)
+
+위와 같은 이슈 때문에, 통합테스트 테스트 격리를 위해 truncate.sql을 @Sql에 명시해서 매 테스트마다 초기화 해주는데,
+
+실수로 테이블을 명시하지 않으면 아래와 같이 테스트 데이터의 삭제가 이루어 지지 않으니, 꼭 명시해 주자.
+<img width="705" alt="image" src="https://github.com/gyureal/weGather/assets/78974381/1a06ede2-ab47-4121-be0a-82ccac4c4a42"> <br/>
+매 테스트마다 3개의 회원 데이터를 추가해주는데, 전체 조회 기능 테스트 시 아래와 같이 6개로 나옴 <br/>
+<img width="694" alt="image" src="https://github.com/gyureal/weGather/assets/78974381/54774d81-cd06-4bed-81dd-078815aa8d2d"> <br/>
+
+해결 : 회원 테이블 truncate.sql 에 추가 <br/>
+<img width="473" alt="image" src="https://github.com/gyureal/weGather/assets/78974381/62dac751-1cdc-484a-871c-a9727d10026f"> <br/>
+
+<br/> <br/> <br/>
+## Page 반환타입 테스트 
+<img width="707" alt="image" src="https://github.com/gyureal/weGather/assets/78974381/f67eea65-75db-4bb9-aff8-bd8f9483e465"> <br/>
+as() 는 RestAssured에서 json으로 넘어온 결과값을 deserialize해서 명시한 객체로 매핑해주는 ObjectMapping 기능을 수행하는 메서드입니다.
+Page.class 객체에 매핑시켜서 값 검증을 하려고 했지만, 매핑되지 않았습니다.
+
+Page가 인터페이스여서 되지 않았나 싶어서 PageImpl 인 구현체로도 해보았지만, 아래와 같이 실패했습니다. <br/>
+<img width="703" alt="image" src="https://github.com/gyureal/weGather/assets/78974381/80e0bd05-b29a-4878-82e5-c6a5bfb34b0a"> <br/>
+
+Json 타입을 객체로 올바르게 매핑시킬 수 없는 것 같았습니다. 조사한해결책 아래와 같습니다.
+- 적절한 deserializer를 구현(**[Spring Boot Page Deserialization - PageImpl No constructor](https://stackoverflow.com/questions/52490399/spring-boot-page-deserialization-pageimpl-no-constructor)**),
+- 해당 json 리턴 값에 맞는 대응하는 생성자를 가진 클래스 생성([**[Spring Boot Page Deserialization - PageImpl No constructor](https://stackoverflow.com/questions/52490399/spring-boot-page-deserialization-pageimpl-no-constructor)**](https://stackoverflow.com/questions/52490399/spring-boot-page-deserialization-pageimpl-no-constructor)).
+
+저는 굳이 위 과정을 통해 Page객체로 받아 검증할 필요는 없을 것 같아서, jsonPath를 이용해 검증하기로 했습니다.
+<img width="704" alt="image" src="https://github.com/gyureal/weGather/assets/78974381/5349198d-d88d-4e46-acff-b4b6edb5ce21">
+- jsonPath().getList() 를 사용하면 해당 path에 list<> 객체를 가져올 수 있습니다. 이걸로 조회해 온 회원목록을 검증합니다.
+- path(”경로”)를 사용하면 해당  path의 값을 Object 타입으로 반환받을 수 있습니다. 이걸로 페이징 관련 리턴값을 검증하였습니다.
+- JsonPath().get(”경로”)를 사용할 수 도 있지만, 그렇게되면 json타입에 의존하게 되기 때문에 path() 메서드를 사용하였습니다.
+
+
+<br/> <br/> <br/>
+
+## 이미지 업로드 기능 테스트
+이미지 업로드 시, MultipartFile 타입의 input을 사용한다. 이를 어떻게 테스트할지 고민해 보았습니다.
+
+해당 프로젝트는 통합테스트로 RestAssured 모듈을 사용하고 있었으므로, RestAssured의 docs를 우선 찾아보았습니다. 역시 관련해서 기능을 제공해주고 있었습니다.
+
+https://github.com/rest-assured/rest-assured/wiki/Usage#multi-part-form-data <br/>
+
+<img width="695" alt="image" src="https://github.com/gyureal/weGather/assets/78974381/8ac00d1b-e329-4cfd-b2b4-96b8948dc80a"><br/>
+
+우선 가장 기본적인 기능은 multipart()에 파라메터로 File 인스턴스를 주는 것입니다. 하지만 이것은 실제 파일이 해당 경로에 존재하는 경우입니다. 경로가 임의의 경로인 경우 아래와 같은 에러가 표출됩니다. <br/>
+
+<img width="696" alt="image" src="https://github.com/gyureal/weGather/assets/78974381/5c970890-6cd7-4898-aa89-9e25be188058"> <br/>
+임의의 파일과 경로로 테스트 하고싶은 경우 아래 방식을 이용합니다. <br/>
+
+MultipartSpecBuilder를 이용해 가상의 요청을 만듭니다. <br/>
+<img width="699" alt="image" src="https://github.com/gyureal/weGather/assets/78974381/2cecd078-bf53-4a50-9cca-3403f260e98b"> <br/>
+https://itecnote.com/tecnote/java-how-to-send-a-multipart-request-with-restassured/
 
