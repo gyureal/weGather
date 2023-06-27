@@ -153,7 +153,7 @@ public class MemberIntegrationTest extends IntegrationTest {
   }
 
   @Test
-  @DisplayName("id로 관심사를 삭제합니다.")
+  @DisplayName("id로 회원을 삭제합니다.")
   void deleteMemberByIdSuccessfully() {
     // given
     // when
@@ -195,8 +195,16 @@ public class MemberIntegrationTest extends IntegrationTest {
     assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_OK);
     Member findMember = memberRepository.findById(id)
         .orElseThrow(() -> new RuntimeException("회원이 없습니다."));
-    System.out.println("storedImage : " + findMember.getProfileImage().getValue());
-    assertThat(findMember.getProfileImage().getValue()).isNotEqualTo(DEFAULT_IMAGE_NAME);
+    String storedImage = findMember.getProfileImage().getValue();
+    System.out.println("storedImage : " + storedImage);
+    assertThat(storedImage).isNotEqualTo(DEFAULT_IMAGE_NAME);
+
+    // 이미지 삭제
+    RestAssured
+        .given().log().all()
+        .pathParam("filename", storedImage)
+        .when().delete("/images/{filename}")
+        .then().log().all();
   }
 
   @Test

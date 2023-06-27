@@ -1,10 +1,14 @@
 package com.example.wegather.global.upload;
 
+import com.example.wegather.global.customException.FileDeleteException;
 import com.example.wegather.global.customException.FileGetException;
 import com.example.wegather.global.customException.FileUploadException;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +24,7 @@ public class StoreFileToDirectory implements StoreFile {
 
   private static final String FAIL_TO_UPLOAD_PROFILE_IMAGE = "회원 프로필 이미지 업로드에 실패했습니다.";
   private static final String FAIL_TO_GET_FILE = "파일을 가져오는데 실패했습니다.";
+  private static final String FAIL_TO_DELETE_FILE = "파일 삭제에 실패했습니다.";
   @Value("${file.dir}")
   private String fileDir;
 
@@ -68,6 +73,20 @@ public class StoreFileToDirectory implements StoreFile {
     }
 
     return new UploadFile(originalFilename, storeFileName);
+  }
+
+  /**
+   * 파일을 삭제합니다.
+   * @param filename
+   */
+  @Override
+  public void deleteFile(String filename) {
+    Path filePath = FileSystems.getDefault().getPath(getFullPath(filename));
+    try {
+      Files.delete(filePath);
+    } catch (IOException | SecurityException e) {
+      throw new FileDeleteException(FAIL_TO_DELETE_FILE);
+    }
   }
 
   /**

@@ -50,4 +50,9 @@ public class StoreFileToAWS implements StoreFile {
 
     return UploadFile.of(multipartFile.getOriginalFilename(), storeFileName);
   }
+
+  @Override
+  public void deleteFile(String filename) {
+    s3Client.deleteObject(bucketName, filename);
+  }
 }

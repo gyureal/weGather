@@ -21,6 +21,12 @@ public interface StoreFile {
   UploadFile storeFile(MultipartFile multipartFile);
 
   /**
+   * 파일을 삭제합니다.
+   * @param filename
+   */
+  void deleteFile(String filename);
+
+  /**
    * 저장할 파일 이름을 생성합니다.
    * UUID 에 기존 파일의 확장자를 붙혀서 만듭니다.
    * @param originalFilename
