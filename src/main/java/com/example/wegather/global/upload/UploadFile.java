@@ -11,4 +11,8 @@ public class UploadFile {
     this.uploadFileName = uploadFileName;
     this.storeFileName = storeFileName;
   }
+
+  public static UploadFile of(String uploadFileName, String storeFileName) {
+    return new UploadFile(uploadFileName, storeFileName);
+  }
 }

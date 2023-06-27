@@ -1,5 +1,6 @@
 package com.example.wegather.member.web;
 
+import com.example.wegather.global.customException.FileUploadException;
 import com.example.wegather.global.dto.AddressRequest;
 import com.example.wegather.member.domain.MemberService;
 import com.example.wegather.member.dto.JoinMemberRequest;
@@ -80,7 +81,7 @@ public class MemberController {
    * @param id
    * @param profileImage
    * @throws IllegalArgumentException 회원이 존재하지 않은 경우
-   * @throws com.example.wegather.global.customException.ImageUploadException
+   * @throws FileUploadException
    *     이미지 업로드에 실패할 경우
    * @return
    */

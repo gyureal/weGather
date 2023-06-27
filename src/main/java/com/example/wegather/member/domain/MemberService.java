@@ -3,9 +3,8 @@ package com.example.wegather.member.domain;
 import static com.example.wegather.global.Message.Error.MEMBER_NOT_FOUND;
 import static com.example.wegather.global.Message.Error.USERNAME_DUPLICATED;
 
-import com.example.wegather.global.customException.ImageUploadException;
 import com.example.wegather.global.dto.AddressRequest;
-import com.example.wegather.global.upload.FileStore;
+import com.example.wegather.global.upload.StoreFile;
 import com.example.wegather.global.upload.UploadFile;
 import com.example.wegather.global.vo.Address;
 import com.example.wegather.global.vo.Image;
@@ -23,9 +22,8 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 @RequiredArgsConstructor
 public class MemberService {
-  private static final String FAIL_TO_UPLOAD_PROFILE_IMAGE = "회원 프로필 이미지 업로드에 실패했습니다.";
   private final MemberRepository memberRepository;
-  private final FileStore fileStore;
+  private final StoreFile storeFile;
 
   @Transactional
   public Member joinMember(JoinMemberRequest request) {
@@ -65,11 +63,7 @@ public class MemberService {
     Member member = getMember(id);
 
     UploadFile uploadFile;
-    try {
-      uploadFile = fileStore.storeFile(profileImage);
-    } catch (Exception e) {
-      throw new ImageUploadException(FAIL_TO_UPLOAD_PROFILE_IMAGE, e);
-    }
+    uploadFile = storeFile.storeFile(profileImage);
 
     member.changeProfileImage(uploadFile.getStoreFileName());
   }
