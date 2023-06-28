@@ -23,8 +23,8 @@ public class Username {
   /**
    * username 을 생성합니다.버
    * 영문소문자, 숫자로 이루어진 4자 - 12자 사이의 글자
-   * @throws IllegalArgumentException 회원 아이디 규칙에 맞지 않을 경우 예외를 던집니다.
    * @param value
+   * @throws IllegalArgumentException 회원 아이디 규칙에 맞지 않을 경우 예외를 던집니다.
    */
   public static Username of(String value) {
     return new Username(value);

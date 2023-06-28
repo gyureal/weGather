@@ -5,6 +5,12 @@ spring:
     username: root
     password: 12
 
+  data:
+    web:
+      pageable:
+        default-page-size: 20
+        max-page-size: 2000
+
   jpa:
     hibernate:
       ddl-auto: create
@@ -16,3 +22,20 @@ logging:
   level:
     org.springframework: INFO
     org.hibernate.SQL: debug
+
+file:
+  dir: /Users/yonggyujeong/temp/
+
+cloud:
+  aws:
+    credentials:
+      accessKey: 'AKIA2XCLNRPKHBHDFS4W'
+      secretKey: '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'
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
+
+application:
+  bucket:
+    name: wegather

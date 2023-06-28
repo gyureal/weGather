@@ -22,11 +22,13 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.DynamicInsert;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
+@DynamicInsert
 @Entity
 public class Member extends BaseTimeEntity {
   @Id
@@ -57,5 +59,13 @@ public class Member extends BaseTimeEntity {
   @Embedded
   @AttributeOverride(name = "value", column = @Column(name = "interests"))
   Interests interests;
+
+  public void changeProfileImage(String storeImagePath) {
+    profileImage = Image.of(storeImagePath);
+  }
+
+  public void changeAddress(Address address) {
+    this.address = address;
+  }
 }
 
