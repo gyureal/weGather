@@ -1,0 +1,16 @@
+### GET request with a header
+GET localhost:8080/members
+Accept: application/json
+
+### Send POST request with json body
+POST localhost:8080/members
+Content-Type: application/json
+
+{
+  "username": "admin01",
+  "password": "1234",
+  "name": "김진주",
+  "phoneNumber": "010-2333-2222",
+  "streetAddress" : "서울시 강남구 달변대로 20-12",
+  "memberType": "ROLE_USER"
+}

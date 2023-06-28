@@ -28,7 +28,7 @@ public class MemberController {
 
   private final MemberService memberService;
   /**
-   * 회원을 새로 추가합니다.
+   * 회원을 새로 추가합니다. (회원가입)
    * @param request 회원가입시 입력되는 회원정보
    * @return 생성된 회원
    * @throws IllegalArgumentException

@@ -18,6 +18,7 @@ public class JoinMemberRequest {
   @NotEmpty
   private String name;
   private String phoneNumber;
+  @NotEmpty
   private String streetAddress;
   private Double longitude;
   private Double latitude;

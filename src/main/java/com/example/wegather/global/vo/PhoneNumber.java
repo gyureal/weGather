@@ -7,6 +7,7 @@ import javax.persistence.Embeddable;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.util.StringUtils;
 
 @Getter
 @Embeddable
@@ -25,6 +26,9 @@ public class PhoneNumber {
   }
 
   void validatePhoneNumberRule(String value) {
+    if (!StringUtils.hasText(value)) {
+      return;
+    }
     if (!PHONE_NUMBER_RULE.matcher(value).matches()) {
       throw new IllegalArgumentException(PHONE_NUMBER_RULE_VIOLATION);
     }
