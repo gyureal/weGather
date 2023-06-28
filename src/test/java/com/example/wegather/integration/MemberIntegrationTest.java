@@ -1,12 +1,12 @@
 package com.example.wegather.integration;
 
-import static com.example.wegather.member.domain.vo.MemberType.*;
+import static com.example.wegather.global.vo.MemberType.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.example.wegather.global.dto.AddressRequest;
 import com.example.wegather.member.domain.Member;
 import com.example.wegather.member.domain.MemberRepository;
-import com.example.wegather.member.domain.vo.MemberType;
+import com.example.wegather.global.vo.MemberType;
 import com.example.wegather.member.dto.JoinMemberRequest;
 import com.example.wegather.member.dto.MemberDto;
 import io.restassured.RestAssured;

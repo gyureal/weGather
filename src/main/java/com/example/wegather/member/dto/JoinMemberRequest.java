@@ -1,6 +1,6 @@
 package com.example.wegather.member.dto;
 
-import com.example.wegather.member.domain.vo.MemberType;
+import com.example.wegather.global.vo.MemberType;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;

@@ -1,7 +1,7 @@
 package com.example.wegather.member.dto;
 
 import com.example.wegather.member.domain.Member;
-import com.example.wegather.member.domain.vo.MemberType;
+import com.example.wegather.global.vo.MemberType;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
