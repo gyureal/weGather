@@ -1,4 +1,4 @@
-# weGather (소모임 서비스)
+<img width="636" alt="image" src="https://github.com/gyureal/weGather/assets/78974381/c11d1d84-0690-41f5-b050-fd0fa777db0a"># weGather (소모임 서비스)
 
 ## 개요
 - 지역과 관심사가 비슷한 사람 끼리 모임을 만들 수 있는 서비스
@@ -130,4 +130,23 @@ https://github.com/rest-assured/rest-assured/wiki/Usage#multi-part-form-data <br
 MultipartSpecBuilder를 이용해 가상의 요청을 만듭니다. <br/>
 <img width="699" alt="image" src="https://github.com/gyureal/weGather/assets/78974381/2cecd078-bf53-4a50-9cca-3403f260e98b"> <br/>
 https://itecnote.com/tecnote/java-how-to-send-a-multipart-request-with-restassured/
+
+<br/><br/><br/>
+
+## RestAssured NoClassDefFoundError
+<img width="636" alt="image" src="https://github.com/gyureal/weGather/assets/78974381/5b4dc6fd-4c47-40d4-ad7c-53686597737b"> <br/>
+- RestAssuredMockMvc를 사용하기 위해서 restAssured - spring-mock-mvc 3.0.0 을 import 한 후, RestAssuredMockMvc를 사용하였더니 아래 에러가 발생하였다. <br/>
+<img width="925" alt="image" src="https://github.com/gyureal/weGather/assets/78974381/9ad298ca-0c87-4bd1-9ca4-896dde983537"> <br/>
+- 문제의 원인
+   RestAssured의 낮은 버전에서는 해당 에러가 발생하였던 것 같다. 프로젝트에서 사용하는 RestAssured의 버전인 4.4.0으로 업그레이드 하니, 에러가 발생하지 않았다. <br/>
+  <img width="641" alt="image" src="https://github.com/gyureal/weGather/assets/78974381/124f5c5f-00ca-4eb7-b61d-10a387d0cbd2"> <br/>
+- 참고
+  https://github.com/rest-assured/rest-assured/issues/1220
+
+## RestAssured -> RestAssuredMockMvc
+static import 를 하면 매번 test 문에 restAssured인지 RestAssruedMockMvc 인지 명시해 주지 않아도 되어서 교체 해주기 편했다.
+<img width="1015" alt="image" src="https://github.com/gyureal/weGather/assets/78974381/d7cae66e-3040-4723-bacd-ce76d4298168">
+참고
+https://www.baeldung.com/spring-mock-mvc-rest-assured
+
 
