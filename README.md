@@ -132,21 +132,47 @@ MultipartSpecBuilder를 이용해 가상의 요청을 만듭니다. <br/>
 https://itecnote.com/tecnote/java-how-to-send-a-multipart-request-with-restassured/
 
 <br/><br/><br/>
+## RestAssured -> RestAssuredMockMvc
+- RestAssured로 통합테스트를 하는 환경에서 Spring Security가 적용된 api 테스트를 위해 RestAssuredMockMvc 를 도입하였습니다.
 
-## RestAssured NoClassDefFoundError
+<br/><br/><br/>
+
+### RestAssured NoClassDefFoundError
 <img width="636" alt="image" src="https://github.com/gyureal/weGather/assets/78974381/5b4dc6fd-4c47-40d4-ad7c-53686597737b"> <br/>
-- RestAssuredMockMvc를 사용하기 위해서 restAssured - spring-mock-mvc 3.0.0 을 import 한 후, RestAssuredMockMvc를 사용하였더니 아래 에러가 발생하였다. <br/>
+- RestAssuredMockMvc를 사용하기 위해서 restAssured - spring-mock-mvc 3.0.0 을 import 한 후, RestAssuredMockMvc를 사용하였더니 아래 에러가 발생하였습니다. <br/>
 <img width="925" alt="image" src="https://github.com/gyureal/weGather/assets/78974381/9ad298ca-0c87-4bd1-9ca4-896dde983537"> <br/>
 - 문제의 원인
-   RestAssured의 낮은 버전에서는 해당 에러가 발생하였던 것 같다. 프로젝트에서 사용하는 RestAssured의 버전인 4.4.0으로 업그레이드 하니, 에러가 발생하지 않았다. <br/>
+   RestAssured의 낮은 버전에서는 해당 에러가 발생하였던 것 같다. 프로젝트에서 사용하는 RestAssured의 버전인 4.4.0으로 업그레이드 하니, 에러가 발생하지 않았습니다. <br/>
   <img width="641" alt="image" src="https://github.com/gyureal/weGather/assets/78974381/124f5c5f-00ca-4eb7-b61d-10a387d0cbd2"> <br/>
 - 참고
   https://github.com/rest-assured/rest-assured/issues/1220
 
-## RestAssured -> RestAssuredMockMvc
-static import 를 하면 매번 test 문에 restAssured인지 RestAssruedMockMvc 인지 명시해 주지 않아도 되어서 교체 해주기 편했다.
+<br/><br/><br/>
+
+### RestAssured -> RestAssuredMockMvc 
+RestAssured -> RestAssuredMockMvc 로 교체
+<img width="502" alt="image" src="https://github.com/gyureal/weGather/assets/78974381/5112c731-1d12-40d1-92c2-d454d1d725cd"> <br/>
+- extract() 시, ExtractableResponse<Response> 가 아닌 ExtractableResponse<MockMvcResponse> 를 반환합니다.
+- static import 를 하면 매번 test 문에 restAssured인지 RestAssruedMockMvc 인지 명시해 주지 않아도 되어서 교체 해주기 편했습니다.
 <img width="1015" alt="image" src="https://github.com/gyureal/weGather/assets/78974381/d7cae66e-3040-4723-bacd-ce76d4298168">
 참고
 https://www.baeldung.com/spring-mock-mvc-rest-assured
+
+<br/><br/><br/>
+
+### RestAssuredMockMvc 에서 pathParam() cannot resolve 문제
+<img width="581" alt="image" src="https://github.com/gyureal/weGather/assets/78974381/0ea49248-f341-4e08-847c-4c01d2a63d3d"> <br/>
+- RestAssured 에서 PathVariable을 테스트하기 위해 사용한 pathParam() 이 RestssuredMockMvc에는 존재하지 않았습니다.
+
+- RestssuredMockMvc에는 체이닝 메서드 들의 반환타입인 MockMvcRequestSpecification 을 찾아보니, get(), post() 등 요청을 url을 명시할 때 pathVariable 또한 같이 명시함을 알 수 있었습니다.
+<img width="899" alt="image" src="https://github.com/gyureal/weGather/assets/78974381/9b694e56-1184-4c8a-8504-d85fa1113e76">
+
+
+<br/> <br/><br/>
+
+### Multipart() 파라메터 오류
+MultipartFile 을 파라메터로 받는 api 테스트 시, RestAssured 사용시에는 가상의 요청을 MultiPartSpecification 인스턴스로 만들어서 multipart()의 파라메터로 던져주었으나, RestAssuredMockMvc 사용시에는 에러가 났다.
+
+왜 이렇게 다를까? MockMvc 기준인것 같다
 
 
