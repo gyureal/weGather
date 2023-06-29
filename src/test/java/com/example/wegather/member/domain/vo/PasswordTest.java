@@ -7,14 +7,18 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 class PasswordTest {
+
+  private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
   @Test
   @DisplayName("비밀번호 생성에 성공합니다.")
   void createPasswordSuccessfully() {
     String password = "test1";
 
-    Password result = Password.of(password);
+    Password result = Password.of(password, passwordEncoder);
 
     assertThat(result).isNotNull();
   }
@@ -27,7 +31,7 @@ class PasswordTest {
 
     // when // then
     assertThatThrownBy(() -> {
-      Password result = Password.of(password);
+      Password result = Password.of(password, passwordEncoder);
     }).isInstanceOf(IllegalArgumentException.class)
         .hasMessage(PASSWORD_RULE_VIOLATION);
   }
@@ -40,7 +44,7 @@ class PasswordTest {
 
     // when // then
     assertThatThrownBy(() -> {
-      Password result = Password.of(password);
+      Password result = Password.of(password, passwordEncoder);
     }).isInstanceOf(IllegalArgumentException.class)
         .hasMessage(PASSWORD_RULE_VIOLATION);
   }
