@@ -15,6 +15,7 @@ import com.example.wegather.member.dto.JoinMemberRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class MemberService {
   private final MemberRepository memberRepository;
   private final StoreFile storeFile;
+  private final PasswordEncoder passwordEncoder;
 
   @Transactional
   public Member joinMember(JoinMemberRequest request) {
@@ -33,7 +35,7 @@ public class MemberService {
 
     return memberRepository.save(Member.builder()
             .username(Username.of(request.getUsername()))
-            .password(Password.of(request.getPassword()))
+            .password(Password.of(request.getPassword(), passwordEncoder))
             .name(request.getName())
             .phoneNumber(PhoneNumber.of(request.getPhoneNumber()))
             .address(Address.of(request.getStreetAddress()

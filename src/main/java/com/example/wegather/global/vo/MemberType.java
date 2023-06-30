@@ -1,4 +1,4 @@
-package com.example.wegather.member.domain.vo;
+package com.example.wegather.global.vo;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

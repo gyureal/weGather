@@ -5,7 +5,7 @@ import com.example.wegather.global.vo.Address;
 import com.example.wegather.global.vo.Image;
 import com.example.wegather.global.vo.PhoneNumber;
 import com.example.wegather.member.domain.vo.Interests;
-import com.example.wegather.member.domain.vo.MemberType;
+import com.example.wegather.global.vo.MemberType;
 import com.example.wegather.member.domain.vo.Password;
 import com.example.wegather.member.domain.vo.Username;
 import javax.persistence.AttributeOverride;
