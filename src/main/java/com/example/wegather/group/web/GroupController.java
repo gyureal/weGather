@@ -3,10 +3,9 @@ package com.example.wegather.group.web;
 import com.example.wegather.group.domain.GroupService;
 import com.example.wegather.group.dto.CreateGroupRequest;
 import com.example.wegather.group.dto.GroupDto;
+import com.example.wegather.group.dto.GroupSearchCondition;
 import java.net.URI;
 import java.security.Principal;
-import java.util.List;
-import java.util.Optional;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 
@@ -36,8 +34,15 @@ public class GroupController {
         .body(groupDto);
   }
 
-  @GetMapping("{id}")
+  @GetMapping("/{id}")
   public ResponseEntity<GroupDto> readGroup(@PathVariable Long id) {
     return ResponseEntity.ok(GroupDto.from(groupService.getGroup(id)));
+  }
+
+  @GetMapping
+  public ResponseEntity<Page<GroupDto>> readGroups(
+      @RequestBody GroupSearchCondition cond,
+      Pageable pageRequest) {
+    return ResponseEntity.ok(groupService.searchGroups(cond, pageRequest));
   }
 }
