@@ -23,4 +23,9 @@ public class AuthenticationManager implements IAuthenticationManager {
     }
     throw new IllegalStateException(CANNOT_GET_PRINCIPAL_AS_MEMBER_DETAILS_TYPE);
   }
+
+  @Override
+  public String getUsername() {
+    return getPrincipal().getUsername();
+  }
 }

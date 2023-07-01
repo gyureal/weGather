@@ -7,4 +7,6 @@ public interface IAuthenticationManager {
   Authentication getAuthentication();
 
   MemberDetails getPrincipal();
+
+  String getUsername();
 }
