@@ -2,6 +2,7 @@ package com.example.wegather.group.domain;
 
 import com.example.wegather.global.BaseTimeEntity;
 import com.example.wegather.global.vo.Address;
+import com.example.wegather.group.vo.MaxMemberCount;
 import com.example.wegather.member.domain.Member;
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
@@ -39,5 +40,8 @@ public class Group extends BaseTimeEntity {
       @AttributeOverride(name = "latitude", column = @Column(name = "latitude"))
   })
   private Address address;
-  private Integer maxMemberCount;
+
+  @Embedded
+  @AttributeOverride(name = "value", column = @Column(name = "max_member_count"))
+  private MaxMemberCount maxMemberCount;
 }

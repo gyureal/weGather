@@ -29,7 +29,7 @@ public class GroupDto {
         .streetAddress(group.getAddress().getStreetAddress())
         .longitude(group.getAddress().getLongitude())
         .latitude(group.getAddress().getLatitude())
-        .maxMemberCount(group.getMaxMemberCount())
+        .maxMemberCount(group.getMaxMemberCount().getValue())
         .build();
   }
 }

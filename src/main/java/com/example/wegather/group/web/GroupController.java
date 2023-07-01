@@ -35,4 +35,9 @@ public class GroupController {
     return ResponseEntity.created(URI.create("/groups/" + groupDto.getId()))
         .body(groupDto);
   }
+
+  @GetMapping("{id}")
+  public ResponseEntity<GroupDto> readGroup(@PathVariable Long id) {
+    return ResponseEntity.ok(GroupDto.from(groupService.getGroup(id)));
+  }
 }

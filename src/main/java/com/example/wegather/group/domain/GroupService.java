@@ -1,16 +1,12 @@
 package com.example.wegather.group.domain;
 
-import com.example.wegather.global.auth.IAuthenticationManager;
 import com.example.wegather.global.vo.Address;
 import com.example.wegather.group.dto.CreateGroupRequest;
+import com.example.wegather.group.vo.MaxMemberCount;
 import com.example.wegather.member.domain.Member;
 import com.example.wegather.member.domain.MemberRepository;
 import com.example.wegather.member.domain.vo.Username;
-import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,7 +30,12 @@ public class GroupService {
             .leader(member)
             .address(Address.of(request.getStreetAddress(), request.getLongitude(),
                 request.getLatitude()))
-            .maxMemberCount(request.getMaxMemberCount())
+            .maxMemberCount(MaxMemberCount.of(request.getMaxMemberCount()))
         .build());
+  }
+
+  public Group getGroup(Long id) {
+    return groupRepository.findById(id)
+        .orElseThrow(() -> new IllegalArgumentException(GROUP_NOT_FOUND));
   }
 }

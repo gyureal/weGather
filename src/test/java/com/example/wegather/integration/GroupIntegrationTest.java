@@ -31,17 +31,20 @@ public class GroupIntegrationTest extends IntegrationTest {
     RestAssuredMockMvc.webAppContextSetup(webApplicationContext);
   }
 
-  private static String memberUsername = "test01";
-  private static String memberPassword = "1234";
+  private static final String memberUsername = "test01";
+  private static final String memberPassword = "1234";
+  private MemberDto member01;
+  private GroupDto group01;
 
   @BeforeEach
   void initData() {
+    member01 = insertMember(memberUsername, memberPassword, MemberType.ROLE_USER);
+    group01 = insertGroup("탁사모", 300);
   }
 
   @Test
   @DisplayName("소모임을 생성합니다.")
   void createInterestSuccessfully() {
-    insertMember(memberUsername, memberPassword, MemberType.ROLE_USER);
 
     CreateGroupRequest request = CreateGroupRequest.builder()
         .groupName("볼사모")
@@ -64,7 +67,42 @@ public class GroupIntegrationTest extends IntegrationTest {
         .usingRecursiveComparison()
         .ignoringFields("id", "leaderId", "leaderUsername")
         .isEqualTo(request);
+  }
 
+  @Test
+  @DisplayName("소그룹 조회를 성공합니다.")
+  void getGroupSuccessfully() {
+    Long groupId = group01.getId();
+
+    ExtractableResponse<Response> response = RestAssured.given().log().all()
+        .auth().basic(memberUsername, memberPassword)
+        .pathParam("id", groupId)
+        .contentType(ContentType.JSON)
+        .when().get("/groups/{id}")
+        .then().log().all()
+        .extract();
+
+    GroupDto result = response.body().as(GroupDto.class);
+    assertThat(result)
+        .usingRecursiveComparison()
+        .isEqualTo(group01);
+  }
+
+  private GroupDto insertGroup(String groupName, Integer maxMemberCount) {
+    CreateGroupRequest request = CreateGroupRequest.builder()
+        .groupName(groupName)
+        .description("테스트입니다.")
+        .streetAddress("서울특별시 중구 세종대로 125")
+        .maxMemberCount(maxMemberCount)
+        .build();
+
+    return RestAssured.given().log().all()
+        .auth().basic(memberUsername, memberPassword)
+        .body(request)
+        .contentType(ContentType.JSON)
+        .when().post("/groups")
+        .then().log().ifStatusCodeIsEqualTo(HttpStatus.SC_CREATED)
+        .extract().as(GroupDto.class);
   }
 
   private MemberDto insertMember(String username, String password, MemberType memberType) {
