@@ -232,4 +232,16 @@ RestAssured 를 쓰고, auth().basic("username", "password") 메서드를 사용
    - isEqualTo(객체) : 비교할 객체를 명시 <br/>
   <img width="657" alt="image" src="https://github.com/gyureal/weGather/assets/78974381/74c7aebb-3dd3-4dd9-bf87-3d685b9be910">
 
-  
+<br/><br/><br/>
+
+## Querydsl Test 시 주의할 점 (JpaQueryFactory 빈주입)
+> Querydsl Repository 를 @DataJpaTest 로 테스트시 JpaQueryFactory를 빈주입 받지 못해 에러가 났다.
+<img width="928" alt="image" src="https://github.com/gyureal/weGather/assets/78974381/74ff804b-8b5a-463a-acfe-48acbd40dba8">
+- JpaQueryFactory 가 영속성 계층이 아니라서 자동으로 빈주입을 시켜주지 못하는 것이다.
+
+### 해결
+- @TestConfiguration 을 이용하여 테스트 시에 해당 빈을 주입 받도록 설정해주었다. <br/>
+<img width="371" alt="image" src="https://github.com/gyureal/weGather/assets/78974381/c6d174fe-afcd-48e8-a5d0-df13011c2b48"> <br/>
+<img width="378" alt="image" src="https://github.com/gyureal/weGather/assets/78974381/f4dea017-722f-450d-9fe7-1e647b50342c">
+
+
