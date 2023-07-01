@@ -202,11 +202,12 @@ RestAssured 를 쓰고, auth().basic("username", "password") 메서드를 사용
 > create entity 기능을 테스트할 경우, 요청에 쓰이는 dto 객체와 생성되어 반환되는 dto의 타입이 다르다. 둘의 비교를 쉽게 하는 법은 무엇일까?
 
 ### 예시
-- api : createGroup
-- RequestDTO :
+- api : createGroup - 소그룹을 생성하는 api
+  
+- RequestDTO : <br/>
   <img width="292" alt="image" src="https://github.com/gyureal/weGather/assets/78974381/bebdc868-ec19-4d96-8942-c57e8193b1ce">
 
-- ResponseDTO :
+- ResponseDTO : <br/>
   <img width="299" alt="image" src="https://github.com/gyureal/weGather/assets/78974381/6f9a8257-3fd6-4b7b-905d-680a7b40f85c">
 
 
@@ -220,13 +221,13 @@ RestAssured 를 쓰고, auth().basic("username", "password") 메서드를 사용
    - equalTo() 를 override 하지 않아도, 두 객체를 필드로 비교해준다
 - isEqualToComparingOnlyGivenFields 메서드
    - assertj 에서는 특정 필드만 명시하여 비교할 수 있도록 메서드를 제공해준다.
-   - 하지만 이는 deprecated 되었다. - nested feild에 대해서는 비교를 못해주기 때문이라고한다.
+   - 하지만 이는 deprecated 되었다. - nested feild에 대해서는 비교를 못해주기 때문이라고한다. <br/>
      <img width="801" alt="image" src="https://github.com/gyureal/weGather/assets/78974381/3eafd8b9-f2e5-44e7-a61d-a40bd7981b07">
 - usingRecursiveComparison() + ignoringFields + isEqualTo 조합
    - 최종적으로 선택된 메서드 조합이다.
    - usingRecursiveComparison : 동등성 비교 명시
    - ignortingFileds : 특정 필드를 비교하지 않도록 명시
-   - isEqualTo(객체) : 비교할 객체를 명시
+   - isEqualTo(객체) : 비교할 객체를 명시 <br/>
   <img width="657" alt="image" src="https://github.com/gyureal/weGather/assets/78974381/74c7aebb-3dd3-4dd9-bf87-3d685b9be910">
 
   
