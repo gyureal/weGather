@@ -191,9 +191,11 @@ RestAssuredMockMvc 사용시, RestAssured 로 작성한 코드가 완벽하게 �
 
 ### 결론
 인증, 인가를 위해 꼭 RestAssuredMockMvc를 쓸 필요는 없다.
-RestAssured 를 쓰고, auth().basic("username", "password") 메서드를 사용해서 인증을 위한 ID를 직접 던져주어도 된다.
-이 편이 API 기능 전체를 테스트 하는 End To End 테스트의 개념에 더 맞기도 하고, 굳이 자료도 많이 없는 RestAssuredMvc 를 사용하여 인증,인가를 Mock 하겠다고
-케이스 별로 애쓰지 않아도 된다.
+RestAssured 를 쓰고, auth().basic("username", "password") 메서드를 사용해서 인증정보를 직접 던져주어도 된다. <br/>
+<img width="659" alt="image" src="https://github.com/gyureal/weGather/assets/78974381/6ccd3077-2d1d-4550-a44d-6223bc69beb5">
+
+이 편이 API 기능 전체를 테스트 하는 End To End 테스트의 개념에 더 맞기도 하고, 굳이 자료도 많이 없는 RestAssuredMvc 를 사용하겠다고 고생하지 않아도 된다.
+단, 인증 방식이 바뀌면 테스트 코드의 위 부분도 변경되어야 한다는 단점이 있다.
 
 
 <br/> <br/> <br/>
