@@ -6,6 +6,8 @@ import com.example.wegather.group.dto.GroupDto;
 import com.example.wegather.group.dto.GroupSearchCondition;
 import java.net.URI;
 import java.security.Principal;
+import java.util.List;
+import java.util.stream.Collectors;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -40,9 +42,9 @@ public class GroupController {
   }
 
   @GetMapping
-  public ResponseEntity<Page<GroupDto>> readGroups(
-      @RequestBody GroupSearchCondition cond,
-      Pageable pageRequest) {
-    return ResponseEntity.ok(groupService.searchGroups(cond, pageRequest));
+  public ResponseEntity<List<GroupDto>> searchGroups(
+      @RequestBody GroupSearchCondition cond) {
+    return ResponseEntity.ok(groupService.searchGroups(cond).stream().map(GroupDto::from).collect(
+        Collectors.toList()));
   }
 }

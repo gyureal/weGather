@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.example.wegather.global.vo.MemberType;
 import com.example.wegather.group.dto.CreateGroupRequest;
 import com.example.wegather.group.dto.GroupDto;
+import com.example.wegather.group.dto.GroupSearchCondition;
 import com.example.wegather.member.dto.JoinMemberRequest;
 import com.example.wegather.member.dto.MemberDto;
 import io.restassured.RestAssured;
@@ -13,6 +14,7 @@ import io.restassured.http.ContentType;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.util.List;
 import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -35,11 +37,15 @@ public class GroupIntegrationTest extends IntegrationTest {
   private static final String memberPassword = "1234";
   private MemberDto member01;
   private GroupDto group01;
+  private GroupDto group02;
+  private GroupDto group03;
 
   @BeforeEach
   void initData() {
     member01 = insertMember(memberUsername, memberPassword, MemberType.ROLE_USER);
     group01 = insertGroup("탁사모", 300);
+    group02 = insertGroup("책사모", 100);
+    group03 = insertGroup("토사모", 200);
   }
 
   @Test
@@ -70,7 +76,7 @@ public class GroupIntegrationTest extends IntegrationTest {
   }
 
   @Test
-  @DisplayName("소그룹 조회를 성공합니다.")
+  @DisplayName("id로 소그룹 조회를 성공합니다.")
   void getGroupSuccessfully() {
     Long groupId = group01.getId();
 
@@ -86,6 +92,28 @@ public class GroupIntegrationTest extends IntegrationTest {
     assertThat(result)
         .usingRecursiveComparison()
         .isEqualTo(group01);
+  }
+
+  @Test
+  @DisplayName("그룹 이름과 최대회원수 범위로 소그룹 조회를 성공합니다.")
+  void searchGroupByGroupNameAndMaxMemberCountRangeSuccessfully() {
+    GroupSearchCondition groupSearchCondition = GroupSearchCondition.builder()
+        .groupName("사모")
+        .maxMemberCountFrom(100)
+        .maxMemberCountTo(201)
+        .build();
+
+    ExtractableResponse<Response> response = RestAssured.given().log().all()
+        .auth().basic(memberUsername, memberPassword)
+        .body(groupSearchCondition)
+        .contentType(ContentType.JSON)
+        .when().get("/groups")
+        .then().log().all()
+        .extract();
+
+    List<GroupDto> result = response.jsonPath().getList(".", GroupDto.class);
+    assertThat(result).hasSize(2);
+    assertThat(result).usingRecursiveFieldByFieldElementComparator().contains(group02, group03);
   }
 
   private GroupDto insertGroup(String groupName, Integer maxMemberCount) {
