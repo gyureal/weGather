@@ -1,4 +1,4 @@
-<img width="636" alt="image" src="https://github.com/gyureal/weGather/assets/78974381/c11d1d84-0690-41f5-b050-fd0fa777db0a"># weGather (소모임 서비스)
+# weGather (소모임 서비스)
 
 ## 개요
 - 지역과 관심사가 비슷한 사람 끼리 모임을 만들 수 있는 서비스
@@ -138,6 +138,7 @@ https://itecnote.com/tecnote/java-how-to-send-a-multipart-request-with-restassur
 <br/><br/><br/>
 
 ### RestAssured NoClassDefFoundError
+<img width="636" alt="image" src="https://github.com/gyureal/weGather/assets/78974381/c11d1d84-0690-41f5-b050-fd0fa777db0a">
 <img width="636" alt="image" src="https://github.com/gyureal/weGather/assets/78974381/5b4dc6fd-4c47-40d4-ad7c-53686597737b"> <br/>
 - RestAssuredMockMvc를 사용하기 위해서 restAssured - spring-mock-mvc 3.0.0 을 import 한 후, RestAssuredMockMvc를 사용하였더니 아래 에러가 발생하였습니다. <br/>
 <img width="925" alt="image" src="https://github.com/gyureal/weGather/assets/78974381/9ad298ca-0c87-4bd1-9ca4-896dde983537"> <br/>
@@ -175,4 +176,57 @@ MultipartFile 을 파라메터로 받는 api 테스트 시, RestAssured 사용�
 
 왜 이렇게 다를까? MockMvc 기준인것 같다
 
+<br/> <br/> <br/>
 
+## 꼭 RestAssuredMockMvc 를 써야할까?
+>Spring Security 환경의 API 테스트 시, RestAssured를 사용하려면 꼭 RestAssuredMockMVC를 써야하는가?
+
+RestAssured 는 API테스트에 BDD 스타일로 작성하기 때문에 가독성이 좋다. 그래서 MockMVC를 사용하기 보다는 RestAssured 사용을 고수하고 싶다. 하지만 SpringSecurity가 적용된 API의 경우 MockMVC 를 사용하는 것이 좀더 판한 것 같다. 인가를 Mock 하기위한 기능들을 많이 제공한다. 이를위해 RestAssured 쪽에서도 RestAssuredMockMvc 라는 라이브러리를 제공하고 있지만, 제한된 기능은 어쩔 수 없다.
+
+### 불편했던점
+RestAssuredMockMvc 사용시, RestAssured 로 작성한 코드가 완벽하게 호환되지 않는다.
+1. PathVariable
+2. MultiPartFile()
+4. 자료가 많이 없다. 많이 쓰이지는 않는 것 같아서, 인터넷에 자료가 많이 없다는 점이 약점
+
+### 결론
+인증, 인가를 위해 꼭 RestAssuredMockMvc를 쓸 필요는 없다.
+RestAssured 를 쓰고, auth().basic("username", "password") 메서드를 사용해서 인증을 위한 ID를 직접 던져주어도 된다.
+이 편이 API 기능 전체를 테스트 하는 End To End 테스트의 개념에 더 맞기도 하고, 굳이 자료도 많이 없는 RestAssuredMvc 를 사용하여 인증,인가를 Mock 하겠다고
+케이스 별로 애쓰지 않아도 된다.
+
+
+<br/> <br/> <br/>
+
+## 테스트 시, 서로 다른 두 객체의 동등성 비교하기
+> create entity 기능을 테스트할 경우, 요청에 쓰이는 dto 객체와 생성되어 반환되는 dto의 타입이 다르다. 둘의 비교를 쉽게 하는 법은 무엇일까?
+
+### 예시
+- api : createGroup
+- RequestDTO :
+  <img width="292" alt="image" src="https://github.com/gyureal/weGather/assets/78974381/bebdc868-ec19-4d96-8942-c57e8193b1ce">
+
+- ResponseDTO :
+  <img width="299" alt="image" src="https://github.com/gyureal/weGather/assets/78974381/6f9a8257-3fd6-4b7b-905d-680a7b40f85c">
+
+
+### 고려사항
+위 두 객체를 비교함에 있어 고려해야할 점이 몇가지 있다.
+1. 두 객체의 필드를 비교해야한다. (동등성 비교)
+2. 두 객체의 필드가 서로 다르다. (특정 필드만 비교해야한다.)
+
+### 해결
+- 동등성 비교를 위해서는 assertj 에서 usingRecursiveComparison() 메서드를 제공한다.
+   - equalTo() 를 override 하지 않아도, 두 객체를 필드로 비교해준다
+- isEqualToComparingOnlyGivenFields 메서드
+   - assertj 에서는 특정 필드만 명시하여 비교할 수 있도록 메서드를 제공해준다.
+   - 하지만 이는 deprecated 되었다. - nested feild에 대해서는 비교를 못해주기 때문이라고한다.
+     <img width="801" alt="image" src="https://github.com/gyureal/weGather/assets/78974381/3eafd8b9-f2e5-44e7-a61d-a40bd7981b07">
+- usingRecursiveComparison() + ignoringFields + isEqualTo 조합
+   - 최종적으로 선택된 메서드 조합이다.
+   - usingRecursiveComparison : 동등성 비교 명시
+   - ignortingFileds : 특정 필드를 비교하지 않도록 명시
+   - isEqualTo(객체) : 비교할 객체를 명시
+  <img width="657" alt="image" src="https://github.com/gyureal/weGather/assets/78974381/74c7aebb-3dd3-4dd9-bf87-3d685b9be910">
+
+  
