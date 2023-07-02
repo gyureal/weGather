@@ -5,9 +5,13 @@ import static com.example.wegather.group.domain.QGroup.*;
 import com.example.wegather.group.domain.Group;
 import com.example.wegather.group.dto.GroupSearchCondition;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -17,8 +21,8 @@ public class GroupRepositoryImpl implements GroupRepositoryQuerydsl {
   private final JPAQueryFactory queryFactory;
 
   @Override
-  public List<Group> search(GroupSearchCondition cond) {
-    return queryFactory
+  public Page<Group> search(GroupSearchCondition cond, Pageable pageable) {
+    List<Group> content = queryFactory
         .selectFrom(group)
         .where(
             groupNameContains(cond.getGroupName()),
@@ -26,7 +30,11 @@ public class GroupRepositoryImpl implements GroupRepositoryQuerydsl {
             leaderUsernameLike(cond.getLeaderUsername()),
             maxMemberCountGoe(cond.getMaxMemberCountFrom()),
             maxMemberCountLt(cond.getMaxMemberCountTo()))
+        .offset(pageable.getOffset())
+        .limit(pageable.getPageSize())
         .fetch();
+
+    return PageableExecutionUtils.getPage(content, pageable, content::size);
   }
 
   private BooleanExpression groupNameContains(String groupName) {

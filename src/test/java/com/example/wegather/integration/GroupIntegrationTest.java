@@ -102,18 +102,27 @@ public class GroupIntegrationTest extends IntegrationTest {
         .maxMemberCountFrom(100)
         .maxMemberCountTo(201)
         .build();
+    int size = 2;
+    int page = 0;
 
     ExtractableResponse<Response> response = RestAssured.given().log().all()
         .auth().basic(memberUsername, memberPassword)
         .body(groupSearchCondition)
+        .queryParam("size", size, "page", page)
         .contentType(ContentType.JSON)
         .when().get("/groups")
         .then().log().all()
         .extract();
 
-    List<GroupDto> result = response.jsonPath().getList(".", GroupDto.class);
+    assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_OK);
+    List<GroupDto> result = response.jsonPath().getList("content", GroupDto.class);
     assertThat(result).hasSize(2);
     assertThat(result).usingRecursiveFieldByFieldElementComparator().contains(group02, group03);
+    // 페이징 관련 리턴값 검증
+    int pageSize = (int) response.path("pageable.pageSize");
+    int pageNumber = (int) response.path("pageable.pageNumber");
+    assertThat(pageSize).isEqualTo(size);
+    assertThat(pageNumber).isEqualTo(page);
   }
 
   private GroupDto insertGroup(String groupName, Integer maxMemberCount) {

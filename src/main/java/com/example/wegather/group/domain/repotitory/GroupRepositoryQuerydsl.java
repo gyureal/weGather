@@ -2,8 +2,9 @@ package com.example.wegather.group.domain.repotitory;
 
 import com.example.wegather.group.domain.Group;
 import com.example.wegather.group.dto.GroupSearchCondition;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface GroupRepositoryQuerydsl {
-  List<Group> search(GroupSearchCondition condition);
+  Page<Group> search(GroupSearchCondition condition, Pageable pageable);
 }

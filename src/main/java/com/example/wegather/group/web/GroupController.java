@@ -42,9 +42,9 @@ public class GroupController {
   }
 
   @GetMapping
-  public ResponseEntity<List<GroupDto>> searchGroups(
-      @RequestBody GroupSearchCondition cond) {
-    return ResponseEntity.ok(groupService.searchGroups(cond).stream().map(GroupDto::from).collect(
-        Collectors.toList()));
+  public ResponseEntity<Page<GroupDto>> searchGroups(
+      @RequestBody GroupSearchCondition cond,
+      Pageable pageable) {
+    return ResponseEntity.ok(groupService.searchGroups(cond, pageable).map(GroupDto::from));
   }
 }

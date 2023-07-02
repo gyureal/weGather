@@ -45,7 +45,7 @@ public class GroupService {
         .orElseThrow(() -> new IllegalArgumentException(GROUP_NOT_FOUND));
   }
 
-  public List<Group> searchGroups(GroupSearchCondition cond) {
-    return groupRepository.search(cond);
+  public Page<Group> searchGroups(GroupSearchCondition cond, Pageable pageable) {
+    return groupRepository.search(cond, pageable);
   }
 }

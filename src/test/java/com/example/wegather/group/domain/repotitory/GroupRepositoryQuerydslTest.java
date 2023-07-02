@@ -24,13 +24,16 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
 
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ActiveProfiles("test")
 @Import(TestConfig.class)
+@Sql("/truncate.sql")
 @DataJpaTest
 class GroupRepositoryQuerydslTest {
   @Autowired
@@ -61,11 +64,18 @@ class GroupRepositoryQuerydslTest {
   @Test
   @DisplayName("이름만으로 조회")
   void searchGroupOnlyName() {
+    // given
     GroupSearchCondition cond = GroupSearchCondition.builder()
         .groupName("탁사모")
         .build();
 
-    List<Group> groups = groupRepositoryQuerydsl.search(cond);
+    int size = 10;
+    int page = 0;
+
+    PageRequest pageRequest = PageRequest.of(page, size);
+
+    // when
+    List<Group> groups = groupRepositoryQuerydsl.search(cond, pageRequest).getContent();
 
     assertThat(groups).hasSize(2);
     assertThat(groups).extracting(Group::getName).contains("탁사모", "탁사모 부산");
@@ -84,7 +94,13 @@ class GroupRepositoryQuerydslTest {
         .streetAddress("서울")
         .build();
 
-    List<Group> groups = groupRepositoryQuerydsl.search(cond);
+    int size = 10;
+    int page = 0;
+
+    PageRequest pageRequest = PageRequest.of(page, size);
+
+    // when
+    List<Group> groups = groupRepositoryQuerydsl.search(cond, pageRequest).getContent();
 
     assertThat(groups).hasSize(3);
     assertThat(groups).extracting(Group::getName).contains("탁사모", "농구 최고", "서울 토익 스터디");
@@ -98,7 +114,13 @@ class GroupRepositoryQuerydslTest {
         .maxMemberCountTo(30)
         .build();
 
-    List<Group> groups = groupRepositoryQuerydsl.search(cond);
+    int size = 10;
+    int page = 0;
+
+    PageRequest pageRequest = PageRequest.of(page, size);
+
+    // when
+    List<Group> groups = groupRepositoryQuerydsl.search(cond, pageRequest).getContent();
 
     assertThat(groups).hasSize(2);
   }
@@ -111,7 +133,13 @@ class GroupRepositoryQuerydslTest {
         .streetAddress("서울")
         .build();
 
-    List<Group> groups = groupRepositoryQuerydsl.search(cond);
+    int size = 10;
+    int page = 0;
+
+    PageRequest pageRequest = PageRequest.of(page, size);
+
+    // when
+    List<Group> groups = groupRepositoryQuerydsl.search(cond, pageRequest).getContent();
 
     assertThat(groups).hasSize(1);
     assertThat(groups).extracting(Group::getName).contains("서울 토익 스터디");
