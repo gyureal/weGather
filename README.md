@@ -245,3 +245,10 @@ RestAssured 를 쓰고, auth().basic("username", "password") 메서드를 사용
 <img width="378" alt="image" src="https://github.com/gyureal/weGather/assets/78974381/f4dea017-722f-450d-9fe7-1e647b50342c">
 
 
+<br/><br/><br/>
+
+## querydsl의 fetchResults, fetchCount deprecated 
+https://gyurrr.tistory.com/17
+위 링크에 작성하였습니다.
+
+
