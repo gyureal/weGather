@@ -5,6 +5,7 @@ import javax.persistence.Embeddable;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.util.Assert;
 
 /**
  * 소그룹 엔티티의 최대 멤버수 VO
@@ -13,9 +14,16 @@ import lombok.NoArgsConstructor;
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MaxMemberCount {
+
+  private static final String MAX_MEMBER_COUNT_CANNOT_NULL = "최대 회원 수는 null 일 수 없습니다.";
+  private static final String MAX_MEMBER_COUNT_MUST_LARGER_THAN_ZERO = "최대 회원 수는 0보다 커야 합니다.";
   private Integer value;
 
   public MaxMemberCount(Integer value) {
+    Assert.notNull(value, MAX_MEMBER_COUNT_CANNOT_NULL);
+    if (value < 0) {
+      throw new IllegalArgumentException(MAX_MEMBER_COUNT_MUST_LARGER_THAN_ZERO);
+    }
     this.value = value;
   }
 

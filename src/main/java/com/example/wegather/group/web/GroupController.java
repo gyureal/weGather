@@ -4,6 +4,7 @@ import com.example.wegather.group.domain.GroupService;
 import com.example.wegather.group.dto.CreateGroupRequest;
 import com.example.wegather.group.dto.GroupDto;
 import com.example.wegather.group.dto.GroupSearchCondition;
+import com.example.wegather.group.dto.UpdateGroupRequest;
 import java.net.URI;
 import java.security.Principal;
 import java.util.List;
@@ -16,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -46,5 +48,14 @@ public class GroupController {
       @RequestBody GroupSearchCondition cond,
       Pageable pageable) {
     return ResponseEntity.ok(groupService.searchGroups(cond, pageable).map(GroupDto::from));
+  }
+
+  @PutMapping("/{id}")
+  public ResponseEntity<Void> updateGroup(
+      @PathVariable Long id,
+      @RequestBody UpdateGroupRequest request) {
+
+    groupService.editGroup(id, request);
+    return ResponseEntity.ok().build();
   }
 }

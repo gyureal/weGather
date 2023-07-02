@@ -44,4 +44,11 @@ public class Group extends BaseTimeEntity {
   @Embedded
   @AttributeOverride(name = "value", column = @Column(name = "max_member_count"))
   private MaxMemberCount maxMemberCount;
+
+  public void updateGroupTotalInfo(String name, String description, Address address, MaxMemberCount maxMemberCount) {
+    this.name = name;
+    this.description = description;
+    this.address = address;
+    this.maxMemberCount = maxMemberCount;
+  }
 }

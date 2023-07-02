@@ -4,9 +4,12 @@ import static io.restassured.module.mockmvc.RestAssuredMockMvc.given;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.example.wegather.global.vo.MemberType;
+import com.example.wegather.group.domain.Group;
+import com.example.wegather.group.domain.repotitory.GroupRepository;
 import com.example.wegather.group.dto.CreateGroupRequest;
 import com.example.wegather.group.dto.GroupDto;
 import com.example.wegather.group.dto.GroupSearchCondition;
+import com.example.wegather.group.dto.UpdateGroupRequest;
 import com.example.wegather.member.dto.JoinMemberRequest;
 import com.example.wegather.member.dto.MemberDto;
 import io.restassured.RestAssured;
@@ -16,6 +19,7 @@ import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.util.List;
 import org.apache.http.HttpStatus;
+import org.hibernate.AssertionFailure;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -27,6 +31,9 @@ public class GroupIntegrationTest extends IntegrationTest {
 
   @Autowired
   private WebApplicationContext webApplicationContext;
+
+  @Autowired
+  private GroupRepository groupRepository;
 
   @BeforeEach
   void initRestAssuredApplicationContext() {
@@ -123,6 +130,35 @@ public class GroupIntegrationTest extends IntegrationTest {
     int pageNumber = (int) response.path("pageable.pageNumber");
     assertThat(pageSize).isEqualTo(size);
     assertThat(pageNumber).isEqualTo(page);
+  }
+
+  @Test
+  @DisplayName("소모임 정보를 수정합니다.")
+  void updateGroupSuccessfully() {
+    UpdateGroupRequest request = UpdateGroupRequest.builder()
+        .groupName("수정 모임")
+        .description("수정하였습니다.")
+        .streetAddress("수정광역시 수정로")
+        .maxMemberCount(123)
+        .build();
+
+    ExtractableResponse<Response> response = RestAssured
+        .given().log().all()
+        .auth().basic(memberUsername, memberPassword)
+        .pathParam("id", group01.getId())
+        .body(request)
+        .contentType(ContentType.JSON)
+        .when().put("/groups/{id}")
+        .then().log().ifValidationFails()
+        .extract();
+
+    assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_OK);
+    Group updated = groupRepository.findById(group01.getId())
+        .orElseThrow(() -> new AssertionFailure("group ID를 찾을 수 없습니다."));
+    assertThat(updated.getName()).isEqualTo(request.getGroupName());
+    assertThat(updated.getDescription()).isEqualTo(request.getDescription());
+    assertThat(updated.getAddress().getStreetAddress()).isEqualTo(request.getStreetAddress());
+    assertThat(updated.getMaxMemberCount().getValue()).isEqualTo(request.getMaxMemberCount());
   }
 
   private GroupDto insertGroup(String groupName, Integer maxMemberCount) {

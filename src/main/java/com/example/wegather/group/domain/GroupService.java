@@ -3,13 +3,12 @@ package com.example.wegather.group.domain;
 import com.example.wegather.global.vo.Address;
 import com.example.wegather.group.domain.repotitory.GroupRepository;
 import com.example.wegather.group.dto.CreateGroupRequest;
-import com.example.wegather.group.dto.GroupDto;
 import com.example.wegather.group.dto.GroupSearchCondition;
+import com.example.wegather.group.dto.UpdateGroupRequest;
 import com.example.wegather.group.vo.MaxMemberCount;
 import com.example.wegather.member.domain.Member;
 import com.example.wegather.member.domain.MemberRepository;
 import com.example.wegather.member.domain.vo.Username;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -47,5 +46,15 @@ public class GroupService {
 
   public Page<Group> searchGroups(GroupSearchCondition cond, Pageable pageable) {
     return groupRepository.search(cond, pageable);
+  }
+
+  @Transactional
+  public void editGroup(Long id, UpdateGroupRequest request) {
+    Group group = getGroup(id);
+    group.updateGroupTotalInfo(
+        request.getGroupName(),
+        request.getDescription(),
+        Address.of(request.getStreetAddress(), request.getLongitude(), request.getLatitude()),
+        MaxMemberCount.of(request.getMaxMemberCount()));
   }
 }
