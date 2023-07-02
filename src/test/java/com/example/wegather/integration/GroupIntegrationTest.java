@@ -40,9 +40,11 @@ public class GroupIntegrationTest extends IntegrationTest {
     RestAssuredMockMvc.webAppContextSetup(webApplicationContext);
   }
 
-  private static final String memberUsername = "test01";
+  private static final String memberUsername = "member01";
   private static final String memberPassword = "1234";
   private MemberDto member01;
+  private MemberDto member02;
+  private MemberDto admin01;
   private GroupDto group01;
   private GroupDto group02;
   private GroupDto group03;
@@ -50,6 +52,9 @@ public class GroupIntegrationTest extends IntegrationTest {
   @BeforeEach
   void initData() {
     member01 = insertMember(memberUsername, memberPassword, MemberType.ROLE_USER);
+    member02 = insertMember("member02", "1234", MemberType.ROLE_USER);
+    admin01 = insertMember("admin01", "1234", MemberType.ROLE_ADMIN);
+
     group01 = insertGroup("탁사모", 300);
     group02 = insertGroup("책사모", 100);
     group03 = insertGroup("토사모", 200);
@@ -159,6 +164,56 @@ public class GroupIntegrationTest extends IntegrationTest {
     assertThat(updated.getDescription()).isEqualTo(request.getDescription());
     assertThat(updated.getAddress().getStreetAddress()).isEqualTo(request.getStreetAddress());
     assertThat(updated.getMaxMemberCount().getValue()).isEqualTo(request.getMaxMemberCount());
+  }
+  @Test
+  @DisplayName("소모임장이 아니어서 소모임 수정에 실패합니다.")
+  void updateGroupFailBecauseOfNotLeader() {
+    UpdateGroupRequest request = UpdateGroupRequest.builder()
+        .groupName("수정 모임")
+        .description("수정하였습니다.")
+        .streetAddress("수정광역시 수정로")
+        .maxMemberCount(123)
+        .build();
+
+    RestAssured
+        .given().log().all()
+        .auth().basic("member02", "1234")
+        .pathParam("id", group01.getId())
+        .body(request)
+        .contentType(ContentType.JSON)
+        .when().put("/groups/{id}")
+        .then().log().ifValidationFails()
+        .statusCode(HttpStatus.SC_UNAUTHORIZED);
+  }
+
+  @Test
+  @DisplayName("소모임 삭제에 성공합니다.")
+  void deleteGroupSuccessfully() {
+    Long id = group01.getId();
+
+    RestAssured
+        .given().log().all()
+        .auth().basic(memberUsername, memberPassword)
+        .pathParam("id", id)
+        .contentType(ContentType.JSON)
+        .when().delete("/groups/{id}")
+        .then().log().ifValidationFails()
+        .statusCode(HttpStatus.SC_NO_CONTENT);
+  }
+
+  @Test
+  @DisplayName("소모임장이 아니어서 소모임 삭제에 실패합니다.")
+  void deleteGroupFailBecauseOfNotLeader() {
+    Long id = group01.getId();
+
+    RestAssured
+        .given().log().all()
+        .auth().basic("member02", "1234")
+        .pathParam("id", id)
+        .contentType(ContentType.JSON)
+        .when().delete("/groups/{id}")
+        .then().log().ifValidationFails()
+        .statusCode(HttpStatus.SC_UNAUTHORIZED);
   }
 
   private GroupDto insertGroup(String groupName, Integer maxMemberCount) {

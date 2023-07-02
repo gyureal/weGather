@@ -4,6 +4,7 @@ import com.example.wegather.global.BaseTimeEntity;
 import com.example.wegather.global.vo.Address;
 import com.example.wegather.group.vo.MaxMemberCount;
 import com.example.wegather.member.domain.Member;
+import java.util.Objects;
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
@@ -50,5 +51,9 @@ public class Group extends BaseTimeEntity {
     this.description = description;
     this.address = address;
     this.maxMemberCount = maxMemberCount;
+  }
+
+  public boolean isLeader(String username) {
+    return leader.getUsername().getValue().equals(username);
   }
 }
