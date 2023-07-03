@@ -4,12 +4,12 @@ import static io.restassured.module.mockmvc.RestAssuredMockMvc.given;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.example.wegather.global.vo.MemberType;
-import com.example.wegather.group.domain.Group;
-import com.example.wegather.group.domain.repotitory.GroupRepository;
-import com.example.wegather.group.dto.CreateGroupRequest;
-import com.example.wegather.group.dto.GroupDto;
-import com.example.wegather.group.dto.GroupSearchCondition;
-import com.example.wegather.group.dto.UpdateGroupRequest;
+import com.example.wegather.group.domain.SmallGroup;
+import com.example.wegather.group.domain.repotitory.SmallGroupRepository;
+import com.example.wegather.group.dto.CreateSmallGroupRequest;
+import com.example.wegather.group.dto.SmallGroupDto;
+import com.example.wegather.group.dto.SmallGroupSearchCondition;
+import com.example.wegather.group.dto.UpdateSmallGroupRequest;
 import com.example.wegather.member.dto.JoinMemberRequest;
 import com.example.wegather.member.dto.MemberDto;
 import io.restassured.RestAssured;
@@ -27,13 +27,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.WebApplicationContext;
 
 @DisplayName("소모임 통합 테스트")
-public class GroupIntegrationTest extends IntegrationTest {
+public class SmallGroupIntegrationTest extends IntegrationTest {
 
   @Autowired
   private WebApplicationContext webApplicationContext;
 
   @Autowired
-  private GroupRepository groupRepository;
+  private SmallGroupRepository smallGroupRepository;
 
   @BeforeEach
   void initRestAssuredApplicationContext() {
@@ -45,9 +45,9 @@ public class GroupIntegrationTest extends IntegrationTest {
   private MemberDto member01;
   private MemberDto member02;
   private MemberDto admin01;
-  private GroupDto group01;
-  private GroupDto group02;
-  private GroupDto group03;
+  private SmallGroupDto group01;
+  private SmallGroupDto group02;
+  private SmallGroupDto group03;
 
   @BeforeEach
   void initData() {
@@ -64,7 +64,7 @@ public class GroupIntegrationTest extends IntegrationTest {
   @DisplayName("소모임을 생성합니다.")
   void createInterestSuccessfully() {
 
-    CreateGroupRequest request = CreateGroupRequest.builder()
+    CreateSmallGroupRequest request = CreateSmallGroupRequest.builder()
         .groupName("볼사모")
         .description("볼링을 사랑하는 사람들의 모임입니다.")
         .streetAddress("서울특별시 중구 세종대로 125")
@@ -75,12 +75,12 @@ public class GroupIntegrationTest extends IntegrationTest {
         .auth().basic(memberUsername, memberPassword)
         .body(request)
         .contentType(ContentType.JSON)
-        .when().post("/groups")
+        .when().post("/smallGroups")
         .then().log().all()
         .extract();
 
     assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_CREATED);
-    GroupDto result = response.body().as(GroupDto.class);
+    SmallGroupDto result = response.body().as(SmallGroupDto.class);
     assertThat(result)
         .usingRecursiveComparison()
         .ignoringFields("id", "leaderId", "leaderUsername")
@@ -89,18 +89,18 @@ public class GroupIntegrationTest extends IntegrationTest {
 
   @Test
   @DisplayName("id로 소그룹 조회를 성공합니다.")
-  void getGroupSuccessfully() {
+  void getSmallGroupSuccessfully() {
     Long groupId = group01.getId();
 
     ExtractableResponse<Response> response = RestAssured.given().log().all()
         .auth().basic(memberUsername, memberPassword)
         .pathParam("id", groupId)
         .contentType(ContentType.JSON)
-        .when().get("/groups/{id}")
+        .when().get("/smallGroups/{id}")
         .then().log().all()
         .extract();
 
-    GroupDto result = response.body().as(GroupDto.class);
+    SmallGroupDto result = response.body().as(SmallGroupDto.class);
     assertThat(result)
         .usingRecursiveComparison()
         .isEqualTo(group01);
@@ -108,8 +108,8 @@ public class GroupIntegrationTest extends IntegrationTest {
 
   @Test
   @DisplayName("그룹 이름과 최대회원수 범위로 소그룹 조회를 성공합니다.")
-  void searchGroupByGroupNameAndMaxMemberCountRangeSuccessfully() {
-    GroupSearchCondition groupSearchCondition = GroupSearchCondition.builder()
+  void searchSmallGroupByGroupNameAndMaxMemberCountRangeSuccessfully() {
+    SmallGroupSearchCondition smallGroupSearchCondition = SmallGroupSearchCondition.builder()
         .groupName("사모")
         .maxMemberCountFrom(100)
         .maxMemberCountTo(201)
@@ -119,15 +119,15 @@ public class GroupIntegrationTest extends IntegrationTest {
 
     ExtractableResponse<Response> response = RestAssured.given().log().all()
         .auth().basic(memberUsername, memberPassword)
-        .body(groupSearchCondition)
+        .body(smallGroupSearchCondition)
         .queryParam("size", size, "page", page)
         .contentType(ContentType.JSON)
-        .when().get("/groups")
+        .when().get("/smallGroups")
         .then().log().all()
         .extract();
 
     assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_OK);
-    List<GroupDto> result = response.jsonPath().getList("content", GroupDto.class);
+    List<SmallGroupDto> result = response.jsonPath().getList("content", SmallGroupDto.class);
     assertThat(result).hasSize(2);
     assertThat(result).usingRecursiveFieldByFieldElementComparator().contains(group02, group03);
     // 페이징 관련 리턴값 검증
@@ -139,8 +139,8 @@ public class GroupIntegrationTest extends IntegrationTest {
 
   @Test
   @DisplayName("소모임 정보를 수정합니다.")
-  void updateGroupSuccessfully() {
-    UpdateGroupRequest request = UpdateGroupRequest.builder()
+  void updateSmallGroupSuccessfully() {
+    UpdateSmallGroupRequest request = UpdateSmallGroupRequest.builder()
         .groupName("수정 모임")
         .description("수정하였습니다.")
         .streetAddress("수정광역시 수정로")
@@ -153,12 +153,12 @@ public class GroupIntegrationTest extends IntegrationTest {
         .pathParam("id", group01.getId())
         .body(request)
         .contentType(ContentType.JSON)
-        .when().put("/groups/{id}")
+        .when().put("/smallGroups/{id}")
         .then().log().ifValidationFails()
         .extract();
 
     assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_OK);
-    Group updated = groupRepository.findById(group01.getId())
+    SmallGroup updated = smallGroupRepository.findById(group01.getId())
         .orElseThrow(() -> new AssertionFailure("group ID를 찾을 수 없습니다."));
     assertThat(updated.getName()).isEqualTo(request.getGroupName());
     assertThat(updated.getDescription()).isEqualTo(request.getDescription());
@@ -167,8 +167,8 @@ public class GroupIntegrationTest extends IntegrationTest {
   }
   @Test
   @DisplayName("소모임장이 아니어서 소모임 수정에 실패합니다.")
-  void updateGroupFailBecauseOfNotLeader() {
-    UpdateGroupRequest request = UpdateGroupRequest.builder()
+  void updateSmallGroupFailBecauseOfNotLeader() {
+    UpdateSmallGroupRequest request = UpdateSmallGroupRequest.builder()
         .groupName("수정 모임")
         .description("수정하였습니다.")
         .streetAddress("수정광역시 수정로")
@@ -181,14 +181,14 @@ public class GroupIntegrationTest extends IntegrationTest {
         .pathParam("id", group01.getId())
         .body(request)
         .contentType(ContentType.JSON)
-        .when().put("/groups/{id}")
+        .when().put("/smallGroups/{id}")
         .then().log().ifValidationFails()
         .statusCode(HttpStatus.SC_UNAUTHORIZED);
   }
 
   @Test
   @DisplayName("소모임 삭제에 성공합니다.")
-  void deleteGroupSuccessfully() {
+  void deleteSmallGroupSuccessfully() {
     Long id = group01.getId();
 
     RestAssured
@@ -196,14 +196,14 @@ public class GroupIntegrationTest extends IntegrationTest {
         .auth().basic(memberUsername, memberPassword)
         .pathParam("id", id)
         .contentType(ContentType.JSON)
-        .when().delete("/groups/{id}")
+        .when().delete("/smallGroups/{id}")
         .then().log().ifValidationFails()
         .statusCode(HttpStatus.SC_NO_CONTENT);
   }
 
   @Test
   @DisplayName("소모임장이 아니어서 소모임 삭제에 실패합니다.")
-  void deleteGroupFailBecauseOfNotLeader() {
+  void deleteSmallGroupFailBecauseOfNotLeader() {
     Long id = group01.getId();
 
     RestAssured
@@ -211,13 +211,13 @@ public class GroupIntegrationTest extends IntegrationTest {
         .auth().basic("member02", "1234")
         .pathParam("id", id)
         .contentType(ContentType.JSON)
-        .when().delete("/groups/{id}")
+        .when().delete("/smallGroups/{id}")
         .then().log().ifValidationFails()
         .statusCode(HttpStatus.SC_UNAUTHORIZED);
   }
 
-  private GroupDto insertGroup(String groupName, Integer maxMemberCount) {
-    CreateGroupRequest request = CreateGroupRequest.builder()
+  private SmallGroupDto insertGroup(String groupName, Integer maxMemberCount) {
+    CreateSmallGroupRequest request = CreateSmallGroupRequest.builder()
         .groupName(groupName)
         .description("테스트입니다.")
         .streetAddress("서울특별시 중구 세종대로 125")
@@ -228,9 +228,9 @@ public class GroupIntegrationTest extends IntegrationTest {
         .auth().basic(memberUsername, memberPassword)
         .body(request)
         .contentType(ContentType.JSON)
-        .when().post("/groups")
+        .when().post("/smallGroups")
         .then().log().ifStatusCodeIsEqualTo(HttpStatus.SC_CREATED)
-        .extract().as(GroupDto.class);
+        .extract().as(SmallGroupDto.class);
   }
 
   private MemberDto insertMember(String username, String password, MemberType memberType) {

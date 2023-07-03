@@ -10,7 +10,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 @Builder
-public class CreateGroupRequest {
+public class UpdateSmallGroupRequest {
   @NotEmpty
   private String groupName;
   @NotEmpty

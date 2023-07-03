@@ -1,10 +1,10 @@
 package com.example.wegather.group.domain.repotitory;
 
-import static com.example.wegather.group.domain.QGroup.*;
+import static com.example.wegather.group.domain.QSmallGroup.*;
 import static com.example.wegather.member.domain.QMember.*;
 
-import com.example.wegather.group.domain.Group;
-import com.example.wegather.group.dto.GroupSearchCondition;
+import com.example.wegather.group.domain.SmallGroup;
+import com.example.wegather.group.dto.SmallGroupSearchCondition;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
@@ -16,15 +16,15 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 @RequiredArgsConstructor
-public class GroupRepositoryImpl implements GroupRepositoryQuerydsl {
+public class SmallGroupRepositoryImpl implements SmallGroupRepositoryQuerydsl {
 
   private final JPAQueryFactory queryFactory;
 
   @Override
-  public Page<Group> search(GroupSearchCondition cond, Pageable pageable) {
-    List<Group> content = queryFactory
-        .selectFrom(group)
-        .leftJoin(group.leader, member)
+  public Page<SmallGroup> search(SmallGroupSearchCondition cond, Pageable pageable) {
+    List<SmallGroup> content = queryFactory
+        .selectFrom(smallGroup)
+        .leftJoin(smallGroup.leader, member)
         .where(
             groupNameContains(cond.getGroupName()),
             streetAddressContains(cond.getStreetAddress()),
@@ -39,22 +39,22 @@ public class GroupRepositoryImpl implements GroupRepositoryQuerydsl {
   }
 
   private BooleanExpression groupNameContains(String groupName) {
-    return groupName != null ? group.name.contains(groupName) : null;
+    return groupName != null ? smallGroup.name.contains(groupName) : null;
   }
 
   private BooleanExpression streetAddressContains(String streetAddress) {
-    return streetAddress != null ? group.address.streetAddress.contains(streetAddress) : null;
+    return streetAddress != null ? smallGroup.address.streetAddress.contains(streetAddress) : null;
   }
 
   private BooleanExpression leaderUsernameLike(String leaderUsername) {
-    return leaderUsername != null ? group.leader.username.value.like(leaderUsername) : null;
+    return leaderUsername != null ? smallGroup.leader.username.value.like(leaderUsername) : null;
   }
 
   private BooleanExpression maxMemberCountGoe(Integer maxMemberCountFrom) {
-    return maxMemberCountFrom != null ? group.maxMemberCount.value.goe(maxMemberCountFrom) : null;
+    return maxMemberCountFrom != null ? smallGroup.maxMemberCount.value.goe(maxMemberCountFrom) : null;
   }
 
   private BooleanExpression maxMemberCountLt(Integer maxMemberCountTo) {
-    return maxMemberCountTo != null ? group.maxMemberCount.value.lt(maxMemberCountTo) : null;
+    return maxMemberCountTo != null ? smallGroup.maxMemberCount.value.lt(maxMemberCountTo) : null;
   }
 }

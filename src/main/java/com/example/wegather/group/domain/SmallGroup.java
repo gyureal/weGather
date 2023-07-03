@@ -4,7 +4,6 @@ import com.example.wegather.global.BaseTimeEntity;
 import com.example.wegather.global.vo.Address;
 import com.example.wegather.group.vo.MaxMemberCount;
 import com.example.wegather.member.domain.Member;
-import java.util.Objects;
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
@@ -27,7 +26,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @Entity
 @Table(name = "SMALL_GROUP")
-public class Group extends BaseTimeEntity {
+public class SmallGroup extends BaseTimeEntity {
   @Id @GeneratedValue(strategy = GenerationType.AUTO)
   private Long id;
   private String name;
