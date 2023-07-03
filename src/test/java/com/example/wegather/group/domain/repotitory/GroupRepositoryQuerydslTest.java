@@ -107,6 +107,23 @@ class GroupRepositoryQuerydslTest {
   }
 
   @Test
+  @DisplayName("그룹장의 username 으로 검색")
+  void searchGroupByLeaderUsername() {
+    GroupSearchCondition cond = GroupSearchCondition.builder()
+        .leaderUsername("member01")
+        .build();
+    int size = 10;
+    int page = 0;
+    PageRequest pageRequest = PageRequest.of(page, size);
+
+    // when
+    List<Group> groups = groupRepositoryQuerydsl.search(cond, pageRequest).getContent();
+
+    assertThat(groups).hasSize(3);
+    assertThat(groups).extracting(Group::getName).contains("탁사모", "농구 최고", "서울 토익 스터디");
+  }
+
+  @Test
   @DisplayName("소그룹 인원수 제한 범위로 조회")
   void searchGroupOnlyMaxMemberCountRange() {
     GroupSearchCondition cond = GroupSearchCondition.builder()

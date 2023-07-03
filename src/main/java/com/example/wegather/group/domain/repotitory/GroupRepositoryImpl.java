@@ -1,11 +1,11 @@
 package com.example.wegather.group.domain.repotitory;
 
 import static com.example.wegather.group.domain.QGroup.*;
+import static com.example.wegather.member.domain.QMember.*;
 
 import com.example.wegather.group.domain.Group;
 import com.example.wegather.group.dto.GroupSearchCondition;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +24,7 @@ public class GroupRepositoryImpl implements GroupRepositoryQuerydsl {
   public Page<Group> search(GroupSearchCondition cond, Pageable pageable) {
     List<Group> content = queryFactory
         .selectFrom(group)
+        .leftJoin(group.leader, member)
         .where(
             groupNameContains(cond.getGroupName()),
             streetAddressContains(cond.getStreetAddress()),
