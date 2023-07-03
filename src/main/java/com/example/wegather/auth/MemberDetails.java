@@ -18,7 +18,7 @@ public class MemberDetails implements UserDetails {
   private final MemberType role;
 
   public Boolean isAdmin() {
-    return role.equals(MemberType.ROLE_ADMIN);
+    return role == MemberType.ROLE_ADMIN;
   }
 
   @Override
