@@ -1,7 +1,7 @@
 package com.example.wegather.config.exceptionHandle;
 
+import com.example.wegather.global.customException.AuthenticationException;
 import java.util.UUID;
-import javax.security.sasl.AuthenticationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;

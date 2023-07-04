@@ -17,6 +17,10 @@ public class MemberDetails implements UserDetails {
   private final String password;
   private final MemberType role;
 
+  public Boolean isAdmin() {
+    return role.equals(MemberType.ROLE_ADMIN);
+  }
+
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
     List<GrantedAuthority> authorities = new ArrayList<>();
