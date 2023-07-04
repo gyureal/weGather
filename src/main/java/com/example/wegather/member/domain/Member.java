@@ -4,7 +4,7 @@ import com.example.wegather.global.BaseTimeEntity;
 import com.example.wegather.global.vo.Address;
 import com.example.wegather.global.vo.Image;
 import com.example.wegather.global.vo.PhoneNumber;
-import com.example.wegather.member.domain.vo.Interests;
+import com.example.wegather.interest.domain.Interests;
 import com.example.wegather.global.vo.MemberType;
 import com.example.wegather.member.domain.vo.Password;
 import com.example.wegather.member.domain.vo.Username;
@@ -57,7 +57,7 @@ public class Member extends BaseTimeEntity {
   @AttributeOverride(name = "value", column = @Column(name = "profile_image"))
   private Image profileImage;
   @Embedded
-  @AttributeOverride(name = "value", column = @Column(name = "interests"))
+  @AttributeOverride(name = "strValue", column = @Column(name = "interests"))
   Interests interests;
 
   public void changeProfileImage(String storeImagePath) {
