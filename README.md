@@ -251,4 +251,22 @@ RestAssured 를 쓰고, auth().basic("username", "password") 메서드를 사용
 https://gyurrr.tistory.com/17
 위 링크에 작성하였습니다.
 
+<br/><br/><br/>
+
+## Querydsl 조회 시, join 컬럼을 명시하지 않을 시, cross join 하는 증상
+### 연관 테이블을 조회에 사용할 경우, cross join 발생
+<img width="905" alt="image" src="https://github.com/gyureal/weGather/assets/78974381/0a312963-ec6b-44a4-af04-83556c62a17b">
+<img width="493" alt="image" src="https://github.com/gyureal/weGather/assets/78974381/7abab65b-5eec-4b61-ba3d-79cdc6db9331">
+
+### 원인
+Querydsl-JPA에서 사용하는 JPQL의 내부 구현체 (Hibernate) 의 특성 때문.
+Hibernate의 경우 암묵적인 조인은 Cross Join을 사용하는 경향이 있기 때문
+
+참고> https://jojoldu.tistory.com/533
+
+### 해결
+Join을 명시적으로 함으로써, cross join 문제를 해결 <br/>
+<img width="629" alt="image" src="https://github.com/gyureal/weGather/assets/78974381/82c49b64-c453-4e3e-9e2f-db0f0c615d26">
+<img width="384" alt="image" src="https://github.com/gyureal/weGather/assets/78974381/39b93503-013b-4cbe-97ce-5e2497a61c17">
+
 
