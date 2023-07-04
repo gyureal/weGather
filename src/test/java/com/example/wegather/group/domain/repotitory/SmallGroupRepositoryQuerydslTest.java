@@ -7,8 +7,8 @@ import com.example.wegather.global.vo.Address;
 import com.example.wegather.global.vo.Image;
 import com.example.wegather.global.vo.MemberType;
 import com.example.wegather.global.vo.PhoneNumber;
-import com.example.wegather.group.domain.Group;
-import com.example.wegather.group.dto.GroupSearchCondition;
+import com.example.wegather.group.domain.SmallGroup;
+import com.example.wegather.group.dto.SmallGroupSearchCondition;
 import com.example.wegather.group.vo.MaxMemberCount;
 import com.example.wegather.member.domain.Member;
 import com.example.wegather.member.domain.vo.Password;
@@ -35,7 +35,7 @@ import org.springframework.test.context.jdbc.Sql;
 @Import(TestConfig.class)
 @Sql("/truncate.sql")
 @DataJpaTest
-class GroupRepositoryQuerydslTest {
+class SmallGroupRepositoryQuerydslTest {
   @Autowired
   TestEntityManager em;
 
@@ -44,12 +44,12 @@ class GroupRepositoryQuerydslTest {
 
   private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-  GroupRepositoryQuerydsl groupRepositoryQuerydsl;
+  SmallGroupRepositoryQuerydsl smallGroupRepositoryQuerydsl;
 
 
   @BeforeEach
   void initTest() {
-    groupRepositoryQuerydsl = new GroupRepositoryImpl(new JPAQueryFactory(entityManager));
+    smallGroupRepositoryQuerydsl = new SmallGroupRepositoryImpl(new JPAQueryFactory(entityManager));
 
     Member member01 = insertMember("member01");
     Member member02 = insertMember("member02");
@@ -65,7 +65,7 @@ class GroupRepositoryQuerydslTest {
   @DisplayName("이름만으로 조회")
   void searchGroupOnlyName() {
     // given
-    GroupSearchCondition cond = GroupSearchCondition.builder()
+    SmallGroupSearchCondition cond = SmallGroupSearchCondition.builder()
         .groupName("탁사모")
         .build();
 
@@ -75,10 +75,10 @@ class GroupRepositoryQuerydslTest {
     PageRequest pageRequest = PageRequest.of(page, size);
 
     // when
-    List<Group> groups = groupRepositoryQuerydsl.search(cond, pageRequest).getContent();
+    List<SmallGroup> smallGroups = smallGroupRepositoryQuerydsl.search(cond, pageRequest).getContent();
 
-    assertThat(groups).hasSize(2);
-    assertThat(groups).extracting(Group::getName).contains("탁사모", "탁사모 부산");
+    assertThat(smallGroups).hasSize(2);
+    assertThat(smallGroups).extracting(SmallGroup::getName).contains("탁사모", "탁사모 부산");
   }
 
   @Test
@@ -90,7 +90,7 @@ class GroupRepositoryQuerydslTest {
   @Test
   @DisplayName("도로명 주소로 조회")
   void searchGroupOnlyStreetAddress() {
-    GroupSearchCondition cond = GroupSearchCondition.builder()
+    SmallGroupSearchCondition cond = SmallGroupSearchCondition.builder()
         .streetAddress("서울")
         .build();
 
@@ -100,16 +100,33 @@ class GroupRepositoryQuerydslTest {
     PageRequest pageRequest = PageRequest.of(page, size);
 
     // when
-    List<Group> groups = groupRepositoryQuerydsl.search(cond, pageRequest).getContent();
+    List<SmallGroup> smallGroups = smallGroupRepositoryQuerydsl.search(cond, pageRequest).getContent();
 
-    assertThat(groups).hasSize(3);
-    assertThat(groups).extracting(Group::getName).contains("탁사모", "농구 최고", "서울 토익 스터디");
+    assertThat(smallGroups).hasSize(3);
+    assertThat(smallGroups).extracting(SmallGroup::getName).contains("탁사모", "농구 최고", "서울 토익 스터디");
+  }
+
+  @Test
+  @DisplayName("그룹장의 username 으로 검색")
+  void searchGroupByLeaderUsername() {
+    SmallGroupSearchCondition cond = SmallGroupSearchCondition.builder()
+        .leaderUsername("member01")
+        .build();
+    int size = 10;
+    int page = 0;
+    PageRequest pageRequest = PageRequest.of(page, size);
+
+    // when
+    List<SmallGroup> smallGroups = smallGroupRepositoryQuerydsl.search(cond, pageRequest).getContent();
+
+    assertThat(smallGroups).hasSize(3);
+    assertThat(smallGroups).extracting(SmallGroup::getName).contains("탁사모", "농구 최고", "서울 토익 스터디");
   }
 
   @Test
   @DisplayName("소그룹 인원수 제한 범위로 조회")
   void searchGroupOnlyMaxMemberCountRange() {
-    GroupSearchCondition cond = GroupSearchCondition.builder()
+    SmallGroupSearchCondition cond = SmallGroupSearchCondition.builder()
         .maxMemberCountFrom(10)
         .maxMemberCountTo(30)
         .build();
@@ -120,15 +137,15 @@ class GroupRepositoryQuerydslTest {
     PageRequest pageRequest = PageRequest.of(page, size);
 
     // when
-    List<Group> groups = groupRepositoryQuerydsl.search(cond, pageRequest).getContent();
+    List<SmallGroup> smallGroups = smallGroupRepositoryQuerydsl.search(cond, pageRequest).getContent();
 
-    assertThat(groups).hasSize(2);
+    assertThat(smallGroups).hasSize(2);
   }
 
   @Test
   @DisplayName("그룹이름과 도로명 주소로 조회")
   void searchGroupGroupNameAndStreetAddress() {
-    GroupSearchCondition cond = GroupSearchCondition.builder()
+    SmallGroupSearchCondition cond = SmallGroupSearchCondition.builder()
         .groupName("토익")
         .streetAddress("서울")
         .build();
@@ -139,10 +156,10 @@ class GroupRepositoryQuerydslTest {
     PageRequest pageRequest = PageRequest.of(page, size);
 
     // when
-    List<Group> groups = groupRepositoryQuerydsl.search(cond, pageRequest).getContent();
+    List<SmallGroup> smallGroups = smallGroupRepositoryQuerydsl.search(cond, pageRequest).getContent();
 
-    assertThat(groups).hasSize(1);
-    assertThat(groups).extracting(Group::getName).contains("서울 토익 스터디");
+    assertThat(smallGroups).hasSize(1);
+    assertThat(smallGroups).extracting(SmallGroup::getName).contains("서울 토익 스터디");
   }
 
   Member insertMember(String username) {
@@ -156,8 +173,8 @@ class GroupRepositoryQuerydslTest {
         .build());
   }
 
-  Group insertGroup(String groupName, String description, String streetAddress, Member leader, MaxMemberCount maxMemberCount) {
-    return em.persistAndFlush(Group.builder()
+  SmallGroup insertGroup(String groupName, String description, String streetAddress, Member leader, MaxMemberCount maxMemberCount) {
+    return em.persistAndFlush(SmallGroup.builder()
             .name(groupName)
             .description(description)
             .address(Address.of(streetAddress, 123.12, 134.12))

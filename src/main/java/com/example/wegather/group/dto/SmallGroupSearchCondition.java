@@ -8,7 +8,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 @Builder
-public class GroupSearchCondition {
+public class SmallGroupSearchCondition {
   private String groupName;
   private List<String> interests;
   private String streetAddress;
