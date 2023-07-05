@@ -66,6 +66,7 @@ public class Interests {
    */
   public void add(String interest) {
     interests.add(interest);
+    setToString();
   }
 
   /**
@@ -76,7 +77,9 @@ public class Interests {
    *   false - 해당 관심사가 목록 내에 없는 경우
    */
   public boolean remove(String interest) {
-    return interests.remove(interest);
+    boolean isRemoved = interests.remove(interest);
+    setToString();
+    return isRemoved;
   }
 
   /**

@@ -98,5 +98,9 @@ public class Member extends BaseTimeEntity {
   public boolean removeInterest(String interest) {
     return interests.remove(interest);
   }
+
+  public boolean isInterestsNull() {
+    return interests == null;
+  }
 }
 
