@@ -283,3 +283,22 @@ Join을 명시적으로 함으로써, cross join 문제를 해결 <br/>
 Entity에 존재하지만, 실제 DB에 반영하고 싶지 않은 컬럼이 있는 경우 @Transient 어노테이션을 붙힌다. <br/>
 <img width="386" alt="image" src="https://github.com/gyureal/weGather/assets/78974381/339f4f8d-c408-4832-8fd5-c0f10860cf3d"> <br/>
 
+<br/><br/><br/>
+
+## java.lang.UnsupportedOperationException (Immutable Set)
+### 에러
+테스트를 작성할 때 준비 단계에서 아래와 같이 `Set.of()`를 사용하여 데이터를 만들었더니, Immutable Set(수정할 수 없는 Set타입)이라고 에러가 났다. <br/>
+<img width="621" alt="image" src="https://github.com/gyureal/weGather/assets/78974381/8f400b7e-e87c-4ecd-810f-a613d8a636a6"> <br/>
+<img width="877" alt="image" src="https://github.com/gyureal/weGather/assets/78974381/886bedd2-8c8d-4f88-aae2-4fff285a4bf0">
+
+### 원인
+`java.uilt`의 `Set` 타입에 존재하는 정적 팩토리 메서드인 `Set.of()`와 `Set.copyOf()` 는 ImmutableSet 을 반환하기 때문이었다. <br/>
+<img width="608" alt="image" src="https://github.com/gyureal/weGather/assets/78974381/eaca79ea-384d-491c-ad65-8945b3a3a55d"> <br/>
+<img width="521" alt="image" src="https://github.com/gyureal/weGather/assets/78974381/27381000-328e-4c41-9844-be4327630dba"> <br/>
+
+## 해결
+java.util.Set 을 이용하지 않고 Set을 초기화해 준다. <br/>
+<img width="652" alt="image" src="https://github.com/gyureal/weGather/assets/78974381/d2678002-20d2-47d5-9257-138dc0fc78a5">
+
+
+
