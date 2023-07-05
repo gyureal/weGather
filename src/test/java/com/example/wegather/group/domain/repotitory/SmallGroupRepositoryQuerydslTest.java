@@ -2,7 +2,7 @@ package com.example.wegather.group.domain.repotitory;
 
 import static org.assertj.core.api.Assertions.*;
 
-import com.example.wegather.config.TestConfig;
+import com.example.wegather.RepositoryTest;
 import com.example.wegather.global.vo.Address;
 import com.example.wegather.global.vo.Image;
 import com.example.wegather.global.vo.MemberType;
@@ -20,22 +20,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.jdbc.Sql;
 
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@ActiveProfiles("test")
-@Import(TestConfig.class)
-@Sql("/truncate.sql")
-@DataJpaTest
-class SmallGroupRepositoryQuerydslTest {
+
+class SmallGroupRepositoryQuerydslTest extends RepositoryTest {
   @Autowired
   TestEntityManager em;
 
