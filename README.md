@@ -300,5 +300,21 @@ Entity에 존재하지만, 실제 DB에 반영하고 싶지 않은 컬럼이 있
 java.util.Set 을 이용하지 않고 Set을 초기화해 준다. <br/>
 <img width="652" alt="image" src="https://github.com/gyureal/weGather/assets/78974381/d2678002-20d2-47d5-9257-138dc0fc78a5">
 
+<br/><br/><br/>
+
+## JPA의 Dirty checking은 영속성으로 관리되는 속성을 대상으로만 한다.
+VO를 Entity의 속성으로 사용하는 경우에, VO의 @Transient 로 제외된 속성이 있다면, 이는 더티체킹의 대상이 아니다.
+즉, 제외된 컬럼이 변경이 일어나도, persist 나 update가 일어나지 않으므로, EntityListener의 @PrePersist, @PerUpdate 또한 동작하지 않는다.
+
+### 에러 상황
+<img width="879" alt="image" src="https://github.com/gyureal/weGather/assets/78974381/ca7fb7f4-1da5-4bf1-b947-b453b1b095dd">
+<img width="918" alt="image" src="https://github.com/gyureal/weGather/assets/78974381/145a978c-3e3c-40fc-95ab-855a91619328">
+<img width="350" alt="image" src="https://github.com/gyureal/weGather/assets/78974381/fd881c1a-9183-45ab-aade-bd27e221c4bd">
+<img width="872" alt="image" src="https://github.com/gyureal/weGather/assets/78974381/2f3eeee1-4879-4af2-a55f-c9365f886a17">
+
+
+### 해결
+<img width="985" alt="image" src="https://github.com/gyureal/weGather/assets/78974381/1d94e64d-d72e-4bb7-b2ed-ca385f4faddf">
+@Transient 한 속성은 더티체킹의 대상이 아니다. 당연한 것이지만 다시 한번 상기할 수 있었다.
 
 
