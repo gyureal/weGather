@@ -317,4 +317,9 @@ VO를 Entity의 속성으로 사용하는 경우에, VO의 @Transient 로 제외
 <img width="985" alt="image" src="https://github.com/gyureal/weGather/assets/78974381/1d94e64d-d72e-4bb7-b2ed-ca385f4faddf">
 @Transient 한 속성은 더티체킹의 대상이 아니다. 당연한 것이지만 다시 한번 상기할 수 있었다.
 
+### 개선점
+사실, Set -> 문자열 변환이 DB 반영 시점에 한번만 이루어지게 하기 위해서 EntityListener를 사용한 것인데, 관심사를 추가할 때마다 매번 변경해주면 의미가 없다.
+다른 방법을 찾아보아야 겠다.
+[더티체킹로직 커스터마이징](https://vladmihalcea.com/how-to-customize-hibernate-dirty-checking-mechanism/)
+
 
