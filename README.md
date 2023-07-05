@@ -269,4 +269,17 @@ Join을 명시적으로 함으로써, cross join 문제를 해결 <br/>
 <img width="629" alt="image" src="https://github.com/gyureal/weGather/assets/78974381/82c49b64-c453-4e3e-9e2f-db0f0c615d26">
 <img width="384" alt="image" src="https://github.com/gyureal/weGather/assets/78974381/39b93503-013b-4cbe-97ce-5e2497a61c17">
 
+<br/><br/><br/>
+
+## Entity 미사용 컬럼
+<img width="760" alt="image" src="https://github.com/gyureal/weGather/assets/78974381/0ab5237a-e0a0-48af-b088-824b4a87fca4">
+
+### 에러
+하이버네이트 Mapping 에러 발생 <br/>
+<img width="1225" alt="image" src="https://github.com/gyureal/weGather/assets/78974381/e68e870d-30e7-4539-9d02-83d7223b5517">
+
+
+### 해결
+Entity에 존재하지만, 실제 DB에 반영하고 싶지 않은 컬럼이 있는 경우 @Transient 어노테이션을 붙힌다. <br/>
+<img width="386" alt="image" src="https://github.com/gyureal/weGather/assets/78974381/339f4f8d-c408-4832-8fd5-c0f10860cf3d"> <br/>
 
