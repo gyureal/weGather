@@ -25,6 +25,18 @@ class InterestsTest {
   }
 
   @Test
+  @DisplayName("문자열 데이터로 부터 관심사 데이터를 세팅합니다 - 빈값인 경우")
+  void setInterestsFromStringWhenEmptyString() {
+    String strInput = "";
+
+    Interests interests = Interests.of(strInput);
+    interests.setFromString();
+
+    Set<String> set = interests.getInterests();
+    assertThat(set).isEmpty();
+  }
+
+  @Test
   @DisplayName("리스트로된 관심사 값을 문자열로 변환하여 세팅합니다.")
   void setInterestsToString() {
     Set<String> interestSet = Set.of("배구", "야구", "농구");
@@ -36,6 +48,18 @@ class InterestsTest {
     assertThat(strValue).contains("배구");
     assertThat(strValue).contains("야구");
     assertThat(strValue).contains("농구");
+  }
+
+  @Test
+  @DisplayName("리스트로된 관심사 값을 문자열로 변환하여 세팅합니다. - 빈 값인 경우")
+  void setInterestsToStringWhenEmpty() {
+    Set<String> interestSet = new HashSet<>();
+
+    Interests interests = Interests.of(interestSet);
+    interests.setToString();
+
+    String strValue = interests.getStrValue();
+    assertThat(strValue).isEqualTo("");
   }
 
   @Test

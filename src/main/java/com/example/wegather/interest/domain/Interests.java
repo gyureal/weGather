@@ -12,8 +12,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@EntityListeners(InterestsListener.class)
+@NoArgsConstructor
 @Embeddable
 public class Interests {
   private static final String DELIMITER = "/";    // 구분자
@@ -55,6 +54,9 @@ public class Interests {
   }
 
   private Set<String> convertStringToSet(String strValue) {
+    if (strValue.isEmpty()) {
+      return new HashSet<>();
+    }
     return new HashSet<>(Arrays.asList(strValue.split(DELIMITER)));
   }
 
