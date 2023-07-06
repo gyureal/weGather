@@ -2,6 +2,7 @@ package com.example.wegather.member.dto;
 
 import com.example.wegather.member.domain.Member;
 import com.example.wegather.global.vo.MemberType;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,7 +21,8 @@ public class MemberDto {
   private Double latitude;
   private MemberType memberType;
   private String profileImage;
-  private List<String> interests;
+  @Builder.Default
+  private List<String> interests = new ArrayList<>();
 
   public static MemberDto from(Member member) {
     return MemberDto.builder()
@@ -33,6 +35,7 @@ public class MemberDto {
         .latitude(member.getAddress().getLatitude())
         .memberType(member.getMemberType())
         .profileImage(member.getProfileImage().getValue())
+        .interests(member.getInterestsToList())
         .build();
   }
 }

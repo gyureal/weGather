@@ -8,6 +8,7 @@ import com.example.wegather.interest.domain.Interests;
 import com.example.wegather.global.vo.MemberType;
 import com.example.wegather.member.domain.vo.Password;
 import com.example.wegather.member.domain.vo.Username;
+import java.util.List;
 import java.util.Set;
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
@@ -101,6 +102,18 @@ public class Member extends BaseTimeEntity {
 
   public boolean isInterestsNull() {
     return interests == null;
+  }
+
+  public List<String> getInterestsToList() {
+    return interests.convertToList();
+  }
+
+  /**
+   * input 값으로 관심사 교체
+   * @param interests
+   */
+  public void changeInterests(List<String> interests) {
+    this.interests = Interests.of(interests);
   }
 }
 

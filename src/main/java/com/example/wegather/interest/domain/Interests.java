@@ -1,8 +1,10 @@
 package com.example.wegather.interest.domain;
 
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import javax.persistence.Embeddable;
 import javax.persistence.EntityListeners;
@@ -35,6 +37,10 @@ public class Interests {
 
   public static Interests of(Set<String> set) {
     return new Interests(set);
+  }
+
+  public static Interests of(List<String> list) {
+    return new Interests(new HashSet<>(list));
   }
 
   /**
@@ -89,6 +95,10 @@ public class Interests {
    */
   public boolean contains(String interest) {
     return interests.contains(interest);
+  }
+
+  public List<String> convertToList() {
+    return new ArrayList<>(interests);
   }
 }
 

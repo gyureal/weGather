@@ -1,6 +1,9 @@
 package com.example.wegather.member.dto;
 
 import com.example.wegather.global.vo.MemberType;
+import com.example.wegather.interest.domain.Interests;
+import java.util.ArrayList;
+import java.util.List;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -24,4 +27,6 @@ public class JoinMemberRequest {
   private Double latitude;
   @NotNull
   private MemberType memberType;
+  @Builder.Default
+  private List<String> interests = new ArrayList<>();
 }
