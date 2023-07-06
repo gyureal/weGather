@@ -322,6 +322,7 @@ VO를 Entity의 속성으로 사용하는 경우에, VO의 @Transient 로 제외
 다른 방법을 찾아보아야 겠다.
 [더티체킹로직 커스터마이징](https://vladmihalcea.com/how-to-customize-hibernate-dirty-checking-mechanism/)
 
+<br/><br/><br/>
 
 ## Builder 사용시 입력값이 null 일경우 에러
 <img width="932" alt="image" src="https://github.com/gyureal/weGather/assets/78974381/30e1d61c-8ec9-422b-9024-89106f925ae0">
