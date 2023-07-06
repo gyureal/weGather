@@ -323,3 +323,17 @@ VO를 Entity의 속성으로 사용하는 경우에, VO의 @Transient 로 제외
 [더티체킹로직 커스터마이징](https://vladmihalcea.com/how-to-customize-hibernate-dirty-checking-mechanism/)
 
 
+## Builder 사용시 입력값이 null 일경우 에러
+<img width="932" alt="image" src="https://github.com/gyureal/weGather/assets/78974381/30e1d61c-8ec9-422b-9024-89106f925ae0">
+<br/>
+
+### 원인
+롬복의 @AllArgsConstructor 와  @Builder 를 명시할 시, 모든 컬럼으로 빌더를 만들어 주는데, null 값이 들어올 경우 null 값을 그대로 넣어준다.
+참고 > [Lombok-Builder.Default](https://velog.io/@hsbang_thom/Lombok-Builder.Default)
+
+### 해결
+- @Builder.Default 를 컬럼에 명시하여 기본값을 넣어주거나, 생성자를 따로 만든 후 그 위애 @Builder를 명시한다. <br/>
+<img width="457" alt="image" src="https://github.com/gyureal/weGather/assets/78974381/436b2c5a-cb44-41ab-928e-31a0301f4d15"> <br/>
+- List인 경우 @Builder.Default 명시하고, = new ArrayList(); 로 초기화 해 주어야한다.
+
+
