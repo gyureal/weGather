@@ -1,5 +1,7 @@
 package com.example.wegather.group.dto;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -22,4 +24,6 @@ public class CreateSmallGroupRequest {
   @NotNull
   @Min(0)
   private Integer maxMemberCount;
+  @Builder.Default
+  private List<String> interests = new ArrayList<>();
 }

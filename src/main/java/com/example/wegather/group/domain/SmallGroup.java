@@ -5,6 +5,7 @@ import com.example.wegather.global.vo.Address;
 import com.example.wegather.group.vo.MaxMemberCount;
 import com.example.wegather.interest.domain.Interests;
 import com.example.wegather.member.domain.Member;
+import java.util.List;
 import java.util.Set;
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
@@ -94,5 +95,9 @@ public class SmallGroup extends BaseTimeEntity {
 
   public boolean isInterestsNull() {
     return interests == null;
+  }
+
+  public List<String> getInterestsToList() {
+    return interests.convertToList();
   }
 }

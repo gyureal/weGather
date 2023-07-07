@@ -24,13 +24,14 @@ public class SmallGroupRepositoryImpl implements SmallGroupRepositoryQuerydsl {
   public Page<SmallGroup> search(SmallGroupSearchCondition cond, Pageable pageable) {
     List<SmallGroup> content = queryFactory
         .selectFrom(smallGroup)
-        .leftJoin(smallGroup.leader, member)
+        .join(smallGroup.leader, member)
         .where(
             groupNameContains(cond.getGroupName()),
             streetAddressContains(cond.getStreetAddress()),
             leaderUsernameLike(cond.getLeaderUsername()),
             maxMemberCountGoe(cond.getMaxMemberCountFrom()),
-            maxMemberCountLt(cond.getMaxMemberCountTo()))
+            maxMemberCountLt(cond.getMaxMemberCountTo()),
+            interestContains(cond.getInterest()))
         .offset(pageable.getOffset())
         .limit(pageable.getPageSize())
         .fetch();
@@ -56,5 +57,9 @@ public class SmallGroupRepositoryImpl implements SmallGroupRepositoryQuerydsl {
 
   private BooleanExpression maxMemberCountLt(Integer maxMemberCountTo) {
     return maxMemberCountTo != null ? smallGroup.maxMemberCount.value.lt(maxMemberCountTo) : null;
+  }
+
+  private BooleanExpression interestContains(String interest) {
+    return interest != null ? smallGroup.interests.strValue.contains(interest) : null;
   }
 }
