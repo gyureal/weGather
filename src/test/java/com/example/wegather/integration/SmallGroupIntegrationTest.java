@@ -1,8 +1,6 @@
 package com.example.wegather.integration;
 
-import static io.restassured.module.mockmvc.RestAssuredMockMvc.given;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.in;
 
 import com.example.wegather.global.vo.MemberType;
 import com.example.wegather.group.domain.SmallGroup;
@@ -279,7 +277,7 @@ public class SmallGroupIntegrationTest extends IntegrationTest {
         .memberType(memberType)
         .build();
 
-    return given().body(request).contentType(ContentType.JSON)
+    return RestAssured.given().body(request).contentType(ContentType.JSON)
         .when().post("/members")
         .then().extract().as(MemberDto.class);
   }
