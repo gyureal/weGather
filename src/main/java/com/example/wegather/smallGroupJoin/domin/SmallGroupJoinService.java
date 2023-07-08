@@ -1,6 +1,8 @@
 package com.example.wegather.smallGroupJoin.domin;
 
+import com.example.wegather.auth.MemberDetails;
 import com.example.wegather.global.auth.AuthenticationManager;
+import com.example.wegather.global.customException.AuthenticationException;
 import com.example.wegather.group.domain.SmallGroup;
 import com.example.wegather.group.domain.repotitory.SmallGroupRepository;
 import com.example.wegather.member.domain.Member;
@@ -19,7 +21,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class SmallGroupJoinService {
 
-  private static final String SMALL_GROUP_NOT_FOUND_TO_JOIN = "가입할 소모임을 찾을 수 없습니다.";
+  private static final String SMALL_GROUP_NOT_FOUND = "소모임을 찾을 수 없습니다.";
   private static final String MEMBER_NOT_FOUND_TO_JOIN = "가입할 회원을 찾을 수 없습니다.";
   private static final String ALREADY_JOINED_MEMBER = "이미 가입한 회원입니다.";
   private final MemberRepository memberRepository;
@@ -39,7 +41,7 @@ public class SmallGroupJoinService {
    */
   public void joinGroup(Long smallGroupId) {
     SmallGroup smallGroup = smallGroupRepository.findById(smallGroupId)
-        .orElseThrow(() -> new IllegalArgumentException(SMALL_GROUP_NOT_FOUND_TO_JOIN));
+        .orElseThrow(() -> new IllegalArgumentException(SMALL_GROUP_NOT_FOUND));
 
     String username = authManager.getUsername();
     Member member = memberRepository.findByUsername(Username.of(username))
@@ -63,9 +65,20 @@ public class SmallGroupJoinService {
    * @param groupId 소모임 Id
    * @param status 가입요청 상태
    * @param pageable 페이징 인수
+   * @throws IllegalArgumentException 소모임을 찾을 수 없을 때
+   * @throws AuthenticationException 소모임장이나 관리자가 아닐때
    * @return
    */
   public Page<SmallGroupMember> readJoinMember(Long groupId, Optional<MemberStatus> status, Pageable pageable) {
+    MemberDetails principal = authManager.getPrincipal();
+
+    SmallGroup smallGroup = smallGroupRepository.findById(groupId)
+        .orElseThrow(() -> new IllegalArgumentException(SMALL_GROUP_NOT_FOUND));
+
+    if (!smallGroup.isLeader(principal.getUsername()) && !principal.isAdmin()) {
+      throw new AuthenticationException();
+    }
+
     return smallGroupMemberRepository.search(groupId, status, pageable);
   }
 }

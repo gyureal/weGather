@@ -83,6 +83,7 @@ public class SmallGroupJoinIntegrationTest extends IntegrationTest {
     // given
     insertSmallGroupMember(group01, member02);
     insertSmallGroupMember(group01, member03);
+
     String leaderUsername = member01.getUsername();
 
     Long groupId = group01.getId();
@@ -107,6 +108,33 @@ public class SmallGroupJoinIntegrationTest extends IntegrationTest {
     // 페이징 관련 리턴값 검증
     int pageSize = (int) response.path("pageable.pageSize");
     int pageNumber = (int) response.path("pageable.pageNumber");
+  }
+
+  @Test
+  @DisplayName("조회할 권한이 없어서 소모임 가입자 목록 조회에 실패합니다.")
+  void readSmallGroupJoinMemberFailBecauseOfUnAuthorized() {
+    // given
+    insertSmallGroupMember(group01, member02);
+    insertSmallGroupMember(group01, member03);
+
+    String notLeader = member02.getUsername();
+
+    Long groupId = group01.getId();
+    int size = 5;
+    int page = 0;
+
+    // when
+    ExtractableResponse<Response> response = RestAssured.given().log().all()
+        .auth().basic(notLeader, memberPassword)
+        .pathParam("id", groupId)
+        .queryParam("size", size, "page", page)
+        .contentType(ContentType.JSON)
+        .when().get("/smallGroups/{id}/join")
+        .then().log().all()
+        .extract();
+
+    // then
+    assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_UNAUTHORIZED);
   }
 
   private void insertSmallGroupMember(SmallGroupDto smallGroup, MemberDto member) {
