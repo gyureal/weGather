@@ -34,11 +34,11 @@
             - [x] 이미 가입된 인원인지 체크
             - [x] 요청과 동시에 승인
             - [ ] 인원 수 제한 (Redis 이용**)
-        - [ ] 가입 요청 목록 조회 (GET /smallGroup/{id}/join?status=?)
-            - [ ] 회원정보, 상태, 요청 날짜
-            - [ ] 모임장, 관리만 조회 가능
-            - [ ] 해당 소모임의 요청 목록을 조회
-        - [ ] 탈퇴 (POST /smallGroup/out/{id}?memberId=?)
+        - [x] 가입 요청 목록 조회 (GET /smallGroup/{id}/join?status=?)
+            - [x] 회원정보, 상태, 요청 날짜
+            - [x] 모임장, 관리자만 조회 가능
+            - [x] 해당 소모임의 요청 목록을 조회
+        - [ ] 탈퇴 (POST /smallGroup/{id}/out?memberId=?)
             - [ ] 모임장, 관리자, 본인
             - [ ] 탈퇴 상태로 변경 
     - 소모임 추천
