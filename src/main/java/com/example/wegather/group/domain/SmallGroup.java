@@ -6,6 +6,7 @@ import com.example.wegather.group.domain.vo.MaxMemberCount;
 import com.example.wegather.interest.domain.Interests;
 import com.example.wegather.interest.domain.InterestsConverter;
 import com.example.wegather.member.domain.Member;
+import com.example.wegather.smallGroupJoin.domin.SmallGroupMember;
 import java.util.List;
 import java.util.Set;
 import javax.persistence.AttributeOverride;
@@ -19,6 +20,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -57,6 +59,9 @@ public class SmallGroup extends BaseTimeEntity {
   //@AttributeOverride(name = "value", column = @Column(name = "interests"))
   @Convert(converter = InterestsConverter.class)
   private Interests interests;
+
+  @OneToMany(mappedBy = "smallGroup")
+  private List<SmallGroupMember> members;
 
   public void updateGroupTotalInfo(String name, String description, Address address, MaxMemberCount maxMemberCount) {
     this.name = name;
