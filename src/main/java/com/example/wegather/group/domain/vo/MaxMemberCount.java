@@ -1,4 +1,4 @@
-package com.example.wegather.group.vo;
+package com.example.wegather.group.domain.vo;
 
 import java.util.Objects;
 import javax.persistence.Embeddable;

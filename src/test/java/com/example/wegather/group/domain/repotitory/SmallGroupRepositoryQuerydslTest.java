@@ -9,7 +9,7 @@ import com.example.wegather.global.vo.MemberType;
 import com.example.wegather.global.vo.PhoneNumber;
 import com.example.wegather.group.domain.SmallGroup;
 import com.example.wegather.group.dto.SmallGroupSearchCondition;
-import com.example.wegather.group.vo.MaxMemberCount;
+import com.example.wegather.group.domain.vo.MaxMemberCount;
 import com.example.wegather.member.domain.Member;
 import com.example.wegather.member.domain.vo.Password;
 import com.example.wegather.member.domain.vo.Username;

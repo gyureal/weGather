@@ -2,7 +2,7 @@ package com.example.wegather.group.domain;
 
 import com.example.wegather.global.BaseTimeEntity;
 import com.example.wegather.global.vo.Address;
-import com.example.wegather.group.vo.MaxMemberCount;
+import com.example.wegather.group.domain.vo.MaxMemberCount;
 import com.example.wegather.interest.domain.Interests;
 import com.example.wegather.interest.domain.InterestsConverter;
 import com.example.wegather.member.domain.Member;
