@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
-@RequestMapping("/smallGroups/{id}/join")
+@RequestMapping("/smallGroups/{id}")
 @RestController
 public class SmallGroupJoinController {
 
@@ -32,7 +32,7 @@ public class SmallGroupJoinController {
    *     회원 정보를 찾지 못했을 때
    *     이미 가입한 회원일 때
    */
-  @PostMapping
+  @PostMapping("/join")
   public ResponseEntity<Void> joinSmallGroup(@PathVariable Long id) {
     smallGroupJoinService.joinGroup(id);
     return ResponseEntity.ok().build();
@@ -47,7 +47,7 @@ public class SmallGroupJoinController {
    * @throws AuthenticationException 소모임장이나 관리자가 아닐때
    * @return
    */
-  @GetMapping
+  @GetMapping("/join")
   public ResponseEntity<Page<SmallGroupMemberDto>> readSmallGroupJoinMember(
       @PathVariable Long id,
       @RequestParam Optional<MemberStatus> status,
@@ -55,5 +55,11 @@ public class SmallGroupJoinController {
 
     return ResponseEntity.ok(smallGroupJoinService.readJoinMember(id, status, pageable)
         .map(SmallGroupMemberDto::from));
+  }
+
+  @PostMapping("/leave")
+  public ResponseEntity<Void> leaveSmallGroup(@PathVariable Long id, @RequestParam Long memberId) {
+    smallGroupJoinService.leave(id, memberId);
+    return ResponseEntity.ok().build();
   }
 }

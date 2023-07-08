@@ -8,7 +8,8 @@ import lombok.RequiredArgsConstructor;
 public enum MemberStatus {
   REQUEST("REQUEST", "등록요청")
   , APPROVED("APPROVED", "승인")
-  , CANCELED("CANCELED", "취소");
+  , CANCELED("CANCELED", "취소")
+  , LEAVE("LEAVE", "탈퇴");
 
   private final String code;
   private final String name;

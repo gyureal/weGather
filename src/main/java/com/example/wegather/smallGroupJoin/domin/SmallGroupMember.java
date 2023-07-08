@@ -39,4 +39,8 @@ public class SmallGroupMember extends BaseTimeEntity {
   private MemberStatus status;
 
   private LocalDateTime registeredDatetime;
+
+  public void changeStatus(MemberStatus status) {
+    this.status = status;
+  }
 }

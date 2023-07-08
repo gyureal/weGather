@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
@@ -24,6 +25,9 @@ public class SmallGroupJoinService {
   private static final String SMALL_GROUP_NOT_FOUND = "소모임을 찾을 수 없습니다.";
   private static final String MEMBER_NOT_FOUND_TO_JOIN = "가입할 회원을 찾을 수 없습니다.";
   private static final String ALREADY_JOINED_MEMBER = "이미 가입한 회원입니다.";
+  private static final String MEMBER_NOT_FOUND_TO_LEAVE = "탈퇴 처리할 회원이 존재하지 않습니다.";
+  private static final String LEAVE_CAN_ONLY_LEADER_ADMIN_SELF = "탈퇴는 모임장 이나 관리자 또는 회원 본인만 가능합니다.";
+  private static final String MEMBER_NOT_JOINED_IN_GROUP = "소모임에 해당 회원이 가입되어 있지 않습니다.";
   private final MemberRepository memberRepository;
   private final SmallGroupRepository smallGroupRepository;
   private final SmallGroupMemberRepository smallGroupMemberRepository;
@@ -39,6 +43,7 @@ public class SmallGroupJoinService {
    *     회원 정보를 찾지 못했을 때
    *     이미 가입한 회원일 때
    */
+  @Transactional
   public void joinGroup(Long smallGroupId) {
     SmallGroup smallGroup = smallGroupRepository.findById(smallGroupId)
         .orElseThrow(() -> new IllegalArgumentException(SMALL_GROUP_NOT_FOUND));
@@ -80,5 +85,47 @@ public class SmallGroupJoinService {
     }
 
     return smallGroupMemberRepository.search(groupId, status, pageable);
+  }
+
+  /**
+   * 회원을 탈퇴 처리 합니다.
+   * @param smallGroupId  탈퇴시킬 소그룹 Id
+   * @param memberIdToLeave  탈퇴처리할 회원 Id
+   * @throws IllegalArgumentException
+   *     탈퇴시킬 소그룹을 찾을 수 없을 때
+   *     탈퇴처리할 회원을 찾을 수 없을 때
+   *     탈퇴시킬 소그룹에 회원이 가입되어 있지 않을 때
+   * @throws AuthenticationException
+   *     소모임장, 관리자, 회원 본인이 아닌 경우
+   */
+  @Transactional
+  public void leave(Long smallGroupId, Long memberIdToLeave) {
+    SmallGroup smallGroup = smallGroupRepository.findById(smallGroupId)
+        .orElseThrow(() -> new IllegalArgumentException(SMALL_GROUP_NOT_FOUND));
+    Member memberToDelte = memberRepository.findById(memberIdToLeave)
+        .orElseThrow(() -> new IllegalArgumentException(MEMBER_NOT_FOUND_TO_LEAVE));
+
+    MemberDetails principal = authManager.getPrincipal();
+    String myUsername =principal.getUsername();
+    if (!smallGroup.isLeader(myUsername) && !principal.isAdmin()
+        && !isAmIDeleteMember(myUsername, memberToDelte)) {
+      throw new AuthenticationException(LEAVE_CAN_ONLY_LEADER_ADMIN_SELF);
+    }
+
+    SmallGroupMember smallGroupMember = smallGroupMemberRepository
+        .findBySmallGroup_IdAndMember_Id(smallGroupId, memberIdToLeave)
+        .orElseThrow(() -> new IllegalArgumentException(MEMBER_NOT_JOINED_IN_GROUP));
+    if(smallGroupMember.getStatus() != MemberStatus.APPROVED) {
+      throw new IllegalArgumentException(MEMBER_NOT_JOINED_IN_GROUP);
+    }
+
+    smallGroupMember.changeStatus(MemberStatus.LEAVE);
+  }
+
+  private boolean isAmIDeleteMember(String memberUsername, Member memberToDelete) {
+    if (memberUsername.equals(memberToDelete.getUsername().getValue())) {
+      return true;
+    }
+    return false;
   }
 }

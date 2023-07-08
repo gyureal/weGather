@@ -137,6 +137,78 @@ public class SmallGroupJoinIntegrationTest extends IntegrationTest {
     assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_UNAUTHORIZED);
   }
 
+  @Test
+  @DisplayName("소모임장이 회원을 탈퇴 처리에 성공합니다.")
+  void leaveMemberSuccessfully() {
+    // given
+    insertSmallGroupMember(group01, member02);
+
+    String leaderUsername = member01.getUsername();
+    Long groupId = group01.getId();
+    Long memberId = member02.getId();
+
+    // when
+    ExtractableResponse<Response> response = RestAssured.given().log().all()
+        .auth().basic(leaderUsername, memberPassword)
+        .pathParam("id", groupId)
+        .queryParam("memberId", memberId)
+        .contentType(ContentType.JSON)
+        .when().post("/smallGroups/{id}/leave")
+        .then().log().all()
+        .extract();
+
+    // then
+    assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_OK);
+  }
+
+  @Test
+  @DisplayName("탈퇴 처리할 회원이 소모임에 가입되어 있지 않아 실패합니다.")
+  void leaveMemberFailBecauseMemberIsNotJoined() {
+    // given
+    insertSmallGroupMember(group01, member02);
+
+    String leaderUsername = member01.getUsername();
+    Long groupId = group01.getId();
+    Long memberId = member03.getId();
+
+    // when
+    ExtractableResponse<Response> response = RestAssured.given().log().all()
+        .auth().basic(leaderUsername, memberPassword)
+        .pathParam("id", groupId)
+        .queryParam("memberId", memberId)
+        .contentType(ContentType.JSON)
+        .when().post("/smallGroups/{id}/leave")
+        .then().log().all()
+        .extract();
+
+    // then
+    assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_BAD_REQUEST);
+  }
+
+  @Test
+  @DisplayName("회원 탈퇴 기능을 호출한 회원이 탈퇴시킬 권한이 없어서 실패합니다.")
+  void leaveMemberFailBecauseUnAuthorized() {
+    // given
+    insertSmallGroupMember(group01, member02);
+
+    String unAuthorizedUser = member03.getUsername();
+    Long groupId = group01.getId();
+    Long memberId = member02.getId();
+
+    // when
+    ExtractableResponse<Response> response = RestAssured.given().log().all()
+        .auth().basic(unAuthorizedUser, memberPassword)
+        .pathParam("id", groupId)
+        .queryParam("memberId", memberId)
+        .contentType(ContentType.JSON)
+        .when().post("/smallGroups/{id}/leave")
+        .then().log().all()
+        .extract();
+
+    // then
+    assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_UNAUTHORIZED);
+  }
+
   private void insertSmallGroupMember(SmallGroupDto smallGroup, MemberDto member) {
     RestAssured.given().log().all()
         .auth().basic(member.getUsername(), memberPassword)
