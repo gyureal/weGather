@@ -351,3 +351,35 @@ VO를 Entity의 속성으로 사용하는 경우에, VO의 @Transient 로 제외
 - List인 경우 @Builder.Default 명시하고, = new ArrayList(); 로 초기화 해 주어야한다.
 
 
+<br/><br/><br/>
+
+## N + 1 문제 (querydsl 사용시)
+ManyToOne(다대일) 연관관계 조회 시, LazyLoading 설정을 해두면, N+1 쿼리가 날라간다.
+<img width="424" alt="image" src="https://github.com/gyureal/weGather/assets/78974381/4b8537ad-7593-42a1-a48f-47b73a3bc7ae"> <br/>
+위 쿼리 실행 후, member 를 조회하는 쿼리가 2개 더 실행됨
+
+### 해결
+Lazy loading이란 처음 조회시에는 프록시 객체를 담아두었다가, 해당 객체를 사용시점에 조회하는 것을 말한다.
+객체로 연관관계가 맺어져 있는 JPA의 경우, Eager Loading 을 사용하면, 객체에 객체에 객체.. 연관되어 있는 객체를 다끌어올 수 있기 때문에 가급적 LazyLoading 을 기본값으로 설정해 두는 것이 권장된다. 
+
+하지만 그렇다고, lazyloading 을 설정해 두면 성능문제가 발생할 수 있다.
+바로, N+1 문제이다. ManyToOne 객체의 조회 시, 연관된 리스트의 size 만큼 쿼리가 추가로 실행될 수 있는 것이다.
+N+1 문제를 해결하기 위해서는 JPA 에서는 fetch join을 써야한다. querydsl 또한 마찬가지이다.
+
+fetch join을 사용하면, Eager loading 처럼 처음 조회 시, join 하여 한번에 연관된 객체 까지 가져온다. 또한, 개발자가 성능을 위해 의도적으로 사용하는 것이므로, Eager loading 설정해 두는 것 보다 Side Effect가 적다. <br/>
+
+<img width="641" alt="image" src="https://github.com/gyureal/weGather/assets/78974381/5d14256f-d8c6-42a6-b2cb-2610b8b3eff6"><br/>
+join 절 뒤에 fetchJoin() 을 추가해 주면 된다. <br/>
+
+<br/>
+<img width="419" alt="image" src="https://github.com/gyureal/weGather/assets/78974381/bf06aba2-bad2-49dc-80b6-482ac38a7cc8">
+
+<br/><br/><br/>
+
+
+
+
+
+
+
+
