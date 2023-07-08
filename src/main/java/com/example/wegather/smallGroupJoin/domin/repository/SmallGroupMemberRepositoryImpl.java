@@ -1,5 +1,7 @@
 package com.example.wegather.smallGroupJoin.domin.repository;
 
+import static com.example.wegather.group.domain.QSmallGroup.*;
+import static com.example.wegather.member.domain.QMember.*;
 import static com.example.wegather.smallGroupJoin.domin.QSmallGroupMember.*;
 
 import com.example.wegather.smallGroupJoin.domin.MemberStatus;
@@ -24,8 +26,10 @@ public class SmallGroupMemberRepositoryImpl implements SmallGroupMemberRepositor
   public Page<SmallGroupMember> search(Long id, Optional<MemberStatus> status, Pageable pageable) {
     List<SmallGroupMember> content = jpaQueryFactory
         .selectFrom(smallGroupMember)
+        .join(smallGroupMember.smallGroup, smallGroup).fetchJoin()
+        .leftJoin(smallGroupMember.member, member).fetchJoin()
         .where(
-            smallGroupMember.id.eq(id),
+            smallGroupMember.smallGroup.id.eq(id),
             statusEq(status)
         ).offset(pageable.getOffset())
         .limit(pageable.getPageSize())
