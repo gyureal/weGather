@@ -1,5 +1,6 @@
 package com.example.wegather.smallGroupJoin.web;
 
+import com.example.wegather.global.customException.AuthenticationException;
 import com.example.wegather.smallGroupJoin.domin.MemberStatus;
 import com.example.wegather.smallGroupJoin.domin.SmallGroupJoinService;
 import com.example.wegather.smallGroupJoin.dto.SmallGroupMemberDto;
@@ -22,12 +23,30 @@ public class SmallGroupJoinController {
 
   private final SmallGroupJoinService smallGroupJoinService;
 
+  /**
+   * 소모임에 가입 합니다.
+   * 요청과 동시에 승인 됩니다.
+   * @param id 소그룹 아이디
+   * @throws IllegalArgumentException
+   *     소모임 정보를 찾지 못했을 때
+   *     회원 정보를 찾지 못했을 때
+   *     이미 가입한 회원일 때
+   */
   @PostMapping
   public ResponseEntity<Void> joinSmallGroup(@PathVariable Long id) {
     smallGroupJoinService.joinGroup(id);
     return ResponseEntity.ok().build();
   }
 
+  /**
+   * 가입요청한 회원을 조회합니다.
+   * @param id 소모임 Id
+   * @param status 가입요청 상태
+   * @param pageable 페이징 파라메터
+   * @throws IllegalArgumentException 소모임을 찾을 수 없을 때
+   * @throws AuthenticationException 소모임장이나 관리자가 아닐때
+   * @return
+   */
   @GetMapping
   public ResponseEntity<Page<SmallGroupMemberDto>> readSmallGroupJoinMember(
       @PathVariable Long id,
