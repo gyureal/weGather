@@ -10,11 +10,14 @@ import com.example.wegather.member.domain.MemberRepository;
 import com.example.wegather.global.vo.MemberType;
 import com.example.wegather.member.dto.JoinMemberRequest;
 import com.example.wegather.member.dto.MemberDto;
+import io.restassured.RestAssured;
 import io.restassured.builder.MultiPartSpecBuilder;
 import io.restassured.http.ContentType;
 import io.restassured.module.mockmvc.response.MockMvcResponse;
 import io.restassured.response.ExtractableResponse;
+import io.restassured.response.Response;
 import io.restassured.specification.MultiPartSpecification;
+import java.util.Arrays;
 import java.util.List;
 import javax.print.attribute.standard.Media;
 import org.apache.http.HttpStatus;
@@ -68,6 +71,7 @@ public class MemberIntegrationTest extends IntegrationTest {
         .longitude(123.12312)
         .latitude(23.131)
         .memberType(ROLE_USER)
+        .interests(Arrays.asList("탁구", "배구"))
         .build();
 
     ExtractableResponse<MockMvcResponse> response =
@@ -227,8 +231,7 @@ public class MemberIntegrationTest extends IntegrationTest {
   }
 
   @Test
-  @DisplayName("회원의 주소를 수정합니다.")
-  @WithMockUser("USER")
+  @DisplayName("관리자가 회원의 주소를 수정합니다.")
   void changeAddressSuccessfully() {
     // given
     AddressRequest addressRequest = AddressRequest.builder()
@@ -237,13 +240,35 @@ public class MemberIntegrationTest extends IntegrationTest {
         .latitude(123.123)
         .build();
     // when
-    ExtractableResponse<MockMvcResponse> response =
-        given().log().all()
-        .body(addressRequest)
-        .contentType(ContentType.JSON)
-        .when().post("/members/{id}/address", member01.getId())
-        .then().log().all()
-        .extract();
+    ExtractableResponse<Response> response =
+        RestAssured.given().log().all()
+            .auth().basic("test01", "password")
+            .body(addressRequest)
+            .contentType(ContentType.JSON)
+            .when().post("/members/{id}/address", member01.getId())
+            .then().log().all()
+            .extract();
+
+    // then
+    assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_OK);
+  }
+
+  @Test
+  @DisplayName("회원의 관심사를 업데이트합니다.")
+  void updateMemberInterestsSuccessfully() {
+    // given
+    Long memberId = member01.getId();
+    List<String> interestList = Arrays.asList("new", "interest");
+
+    // when
+    ExtractableResponse<Response> response =
+        RestAssured.given().log().all()
+            .auth().basic("test01", "password")
+            .queryParam("interests", interestList)
+            .contentType(ContentType.JSON)
+            .when().put("/members/{id}/interests", member01.getId())
+            .then().log().all()
+            .extract();
 
     // then
     assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_OK);

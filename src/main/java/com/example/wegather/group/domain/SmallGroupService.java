@@ -1,7 +1,7 @@
 package com.example.wegather.group.domain;
 
 import com.example.wegather.auth.MemberDetails;
-import com.example.wegather.global.auth.AuthenticationManager;
+import com.example.wegather.global.auth.AuthenticationManagerImpl;
 import com.example.wegather.global.customException.AuthenticationException;
 import com.example.wegather.global.vo.Address;
 import com.example.wegather.group.domain.repotitory.SmallGroupRepository;
@@ -9,6 +9,7 @@ import com.example.wegather.group.dto.CreateSmallGroupRequest;
 import com.example.wegather.group.dto.SmallGroupSearchCondition;
 import com.example.wegather.group.dto.UpdateSmallGroupRequest;
 import com.example.wegather.group.vo.MaxMemberCount;
+import com.example.wegather.interest.domain.Interests;
 import com.example.wegather.member.domain.Member;
 import com.example.wegather.member.domain.MemberRepository;
 import com.example.wegather.member.domain.vo.Username;
@@ -27,7 +28,7 @@ public class SmallGroupService {
   private static final String DO_NOT_HAVE_AUTHORITY_TO_DELETE_GROUP = "소모임을 삭제할 권한이 없습니다.";
   private final SmallGroupRepository groupRepository;
   private final MemberRepository memberRepository;
-  private final AuthenticationManager authManager;
+  private final AuthenticationManagerImpl authManager;
 
   @Transactional
   public SmallGroup addGroup(CreateSmallGroupRequest request, String username) {
@@ -42,6 +43,7 @@ public class SmallGroupService {
             .address(Address.of(request.getStreetAddress(), request.getLongitude(),
                 request.getLatitude()))
             .maxMemberCount(MaxMemberCount.of(request.getMaxMemberCount()))
+            .interests(Interests.of(request.getInterests()))
         .build());
   }
 

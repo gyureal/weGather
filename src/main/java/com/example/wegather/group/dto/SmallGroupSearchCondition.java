@@ -10,9 +10,9 @@ import lombok.Getter;
 @Builder
 public class SmallGroupSearchCondition {
   private String groupName;
-  private List<String> interests;
   private String streetAddress;
   private String leaderUsername;
   private Integer maxMemberCountFrom;
   private Integer maxMemberCountTo;
+  private String interest;
 }

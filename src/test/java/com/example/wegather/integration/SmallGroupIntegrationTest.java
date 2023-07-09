@@ -2,6 +2,7 @@ package com.example.wegather.integration;
 
 import static io.restassured.module.mockmvc.RestAssuredMockMvc.given;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.in;
 
 import com.example.wegather.global.vo.MemberType;
 import com.example.wegather.group.domain.SmallGroup;
@@ -17,6 +18,7 @@ import io.restassured.http.ContentType;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.util.Arrays;
 import java.util.List;
 import org.apache.http.HttpStatus;
 import org.hibernate.AssertionFailure;
@@ -55,20 +57,22 @@ public class SmallGroupIntegrationTest extends IntegrationTest {
     member02 = insertMember("member02", "1234", MemberType.ROLE_USER);
     admin01 = insertMember("admin01", "1234", MemberType.ROLE_ADMIN);
 
-    group01 = insertGroup("탁사모", 300);
-    group02 = insertGroup("책사모", 100);
-    group03 = insertGroup("토사모", 200);
+    group01 = insertGroup("탁사모", 300, Arrays.asList("탁구", "친목"));
+    group02 = insertGroup("책사모", 100, Arrays.asList("독서", "친목"));
+    group03 = insertGroup("토사모", 200, Arrays.asList("토익", "스터디"));
   }
 
   @Test
   @DisplayName("소모임을 생성합니다.")
   void createInterestSuccessfully() {
+    List<String> interests = Arrays.asList("볼링");
 
     CreateSmallGroupRequest request = CreateSmallGroupRequest.builder()
         .groupName("볼사모")
         .description("볼링을 사랑하는 사람들의 모임입니다.")
         .streetAddress("서울특별시 중구 세종대로 125")
         .maxMemberCount(300)
+        .interests(interests)
         .build();
 
     ExtractableResponse<Response> response = RestAssured.given().log().all()
@@ -130,6 +134,35 @@ public class SmallGroupIntegrationTest extends IntegrationTest {
     List<SmallGroupDto> result = response.jsonPath().getList("content", SmallGroupDto.class);
     assertThat(result).hasSize(2);
     assertThat(result).usingRecursiveFieldByFieldElementComparator().contains(group02, group03);
+    // 페이징 관련 리턴값 검증
+    int pageSize = (int) response.path("pageable.pageSize");
+    int pageNumber = (int) response.path("pageable.pageNumber");
+    assertThat(pageSize).isEqualTo(size);
+    assertThat(pageNumber).isEqualTo(page);
+  }
+
+  @Test
+  @DisplayName("관심사로 소그룹 조회를 성공합니다.")
+  void searchSmallGroupByInterestsSuccessfully() {
+    SmallGroupSearchCondition smallGroupSearchCondition = SmallGroupSearchCondition.builder()
+        .interest("친목")
+        .build();
+    int size = 5;
+    int page = 0;
+
+    ExtractableResponse<Response> response = RestAssured.given().log().all()
+        .auth().basic(memberUsername, memberPassword)
+        .body(smallGroupSearchCondition)
+        .queryParam("size", size, "page", page)
+        .contentType(ContentType.JSON)
+        .when().get("/smallGroups")
+        .then().log().all()
+        .extract();
+
+    assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_OK);
+    List<SmallGroupDto> result = response.jsonPath().getList("content", SmallGroupDto.class);
+    assertThat(result).hasSize(2);
+    assertThat(result).usingRecursiveFieldByFieldElementComparator().contains(group01, group02);
     // 페이징 관련 리턴값 검증
     int pageSize = (int) response.path("pageable.pageSize");
     int pageNumber = (int) response.path("pageable.pageNumber");
@@ -216,12 +249,13 @@ public class SmallGroupIntegrationTest extends IntegrationTest {
         .statusCode(HttpStatus.SC_UNAUTHORIZED);
   }
 
-  private SmallGroupDto insertGroup(String groupName, Integer maxMemberCount) {
+  private SmallGroupDto insertGroup(String groupName, Integer maxMemberCount, List<String> interests) {
     CreateSmallGroupRequest request = CreateSmallGroupRequest.builder()
         .groupName(groupName)
         .description("테스트입니다.")
         .streetAddress("서울특별시 중구 세종대로 125")
         .maxMemberCount(maxMemberCount)
+        .interests(interests)
         .build();
 
     return RestAssured.given().log().all()
