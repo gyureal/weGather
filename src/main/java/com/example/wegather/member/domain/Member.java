@@ -6,6 +6,7 @@ import com.example.wegather.global.vo.Image;
 import com.example.wegather.global.vo.PhoneNumber;
 import com.example.wegather.interest.domain.Interests;
 import com.example.wegather.global.vo.MemberType;
+import com.example.wegather.interest.domain.InterestsConverter;
 import com.example.wegather.member.domain.vo.Password;
 import com.example.wegather.member.domain.vo.Username;
 import java.util.List;
@@ -13,9 +14,9 @@ import java.util.Set;
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
@@ -32,7 +33,6 @@ import org.hibernate.annotations.DynamicInsert;
 @AllArgsConstructor
 @Builder
 @DynamicInsert
-@EntityListeners(MemberListener.class)
 @Entity
 public class Member extends BaseTimeEntity {
   @Id
@@ -60,8 +60,13 @@ public class Member extends BaseTimeEntity {
   @Embedded
   @AttributeOverride(name = "value", column = @Column(name = "profile_image"))
   private Image profileImage;
-  @Embedded
-  @AttributeOverride(name = "strValue", column = @Column(name = "interests"))
+
+  // 아래 어노테이션은 붙히면 안된다.
+  //@Embedded
+  //@AttributeOverride(name = "value", column = @Column(name = "interests"))
+  //@Convert(converter = InterestsConverter.class, attributeName = "value")
+  //@AttributeOverride(name = "value", column = @Column(name = "interests"))
+  @Convert(converter = InterestsConverter.class)
   private Interests interests;
 
   public void changeProfileImage(String storeImagePath) {
@@ -73,23 +78,7 @@ public class Member extends BaseTimeEntity {
   }
 
   public Set<String> getInterests() {
-    return interests.getInterests();
-  }
-
-  /**
-   * 컬렉션을 문자열 값으로 변환하여 저장합니다.
-   * ex) Set of {배구, 야구, 농구} -> String of "배구/야구/농구"
-   */
-  public void setInterestToString() {
-    interests.setToString();
-  }
-
-  /**
-   * 문자열로 된 관심사 값을 컬렉션으로 변환하여 저장합니다.
-   * ex) String of "배구/야구/농구" -> List of {배구, 야구, 농구}
-   */
-  public void setInterestsFromString() {
-    interests.setFromString();
+    return interests.getValue();
   }
 
   public void addInterest(String interest) {

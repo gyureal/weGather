@@ -48,7 +48,7 @@ public class SmallGroupRepositoryTest extends RepositoryTest {
         .phoneNumber(PhoneNumber.of("010-3333-2222"))
         .address(Address.of("test", 12.2, 1.2))
         .memberType(MemberType.ROLE_USER)
-        .interests(Interests.of(interestsSet))
+        //.interests(Interests.of(interestsSet))
         .build());
 
     Set<String> groupInterests = new HashSet<>(Arrays.asList("축구", "농구"));

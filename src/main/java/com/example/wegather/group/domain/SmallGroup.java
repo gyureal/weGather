@@ -4,12 +4,14 @@ import com.example.wegather.global.BaseTimeEntity;
 import com.example.wegather.global.vo.Address;
 import com.example.wegather.group.vo.MaxMemberCount;
 import com.example.wegather.interest.domain.Interests;
+import com.example.wegather.interest.domain.InterestsConverter;
 import com.example.wegather.member.domain.Member;
 import java.util.List;
 import java.util.Set;
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
@@ -23,12 +25,13 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.DynamicInsert;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-@EntityListeners(SmallGroupListener.class)
+@DynamicInsert
 @Entity
 @Table(name = "SMALL_GROUP")
 public class SmallGroup extends BaseTimeEntity {
@@ -50,8 +53,9 @@ public class SmallGroup extends BaseTimeEntity {
   @AttributeOverride(name = "value", column = @Column(name = "max_member_count"))
   private MaxMemberCount maxMemberCount;
 
-  @Embedded
-  @AttributeOverride(name = "strValue", column = @Column(name = "interests"))
+  //@Embedded
+  //@AttributeOverride(name = "value", column = @Column(name = "interests"))
+  @Convert(converter = InterestsConverter.class)
   private Interests interests;
 
   public void updateGroupTotalInfo(String name, String description, Address address, MaxMemberCount maxMemberCount) {
@@ -66,23 +70,7 @@ public class SmallGroup extends BaseTimeEntity {
   }
 
   public Set<String> getInterests() {
-    return interests.getInterests();
-  }
-
-  /**
-   * 컬렉션을 문자열 값으로 변환하여 저장합니다.
-   * ex) Set of {배구, 야구, 농구} -> String of "배구/야구/농구"
-   */
-  public void setInterestToString() {
-    interests.setToString();
-  }
-
-  /**
-   * 문자열로 된 관심사 값을 컬렉션으로 변환하여 저장합니다.
-   * ex) String of "배구/야구/농구" -> List of {배구, 야구, 농구}
-   */
-  public void setInterestsFromString() {
-    interests.setFromString();
+    return interests.getValue();
   }
 
   public void addInterest(String interest) {

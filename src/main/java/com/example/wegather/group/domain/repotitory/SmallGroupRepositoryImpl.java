@@ -5,6 +5,7 @@ import static com.example.wegather.member.domain.QMember.*;
 
 import com.example.wegather.group.domain.SmallGroup;
 import com.example.wegather.group.dto.SmallGroupSearchCondition;
+import com.example.wegather.interest.domain.Interests;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
@@ -60,6 +61,6 @@ public class SmallGroupRepositoryImpl implements SmallGroupRepositoryQuerydsl {
   }
 
   private BooleanExpression interestContains(String interest) {
-    return interest != null ? smallGroup.interests.strValue.contains(interest) : null;
+    return interest != null ? smallGroup.interests.in(Interests.of(interest)) : null;
   }
 }

@@ -20,7 +20,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.test.annotation.Rollback;
 
 class MemberRepositoryTest extends RepositoryTest {
 
@@ -37,7 +36,7 @@ class MemberRepositoryTest extends RepositoryTest {
   @BeforeEach
   void init() {
     Set<String> interestsSet = new HashSet<>(Arrays.asList("탁구"));
-    member01 = em.persistAndFlush(Member.builder()
+    Member member = Member.builder()
         .username(Username.of("user01"))
         .password(Password.of("password01", passwordEncoder))
         .name("테스트유저")
@@ -45,7 +44,9 @@ class MemberRepositoryTest extends RepositoryTest {
         .address(Address.of("test", 12.2, 1.2))
         .memberType(MemberType.ROLE_USER)
         .interests(Interests.of(interestsSet))
-        .build());
+        .build();
+
+    member01 = em.persistAndFlush(member);
   }
 
   @Test
@@ -64,6 +65,7 @@ class MemberRepositoryTest extends RepositoryTest {
         .memberType(MemberType.ROLE_USER)
         .interests(interests)
         .build());
+
 
     assertThat(member.getInterests()).contains("배구", "야구");
   }
