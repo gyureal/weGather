@@ -8,6 +8,7 @@ import com.example.wegather.group.domain.repotitory.SmallGroupRepository;
 import com.example.wegather.member.domain.Member;
 import com.example.wegather.member.domain.MemberRepository;
 import com.example.wegather.member.domain.vo.Username;
+import com.example.wegather.smallGroupJoin.domin.repository.SmallGroupMemberRedisRepository;
 import com.example.wegather.smallGroupJoin.domin.repository.SmallGroupMemberRepository;
 import java.time.Clock;
 import java.time.LocalDateTime;
@@ -31,6 +32,7 @@ public class SmallGroupJoinService {
   private final MemberRepository memberRepository;
   private final SmallGroupRepository smallGroupRepository;
   private final SmallGroupMemberRepository smallGroupMemberRepository;
+  private final SmallGroupMemberRedisRepository redisRepository;
   private final AuthenticationManager authManager;
   private final Clock clock;
 
@@ -42,6 +44,8 @@ public class SmallGroupJoinService {
    *     소모임 정보를 찾지 못했을 때
    *     회원 정보를 찾지 못했을 때
    *     이미 가입한 회원일 때
+   * @throws IllegalStateException
+   *    가입할 수 있는 인원수를 초과한 경우
    */
   @Transactional
   public void joinGroup(Long smallGroupId) {
@@ -55,6 +59,9 @@ public class SmallGroupJoinService {
     if(smallGroupMemberRepository.existsBySmallGroup_IdAndMember_Id(smallGroupId, member.getId())) {
       throw new IllegalArgumentException(ALREADY_JOINED_MEMBER);
     }
+
+    Integer maxMemberCount = smallGroup.getMaxMemberCount().getValue();
+    redisRepository.addMemberInSmallGroup(smallGroupId, username, maxMemberCount);
 
     smallGroupMemberRepository.save(SmallGroupMember
         .builder()

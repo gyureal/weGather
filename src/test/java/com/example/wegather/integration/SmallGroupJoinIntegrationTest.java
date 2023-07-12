@@ -7,6 +7,7 @@ import com.example.wegather.group.dto.CreateSmallGroupRequest;
 import com.example.wegather.group.dto.SmallGroupDto;
 import com.example.wegather.member.dto.JoinMemberRequest;
 import com.example.wegather.member.dto.MemberDto;
+import com.example.wegather.smallGroupJoin.domin.repository.SmallGroupMemberRedisRepository;
 import com.example.wegather.smallGroupJoin.dto.SmallGroupMemberDto;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -19,23 +20,36 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.web.client.RestTemplate;
 
 @DisplayName("소모임 가입 통합테스트")
 public class SmallGroupJoinIntegrationTest extends IntegrationTest {
+
+  @Autowired
+  private RedisTemplate redisTemplate;
 
   private static final String memberPassword = "1234";
 
   private MemberDto member01;
   private MemberDto member02;
   private MemberDto member03;
+  private MemberDto member04;
+  private MemberDto member05;
   private SmallGroupDto group01;
 
   @BeforeEach
   void init() {
+    // redis 데이터 초기화
+    redisTemplate.getConnectionFactory().getConnection().flushAll();
+
     member01 = insertMember("member01", memberPassword, MemberType.ROLE_USER);
     member02 = insertMember("member02", memberPassword, MemberType.ROLE_USER);
     member03 = insertMember("member03", memberPassword, MemberType.ROLE_USER);
-    group01 = insertGroup("탁사모", member01.getUsername(),10, Arrays.asList("탁구"));
+    member04 = insertMember("member04", memberPassword, MemberType.ROLE_USER);
+    member05 = insertMember("member05", memberPassword, MemberType.ROLE_USER);
+    group01 = insertGroup("탁사모", member01.getUsername(),3, Arrays.asList("탁구"));
   }
 
   @Test
@@ -63,6 +77,30 @@ public class SmallGroupJoinIntegrationTest extends IntegrationTest {
 
     Long smallGroupId = group01.getId();
     String memberUsername = member01.getUsername();
+
+    // when
+    ExtractableResponse<Response> response = RestAssured.given().log().all()
+        .auth().basic(memberUsername, memberPassword)
+        .pathParam("id", smallGroupId)
+        .contentType(ContentType.JSON)
+        .when().post("/smallGroups/{id}/join")
+        .then().log().all()
+        .extract();
+
+    //then
+    assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_BAD_REQUEST);
+  }
+
+  @Test
+  @DisplayName("최대 회원수를 초과하여 가입에 실패합니다.")
+  void joinSmallGroupFailBecauseExceedMaxMemberCount() {
+    // given
+    insertSmallGroupMember(group01, member02);
+    insertSmallGroupMember(group01, member03);
+    insertSmallGroupMember(group01, member04);
+
+    Long smallGroupId = group01.getId();
+    String memberUsername = member05.getUsername();   // 4명째 가입
 
     // when
     ExtractableResponse<Response> response = RestAssured.given().log().all()
