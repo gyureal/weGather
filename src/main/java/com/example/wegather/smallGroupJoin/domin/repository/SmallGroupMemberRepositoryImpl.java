@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -23,7 +24,7 @@ public class SmallGroupMemberRepositoryImpl implements SmallGroupMemberRepositor
   private final JPAQueryFactory jpaQueryFactory;
 
   @Override
-  public Page<SmallGroupMember> search(Long id, Optional<MemberStatus> status, Pageable pageable) {
+  public Page<SmallGroupMember> search(Long id, @Nullable MemberStatus status, Pageable pageable) {
     List<SmallGroupMember> content = jpaQueryFactory
         .selectFrom(smallGroupMember)
         .join(smallGroupMember.smallGroup, smallGroup).fetchJoin()
@@ -37,7 +38,7 @@ public class SmallGroupMemberRepositoryImpl implements SmallGroupMemberRepositor
     return PageableExecutionUtils.getPage(content, pageable, content::size);
   }
 
-  private BooleanExpression statusEq(Optional<MemberStatus> status) {
-    return status.isPresent() ? smallGroupMember.status.eq(status.get()) : null;
+  private BooleanExpression statusEq(@Nullable MemberStatus status) {
+    return status != null ? smallGroupMember.status.eq(status) : null;
   }
 }
