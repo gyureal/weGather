@@ -61,7 +61,7 @@ public class SmallGroupJoinService {
     }
 
     Integer maxMemberCount = smallGroup.getMaxMemberCount().getValue();
-    redisRepository.addMemberInSmallGroup(smallGroupId, username, maxMemberCount);
+    redisRepository.addMemberInSmallGroup(smallGroupId, maxMemberCount);
 
     smallGroupMemberRepository.save(SmallGroupMember
         .builder()
