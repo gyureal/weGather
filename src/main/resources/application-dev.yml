@@ -18,6 +18,10 @@ spring:
       hibernate.format_sql: true
       dialect: org.hibernate.dialect.MySQL8InnoDBDialect
 
+  redis:
+    host: 192.168.92.123
+    port: 6378
+
 logging:
   level:
     org.springframework: INFO

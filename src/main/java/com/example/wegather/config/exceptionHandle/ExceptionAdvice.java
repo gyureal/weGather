@@ -32,6 +32,12 @@ public class ExceptionAdvice {
         return ErrorResponse.of(generateLogId(ex), ex);
     }
 
+    @ExceptionHandler(IllegalStateException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleIllegalArgumentException(IllegalStateException ex) {
+        return ErrorResponse.of(generateLogId(ex), ex);
+    }
+
     @ExceptionHandler(AuthenticationException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ErrorResponse handleAuthenticationException(AuthenticationException ex) {
