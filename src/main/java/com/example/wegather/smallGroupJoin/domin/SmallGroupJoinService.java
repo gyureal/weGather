@@ -16,6 +16,7 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -81,7 +82,7 @@ public class SmallGroupJoinService {
    * @throws AuthenticationException 소모임장이나 관리자가 아닐때
    * @return
    */
-  public Page<SmallGroupMember> readJoinMember(Long groupId, Optional<MemberStatus> status, Pageable pageable) {
+  public Page<SmallGroupMember> readJoinMember(Long groupId, @Nullable MemberStatus status, Pageable pageable) {
     MemberDetails principal = authManager.getPrincipal();
 
     SmallGroup smallGroup = smallGroupRepository.findById(groupId)

@@ -5,10 +5,12 @@ import com.example.wegather.smallGroupJoin.domin.MemberStatus;
 import com.example.wegather.smallGroupJoin.domin.SmallGroupJoinService;
 import com.example.wegather.smallGroupJoin.dto.SmallGroupMemberDto;
 import java.util.Optional;
+import javax.validation.constraints.Null;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -50,7 +52,7 @@ public class SmallGroupJoinController {
   @GetMapping("/join")
   public ResponseEntity<Page<SmallGroupMemberDto>> readSmallGroupJoinMember(
       @PathVariable Long id,
-      @RequestParam Optional<MemberStatus> status,
+      @RequestParam @Nullable MemberStatus status,
       Pageable pageable) {
 
     return ResponseEntity.ok(smallGroupJoinService.readJoinMember(id, status, pageable)
