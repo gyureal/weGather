@@ -29,7 +29,7 @@ public class SmallGroupMemberRedisDao implements SmallGroupMemberRedisRepository
     ValueOperations<String, String> valueOps = redisTemplate.opsForValue();
 
     String countKey = generateCountKey(smallGroupId);
-      // 가입 인원수 증가
+      // 가입 인원수 증가 -> 동시성 이슈 문제로 먼저 증가 시키기
     Long increasedCount = valueOps.increment(countKey);
 
     if (increasedCount > maxCount) {
