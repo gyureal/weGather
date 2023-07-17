@@ -1,9 +1,9 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3316/weGather
-    username: root
-    password: 12
+    url: ENC(SO6PHbdxZTHfkie1prOPk+hxlCQltGpajykJRk/j08t4yhWLoq3OeBmzddj5mpUoZauhxIutg3s2G7/3Ng2mBVMYbJ9JtoI+iMPw2QgD0yeoSPyU08ADe9zI8MPXV1w1)
+    username: ENC(tOagsk1UI+KQuHDLJggeTA==)
+    password: ENC(HRMRLxIOBIHn78t1/o21aiHOI/eTrU6g)
 
   data:
     web:
@@ -33,8 +33,8 @@ file:
 cloud:
   aws:
     credentials:
-      accessKey: 'AKIA2XCLNRPKHBHDFS4W'
-      secretKey: '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'
+      accessKey: ENC(+tHoBR4Fv8JQYea51gu2JcgF3RmC7BkUNU5kHUuRdBM=)
+      secretKey: ENC(A5Y2FTMBrXCD19PciQYSI1+/w6EgsPBVF78sZUhvmNVZL02ambZ+BU+OzklEy0iM5bR/Myrqwks=)
     region:
       static: ap-northeast-2
     stack:

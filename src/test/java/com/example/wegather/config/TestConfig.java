@@ -3,6 +3,10 @@ package com.example.wegather.config;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import org.jasypt.encryption.StringEncryptor;
+import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
+import org.jasypt.encryption.pbe.config.SimpleStringPBEConfig;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 
@@ -16,4 +20,5 @@ public class TestConfig {
   public JPAQueryFactory jpaQueryFactory() {
     return new JPAQueryFactory(entityManager);
   }
+
 }

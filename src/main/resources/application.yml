@@ -1,3 +1,10 @@
 spring:
   profiles:
     active: dev
+
+jasypt:
+  encryptor:
+    bean: jasyptStringEncryptor
+    property:
+      prefix: ENC(
+      suffix: )
