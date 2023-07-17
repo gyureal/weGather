@@ -42,6 +42,20 @@
 
 - 인증, 인가 방식을 JWT or OAuth 방식으로 변경한다.
 
+## 사용 기술 (Tech Stack)
+- java 11
+- spring
+    - springboot 2.7.5
+    - spring-security
+    - spring-data-jpa
+- querydsl 5.0.0
+- test
+    - junit5
+    - assertj
+    - rest-assured:4.4.0 
+- infra
+    - mysql
+    - redis
 
 ---
 
