@@ -43,3 +43,7 @@ cloud:
 application:
   bucket:
     name: wegather
+
+jasypt:
+  encryptor:
+    password: wegather
