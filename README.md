@@ -56,6 +56,7 @@
 - infra
     - mysql
     - redis
+    - s3
 
 ---
 
