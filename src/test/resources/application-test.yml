@@ -32,8 +32,8 @@ file:
 cloud:
   aws:
     credentials:
-      accessKey: ENC(+tHoBR4Fv8JQYea51gu2JcgF3RmC7BkUNU5kHUuRdBM=)
-      secretKey: ENC(A5Y2FTMBrXCD19PciQYSI1+/w6EgsPBVF78sZUhvmNVZL02ambZ+BU+OzklEy0iM5bR/Myrqwks=)
+      accessKey: 'AKIA2XCLNRPKHBHDFS4W'
+      secretKey: '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'
     region:
       static: ap-northeast-2
     stack:
