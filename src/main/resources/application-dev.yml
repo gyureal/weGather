@@ -29,17 +29,3 @@ logging:
 
 file:
   dir: /Users/yonggyujeong/temp/
-
-cloud:
-  aws:
-    credentials:
-      accessKey: 'AKIA2XCLNRPKHBHDFS4W'
-      secretKey: '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'
-    region:
-      static: ap-northeast-2
-    stack:
-      auto: false
-
-application:
-  bucket:
-    name: wegather
