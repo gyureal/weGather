@@ -1,10 +1,8 @@
-# [Side Project] weGather (소모임 서비스)
-
-## 개요
-- 지역과 관심사가 비슷한 사람 끼리 모임을 만들 수 있는 서비스
+# 🗒️ [Side Project] weGather (소모임 서비스)
+> 지역과 관심사가 비슷한 사람 끼리 모임을 만들 수 있는 서비스
 
 
-## 기능 목록
+## 🔎 프로젝트 기능
 - 회원
     - [x] 사용자, 관리자 구분을 둔다
     - [x] 회원가입
@@ -42,7 +40,7 @@
 
 - 인증, 인가 방식을 JWT or OAuth 방식으로 변경한다.
 
-## 사용 기술 (Tech Stack)
+## 🔧 사용 기술 (Tech Stack)
 - java 11
 - spring
     - springboot 2.7.5
@@ -60,12 +58,12 @@
 
 ---
 
-## ERD
+## 📖 ERD
 https://www.erdcloud.com/d/J3yFTcYwZDscXNmSY
 ![weGather](https://github.com/gyureal/weGather/assets/78974381/f59b336a-1c7d-42a5-bb23-1bc9bd2d9b0a)
 
 ---
-## Trouble Shooting
+## 📕 Trouble Shooting
 [go to the trouble shooting section](./TROUBLE_SHOOTING.md)
 
 
