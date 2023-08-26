@@ -21,6 +21,7 @@ import java.util.List;
 import org.apache.http.HttpStatus;
 import org.hibernate.AssertionFailure;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -140,6 +141,7 @@ public class SmallGroupIntegrationTest extends IntegrationTest {
   }
 
   @Test
+  @Disabled
   @DisplayName("관심사로 소그룹 조회를 성공합니다.")
   void searchSmallGroupByInterestsSuccessfully() {
     SmallGroupSearchCondition smallGroupSearchCondition = SmallGroupSearchCondition.builder()

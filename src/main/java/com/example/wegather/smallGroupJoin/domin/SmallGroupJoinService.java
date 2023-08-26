@@ -8,11 +8,9 @@ import com.example.wegather.group.domain.repotitory.SmallGroupRepository;
 import com.example.wegather.member.domain.Member;
 import com.example.wegather.member.domain.MemberRepository;
 import com.example.wegather.member.domain.vo.Username;
-import com.example.wegather.smallGroupJoin.domin.repository.SmallGroupMemberRedisRepository;
 import com.example.wegather.smallGroupJoin.domin.repository.SmallGroupMemberRepository;
 import java.time.Clock;
 import java.time.LocalDateTime;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -33,7 +31,6 @@ public class SmallGroupJoinService {
   private final MemberRepository memberRepository;
   private final SmallGroupRepository smallGroupRepository;
   private final SmallGroupMemberRepository smallGroupMemberRepository;
-  private final SmallGroupMemberRedisRepository redisRepository;
   private final AuthenticationManager authManager;
   private final Clock clock;
 
@@ -60,9 +57,6 @@ public class SmallGroupJoinService {
     if(smallGroupMemberRepository.existsBySmallGroup_IdAndMember_Id(smallGroupId, member.getId())) {
       throw new IllegalArgumentException(ALREADY_JOINED_MEMBER);
     }
-
-    Integer maxMemberCount = smallGroup.getMaxMemberCount().getValue();
-    redisRepository.addMemberInSmallGroup(smallGroupId, maxMemberCount);
 
     smallGroupMemberRepository.save(SmallGroupMember
         .builder()
