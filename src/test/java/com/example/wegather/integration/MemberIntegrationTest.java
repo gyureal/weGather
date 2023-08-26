@@ -5,31 +5,23 @@ import static io.restassured.module.mockmvc.RestAssuredMockMvc.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.example.wegather.global.dto.AddressRequest;
-import com.example.wegather.member.domain.Member;
 import com.example.wegather.member.domain.MemberRepository;
 import com.example.wegather.global.vo.MemberType;
 import com.example.wegather.member.dto.JoinMemberRequest;
 import com.example.wegather.member.dto.MemberDto;
 import io.restassured.RestAssured;
-import io.restassured.builder.MultiPartSpecBuilder;
 import io.restassured.http.ContentType;
 import io.restassured.module.mockmvc.response.MockMvcResponse;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import io.restassured.specification.MultiPartSpecification;
 import java.util.Arrays;
 import java.util.List;
-import javax.print.attribute.standard.Media;
 import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.annotation.Rollback;
-import org.springframework.util.MimeType;
 import org.springframework.web.context.WebApplicationContext;
 
 @DisplayName("회원 통합테스트")

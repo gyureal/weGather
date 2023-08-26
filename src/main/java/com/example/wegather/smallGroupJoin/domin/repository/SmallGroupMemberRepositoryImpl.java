@@ -1,7 +1,7 @@
 package com.example.wegather.smallGroupJoin.domin.repository;
 
 import static com.example.wegather.group.domain.QSmallGroup.*;
-import static com.example.wegather.member.domain.QMember.*;
+import static com.example.wegather.member.domain.entity.QMember.member;
 import static com.example.wegather.smallGroupJoin.domin.QSmallGroupMember.*;
 
 import com.example.wegather.smallGroupJoin.domin.MemberStatus;

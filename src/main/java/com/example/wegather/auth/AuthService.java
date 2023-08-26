@@ -1,6 +1,6 @@
 package com.example.wegather.auth;
 
-import com.example.wegather.member.domain.Member;
+import com.example.wegather.member.domain.entity.Member;
 import com.example.wegather.member.domain.MemberRepository;
 import com.example.wegather.member.domain.vo.Username;
 import lombok.RequiredArgsConstructor;

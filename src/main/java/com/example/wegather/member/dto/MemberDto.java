@@ -1,6 +1,6 @@
 package com.example.wegather.member.dto;
 
-import com.example.wegather.member.domain.Member;
+import com.example.wegather.member.domain.entity.Member;
 import com.example.wegather.global.vo.MemberType;
 import java.util.ArrayList;
 import java.util.List;

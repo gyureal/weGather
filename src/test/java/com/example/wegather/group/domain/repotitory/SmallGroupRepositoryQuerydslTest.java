@@ -10,7 +10,7 @@ import com.example.wegather.global.vo.PhoneNumber;
 import com.example.wegather.group.domain.SmallGroup;
 import com.example.wegather.group.dto.SmallGroupSearchCondition;
 import com.example.wegather.group.domain.vo.MaxMemberCount;
-import com.example.wegather.member.domain.Member;
+import com.example.wegather.member.domain.entity.Member;
 import com.example.wegather.member.domain.vo.Password;
 import com.example.wegather.member.domain.vo.Username;
 import com.querydsl.jpa.impl.JPAQueryFactory;

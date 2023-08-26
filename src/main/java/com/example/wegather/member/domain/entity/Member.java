@@ -1,4 +1,4 @@
-package com.example.wegather.member.domain;
+package com.example.wegather.member.domain.entity;
 
 import com.example.wegather.global.BaseTimeEntity;
 import com.example.wegather.global.vo.Address;

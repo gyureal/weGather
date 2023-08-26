@@ -12,6 +12,7 @@ import com.example.wegather.global.vo.Address;
 import com.example.wegather.global.vo.Image;
 import com.example.wegather.global.vo.PhoneNumber;
 import com.example.wegather.interest.domain.Interests;
+import com.example.wegather.member.domain.entity.Member;
 import com.example.wegather.member.domain.vo.Password;
 import com.example.wegather.member.domain.vo.Username;
 import com.example.wegather.member.dto.JoinMemberRequest;

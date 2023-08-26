@@ -1,5 +1,6 @@
 package com.example.wegather.member.domain;
 
+import com.example.wegather.member.domain.entity.Member;
 import com.example.wegather.member.domain.vo.Username;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;

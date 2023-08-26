@@ -1,13 +1,13 @@
 package com.example.wegather.member.domain;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 import com.example.wegather.RepositoryTest;
 import com.example.wegather.global.vo.Address;
 import com.example.wegather.global.vo.MemberType;
 import com.example.wegather.global.vo.PhoneNumber;
 import com.example.wegather.interest.domain.Interests;
+import com.example.wegather.member.domain.entity.Member;
 import com.example.wegather.member.domain.vo.Password;
 import com.example.wegather.member.domain.vo.Username;
 import java.util.Arrays;

@@ -1,7 +1,7 @@
 package com.example.wegather.group.domain.repotitory;
 
 import static com.example.wegather.group.domain.QSmallGroup.*;
-import static com.example.wegather.member.domain.QMember.*;
+import static com.example.wegather.member.domain.entity.QMember.member;
 
 import com.example.wegather.group.domain.SmallGroup;
 import com.example.wegather.group.dto.SmallGroupSearchCondition;
