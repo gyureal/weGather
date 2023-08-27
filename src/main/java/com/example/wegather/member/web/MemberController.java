@@ -2,6 +2,7 @@ package com.example.wegather.member.web;
 
 import com.example.wegather.global.customException.FileUploadException;
 import com.example.wegather.global.dto.AddressRequest;
+import com.example.wegather.interest.dto.InterestDto;
 import com.example.wegather.member.domain.MemberService;
 import com.example.wegather.member.dto.JoinMemberRequest;
 import com.example.wegather.member.dto.MemberDto;
@@ -16,7 +17,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -32,16 +32,15 @@ public class MemberController {
   /**
    * 회원을 새로 추가합니다. (회원가입)
    * @param request 회원가입시 입력되는 회원정보
-   * @return 생성된 회원
+   * @return 생성된 회원에 접근할 수 있는 endpoint
    * @throws IllegalArgumentException
    *    회원 username 이 중복된 경우
    *    username, password, phoneNumber, address 등이 형식에 맞지 않는 경우
    */
   @PostMapping
   public ResponseEntity<MemberDto> createMember(@Valid @RequestBody JoinMemberRequest request) {
-    MemberDto memberDto = MemberDto.from(memberService.joinMember(request));
-    return ResponseEntity.created(URI.create("/members/" + memberDto.getId()))
-        .body(memberDto);
+    MemberDto memberDto = memberService.joinMember(request);
+    return ResponseEntity.created(URI.create("/members/" + memberDto.getId())).body(memberDto);
   }
 
   /**
@@ -54,7 +53,7 @@ public class MemberController {
    */
   @GetMapping
   public ResponseEntity<Page<MemberDto>> readAllMember(Pageable pageRequest) {
-    return ResponseEntity.ok(memberService.getAllInterests(pageRequest).map(MemberDto::from));
+    return ResponseEntity.ok(memberService.getAllMembers(pageRequest).map(MemberDto::from));
   }
 
   /**
@@ -65,7 +64,7 @@ public class MemberController {
    */
   @GetMapping("/{id}")
   public ResponseEntity<MemberDto> readMemberById(@PathVariable Long id) {
-    return ResponseEntity.ok(MemberDto.from(memberService.getMember(id)));
+    return ResponseEntity.ok(memberService.getMemberDto(id));
   }
 
   /**
@@ -110,15 +109,24 @@ public class MemberController {
   }
 
   /**
-   * 회원의 관심사를 업데이트합니다.
-   * @param id
-   * @param interests 새로 업데이트할 관심사 목록
+   *
+   * @param id 회원 ID
+   * @param interestId 추가할 관심사 ID
    * @return
    */
-  @PutMapping("/{id}/interests")
-  public ResponseEntity<Void> updateMemberInterests(@PathVariable Long id, @RequestParam List<String> interests) {
-    memberService.updateInterests(id, interests);
-    return ResponseEntity.ok().build();
+  @PostMapping("/{id}/interests")
+  public ResponseEntity<List<InterestDto>> addMemberInterests(@PathVariable Long id, @RequestParam Long interestId) {
+    return ResponseEntity.ok(memberService.addInterest(id, interestId));
   }
 
+  /**
+   * 회원의 관심사를 제거합니다.
+   * @param id 회원 ID
+   * @param interestId 삭제할 관심사 ID
+   * @return
+   */
+  @DeleteMapping("/{id}/interests")
+  public ResponseEntity<List<InterestDto>> removeMemberInterests(@PathVariable Long id, @RequestParam Long interestId) {
+    return ResponseEntity.ok(memberService.removeInterest(id, interestId));
+  }
 }

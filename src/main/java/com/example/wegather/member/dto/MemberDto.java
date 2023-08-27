@@ -1,5 +1,7 @@
 package com.example.wegather.member.dto;
 
+import com.example.wegather.global.dto.AddressDto;
+import com.example.wegather.interest.dto.InterestDto;
 import com.example.wegather.member.domain.entity.Member;
 import com.example.wegather.global.vo.MemberType;
 import java.util.ArrayList;
@@ -16,13 +18,11 @@ public class MemberDto {
   private String username;
   private String name;
   private String phoneNumber;
-  private String streetAddress;
-  private Double longitude;
-  private Double latitude;
+  private AddressDto address;
   private MemberType memberType;
   private String profileImage;
   @Builder.Default
-  private List<String> interests = new ArrayList<>();
+  private List<InterestDto> interests = new ArrayList<>();
 
   public static MemberDto from(Member member) {
     return MemberDto.builder()
@@ -30,12 +30,10 @@ public class MemberDto {
         .username(member.getUsername().getValue())
         .name(member.getName())
         .phoneNumber(member.getPhoneNumber().getValue())
-        .streetAddress(member.getAddress().getStreetAddress())
-        .longitude(member.getAddress().getLongitude())
-        .latitude(member.getAddress().getLatitude())
+        .address(AddressDto.from(member.getAddress()))
         .memberType(member.getMemberType())
-        .profileImage(member.getProfileImage().getValue())
-        .interests(member.getInterestsToList())
+        .profileImage(member.getProfileImage())
+        .interests(member.getInterestDtos())
         .build();
   }
 }

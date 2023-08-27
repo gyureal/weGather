@@ -19,7 +19,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.web.context.WebApplicationContext;
 
 @DisplayName("관심사 통합테스트")
-public class InterestIntegrationTest extends IntegrationTest {
+class InterestIntegrationTest extends IntegrationTest {
 
   @Autowired
   private WebApplicationContext webApplicationContext;

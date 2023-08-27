@@ -3,8 +3,12 @@ package com.example.wegather.integration;
 import static com.example.wegather.global.vo.MemberType.*;
 import static io.restassured.module.mockmvc.RestAssuredMockMvc.*;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.in;
 
 import com.example.wegather.global.dto.AddressRequest;
+import com.example.wegather.interest.domain.Interest;
+import com.example.wegather.interest.dto.CreateInterestRequest;
+import com.example.wegather.interest.dto.InterestDto;
 import com.example.wegather.member.domain.MemberRepository;
 import com.example.wegather.global.vo.MemberType;
 import com.example.wegather.member.dto.JoinMemberRequest;
@@ -25,9 +29,8 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.web.context.WebApplicationContext;
 
 @DisplayName("회원 통합테스트")
-public class MemberIntegrationTest extends IntegrationTest {
+class MemberIntegrationTest extends IntegrationTest {
 
-  private static final String DEFAULT_IMAGE_NAME = "default.jpg";
   @Autowired
   MemberRepository memberRepository;
 
@@ -59,11 +62,7 @@ public class MemberIntegrationTest extends IntegrationTest {
         .password("password")
         .name("김지유")
         .phoneNumber("010-1234-1234")
-        .streetAddress("서울시 강남구 백양대로 123-12")
-        .longitude(123.12312)
-        .latitude(23.131)
         .memberType(ROLE_USER)
-        .interests(Arrays.asList("탁구", "배구"))
         .build();
 
     ExtractableResponse<MockMvcResponse> response =
@@ -78,7 +77,7 @@ public class MemberIntegrationTest extends IntegrationTest {
     MemberDto memberDto = response.body().as(MemberDto.class);
     assertThat(memberDto)
         .usingRecursiveComparison()
-        .ignoringFields("id", "profileImage")
+        .ignoringFields("id", "profileImage", "address", "interests")
         .ignoringActualNullFields()
         .isEqualTo(request);
   }
@@ -96,9 +95,6 @@ public class MemberIntegrationTest extends IntegrationTest {
         .password("password")
         .name("김지유")
         .phoneNumber("010-1234-1234")
-        .streetAddress("서울시 강남구 백양대로 123-12")
-        .longitude(123.12312)
-        .latitude(23.131)
         .memberType(ROLE_USER)
         .build();
 
@@ -246,24 +242,70 @@ public class MemberIntegrationTest extends IntegrationTest {
   }
 
   @Test
-  @DisplayName("회원의 관심사를 업데이트합니다.")
-  void updateMemberInterestsSuccessfully() {
+  @DisplayName("회원의 관심사를 추가합니다.")
+  @WithMockUser("USER")
+  void addMemberInterestsSuccessfully() {
     // given
-    Long memberId = member01.getId();
-    List<String> interestList = Arrays.asList("new", "interest");
+    InterestDto interest1 = insertInterest("공부");
+
+    // when
+    ExtractableResponse<Response> response = requestAddMemberInterest(interest1);
+
+    // then
+    assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_OK);
+    List<InterestDto> interestList = response.jsonPath().getList(".", InterestDto.class);
+    assertThat(interestList).extracting("name")
+        .contains(interest1.getName());
+  }
+
+  private ExtractableResponse<Response> requestAddMemberInterest(InterestDto interest1) {
+    ExtractableResponse<Response> response =
+        RestAssured.given().log().all()
+            .auth().basic("test01", "password")
+            .queryParam("interestId", interest1.getId())
+            .contentType(ContentType.JSON)
+            .when().post("/members/{id}/interests", member01.getId())
+            .then().log().all()
+            .extract();
+    return response;
+  }
+
+  @Test
+  @DisplayName("회원의 관심사를 삭제합니다.")
+  @WithMockUser("USER")
+  void removeMemberInterestsSuccessfully() {
+    // given
+    InterestDto interest1 = insertInterest("공부");
+    requestAddMemberInterest(interest1);
 
     // when
     ExtractableResponse<Response> response =
         RestAssured.given().log().all()
             .auth().basic("test01", "password")
-            .queryParam("interests", interestList)
+            .queryParam("interestId", interest1.getId())
             .contentType(ContentType.JSON)
-            .when().put("/members/{id}/interests", member01.getId())
+            .when().delete("/members/{id}/interests", member01.getId())
             .then().log().all()
             .extract();
 
     // then
     assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_OK);
+    List<InterestDto> interestList = response.jsonPath().getList(".", InterestDto.class);
+    assertThat(interestList).extracting("name")
+        .doesNotContain(interest1.getName());
+  }
+
+  private InterestDto insertInterest(String interestName) {
+    CreateInterestRequest request = CreateInterestRequest.builder()
+        .interestName(interestName)
+        .build();
+
+    return given()
+        .body(request)
+        .contentType(ContentType.JSON)
+        .when().post("/interests")
+        .then()
+        .extract().as(InterestDto.class);
   }
 
 
@@ -273,9 +315,6 @@ public class MemberIntegrationTest extends IntegrationTest {
         .password("password")
         .name(name)
         .phoneNumber("010-1234-1234")
-        .streetAddress("서울시 강남구 백양대로 123-12")
-        .longitude(123.12312)
-        .latitude(23.131)
         .memberType(memberType)
         .build();
 

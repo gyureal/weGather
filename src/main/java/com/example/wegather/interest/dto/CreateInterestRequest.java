@@ -13,4 +13,8 @@ import lombok.NoArgsConstructor;
 public class CreateInterestRequest {
   @NotEmpty
   private String interestName;
+
+  public static CreateInterestRequest of(String interestName) {
+    return new CreateInterestRequest(interestName);
+  }
 }

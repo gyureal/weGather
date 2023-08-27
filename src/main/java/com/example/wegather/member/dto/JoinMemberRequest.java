@@ -21,12 +21,6 @@ public class JoinMemberRequest {
   @NotEmpty
   private String name;
   private String phoneNumber;
-  @NotEmpty
-  private String streetAddress;
-  private Double longitude;
-  private Double latitude;
   @NotNull
   private MemberType memberType;
-  @Builder.Default
-  private List<String> interests = new ArrayList<>();
 }

@@ -275,9 +275,6 @@ public class SmallGroupJoinIntegrationTest extends IntegrationTest {
         .password(password)
         .name("testUser")
         .phoneNumber("010-1234-1234")
-        .streetAddress("서울시 강남구 백양대로 123-12")
-        .longitude(123.12312)
-        .latitude(23.131)
         .memberType(memberType)
         .build();
 

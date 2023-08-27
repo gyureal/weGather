@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.*;
 
 import com.example.wegather.RepositoryTest;
 import com.example.wegather.global.vo.Address;
-import com.example.wegather.global.vo.Image;
 import com.example.wegather.global.vo.MemberType;
 import com.example.wegather.global.vo.PhoneNumber;
 import com.example.wegather.group.domain.SmallGroup;
@@ -160,7 +159,6 @@ class SmallGroupRepositoryQuerydslTest extends RepositoryTest {
             .memberType(MemberType.ROLE_USER)
             .address(Address.of("테스트주소", 123.21, 123.12))
             .phoneNumber(PhoneNumber.of("010-2222-3333"))
-            .profileImage(Image.of("default.jpg"))
         .build());
   }
 
