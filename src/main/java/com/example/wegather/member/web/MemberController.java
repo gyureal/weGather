@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -86,7 +87,7 @@ public class MemberController {
    *     이미지 업로드에 실패할 경우
    * @return
    */
-  @PostMapping("/{id}/image")
+  @PutMapping("/{id}/image")
   public ResponseEntity<Void> updateProfileImage(@PathVariable Long id, @RequestParam MultipartFile profileImage) {
     memberService.updateProfileImage(id, profileImage);
     return ResponseEntity.ok().build();
@@ -101,7 +102,7 @@ public class MemberController {
    *     주소의 형식이 맞지 않을 때
    * @return
    */
-  @PostMapping("/{id}/address")
+  @PutMapping("/{id}/address")
   public ResponseEntity<Void> updateMemberAddress(@PathVariable Long id, @RequestBody
       AddressRequest addressRequest) {
     memberService.updateMemberAddress(id, addressRequest);

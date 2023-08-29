@@ -199,7 +199,7 @@ class MemberIntegrationTest extends IntegrationTest {
 //    ExtractableResponse<MockMvcResponse> response =
 //        given().log().all()
 //        .multiPart(controlName, fileName, bytes, mediaType)
-//        .when().post("/members/{id}/image", id)
+//        .when().put("/members/{id}/image", id)
 //        .then().log().all()
 //        .extract();
 //
@@ -233,7 +233,7 @@ class MemberIntegrationTest extends IntegrationTest {
             .auth().basic("test01", "password")
             .body(addressRequest)
             .contentType(ContentType.JSON)
-            .when().post("/members/{id}/address", member01.getId())
+            .when().put("/members/{id}/address", member01.getId())
             .then().log().all()
             .extract();
 
