@@ -28,6 +28,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class SmallGroupController {
   private final SmallGroupService smallGroupService;
 
+  /**
+   * 소모임을 생성합니다.
+   * @param createSmallGroupRequest 소모임 생성 정보 dto
+   * @param principal 로그인한 회원의 정보
+   * @return 생성된 소모임
+   */
   @PostMapping
   public ResponseEntity<SmallGroupDto> createGroup(
       @Valid @RequestBody CreateSmallGroupRequest createSmallGroupRequest,
@@ -38,11 +44,22 @@ public class SmallGroupController {
         .body(smallGroupDto);
   }
 
+  /**
+   * 소모임을 조회합니다.
+   * @param id
+   * @return
+   */
   @GetMapping("/{id}")
   public ResponseEntity<SmallGroupDto> readGroup(@PathVariable Long id) {
     return ResponseEntity.ok(SmallGroupDto.from(smallGroupService.getGroup(id)));
   }
 
+  /**
+   * 소모임을 검색합니다.
+   * @param cond 소모임 검색 조건
+   * @param pageable 페이징 정보
+   * @return 페이징 정보를 포함한 소모임 목록
+   */
   @GetMapping
   public ResponseEntity<Page<SmallGroupDto>> searchGroups(
       @RequestBody SmallGroupSearchCondition cond,
@@ -50,6 +67,12 @@ public class SmallGroupController {
     return ResponseEntity.ok(smallGroupService.searchGroups(cond, pageable).map(SmallGroupDto::from));
   }
 
+  /**
+   * 소모임 정보를 업데이트 합니다.
+   * @param id 소모임 id
+   * @param request 소모임 update dto
+   * @return
+   */
   @PutMapping("/{id}")
   public ResponseEntity<Void> updateGroup(
       @PathVariable Long id,
@@ -59,6 +82,11 @@ public class SmallGroupController {
     return ResponseEntity.ok().build();
   }
 
+  /**
+   * 소모임을 삭제합니다.
+   * @param id 소모임 id
+   * @return
+   */
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> deleteGroup(@PathVariable Long id) {
     smallGroupService.deleteGroup(id);
