@@ -5,7 +5,6 @@ import static com.example.wegather.member.domain.entity.QMember.member;
 
 import com.example.wegather.group.domain.entity.SmallGroup;
 import com.example.wegather.group.dto.SmallGroupSearchCondition;
-import com.example.wegather.interest.domain.Interests;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
@@ -31,8 +30,7 @@ public class SmallGroupRepositoryImpl implements SmallGroupRepositoryQuerydsl {
             streetAddressContains(cond.getStreetAddress()),
             leaderUsernameLike(cond.getLeaderUsername()),
             maxMemberCountGoe(cond.getMaxMemberCountFrom()),
-            maxMemberCountLt(cond.getMaxMemberCountTo()),
-            interestContains(cond.getInterest()))
+            maxMemberCountLt(cond.getMaxMemberCountTo()))
         .offset(pageable.getOffset())
         .limit(pageable.getPageSize())
         .fetch();
@@ -58,9 +56,5 @@ public class SmallGroupRepositoryImpl implements SmallGroupRepositoryQuerydsl {
 
   private BooleanExpression maxMemberCountLt(Integer maxMemberCountTo) {
     return maxMemberCountTo != null ? smallGroup.maxMemberCount.value.lt(maxMemberCountTo) : null;
-  }
-
-  private BooleanExpression interestContains(String interest) {
-    return interest != null ? smallGroup.interests.in(Interests.of(interest)) : null;
   }
 }

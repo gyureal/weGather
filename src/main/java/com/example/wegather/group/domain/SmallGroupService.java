@@ -44,7 +44,6 @@ public class SmallGroupService {
             .address(Address.of(request.getStreetAddress(), request.getLongitude(),
                 request.getLatitude()))
             .maxMemberCount(MaxMemberCount.of(request.getMaxMemberCount()))
-            .interests(Interests.of(request.getInterests()))
         .build());
   }
 

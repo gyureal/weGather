@@ -257,7 +257,6 @@ public class SmallGroupJoinIntegrationTest extends IntegrationTest {
         .description("테스트입니다.")
         .streetAddress("서울특별시 중구 세종대로 125")
         .maxMemberCount(maxMemberCount)
-        .interests(interests)
         .build();
 
     return RestAssured.given().log().all()

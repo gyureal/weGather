@@ -24,6 +24,4 @@ public class CreateSmallGroupRequest {
   @NotNull
   @Min(0)
   private Integer maxMemberCount;
-  @Builder.Default
-  private List<String> interests = new ArrayList<>();
 }

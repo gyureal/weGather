@@ -71,7 +71,6 @@ public class SmallGroupIntegrationTest extends IntegrationTest {
         .description("볼링을 사랑하는 사람들의 모임입니다.")
         .streetAddress("서울특별시 중구 세종대로 125")
         .maxMemberCount(300)
-        .interests(interests)
         .build();
 
     ExtractableResponse<Response> response = RestAssured.given().log().all()
@@ -255,7 +254,6 @@ public class SmallGroupIntegrationTest extends IntegrationTest {
         .description("테스트입니다.")
         .streetAddress("서울특별시 중구 세종대로 125")
         .maxMemberCount(maxMemberCount)
-        .interests(interests)
         .build();
 
     return RestAssured.given().log().all()

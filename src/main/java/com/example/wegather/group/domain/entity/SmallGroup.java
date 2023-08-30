@@ -3,16 +3,12 @@ package com.example.wegather.group.domain.entity;
 import com.example.wegather.global.BaseTimeEntity;
 import com.example.wegather.global.vo.Address;
 import com.example.wegather.group.domain.vo.MaxMemberCount;
-import com.example.wegather.interest.domain.Interests;
-import com.example.wegather.interest.domain.InterestsConverter;
 import com.example.wegather.member.domain.entity.Member;
 import com.example.wegather.smallGroupJoin.domin.SmallGroupMember;
 import java.util.List;
-import java.util.Set;
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
-import javax.persistence.Convert;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -54,11 +50,6 @@ public class SmallGroup extends BaseTimeEntity {
   @AttributeOverride(name = "value", column = @Column(name = "max_member_count"))
   private MaxMemberCount maxMemberCount;
 
-  //@Embedded
-  //@AttributeOverride(name = "value", column = @Column(name = "interests"))
-  @Convert(converter = InterestsConverter.class)
-  private Interests interests;
-
   @OneToMany(mappedBy = "smallGroup")
   private List<SmallGroupMember> members;
 
@@ -71,25 +62,5 @@ public class SmallGroup extends BaseTimeEntity {
 
   public boolean isLeader(String username) {
     return leader.getUsername().getValue().equals(username);
-  }
-
-  public Set<String> getInterests() {
-    return interests.getValue();
-  }
-
-  public void addInterest(String interest) {
-    interests.add(interest);
-  }
-
-  public boolean removeInterest(String interest) {
-    return interests.remove(interest);
-  }
-
-  public boolean isInterestsNull() {
-    return interests == null;
-  }
-
-  public List<String> getInterestsToList() {
-    return interests.convertToList();
   }
 }

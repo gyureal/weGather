@@ -20,8 +20,6 @@ public class SmallGroupDto {
   private Double longitude;
   private Double latitude;
   private Integer maxMemberCount;
-  @Builder.Default
-  private List<String> interests = new ArrayList<>();
 
   public static SmallGroupDto from(SmallGroup smallGroup) {
     return SmallGroupDto.builder()
@@ -34,7 +32,6 @@ public class SmallGroupDto {
         .longitude(smallGroup.getAddress().getLongitude())
         .latitude(smallGroup.getAddress().getLatitude())
         .maxMemberCount(smallGroup.getMaxMemberCount().getValue())
-        .interests(smallGroup.getInterestsToList())
         .build();
   }
 }
