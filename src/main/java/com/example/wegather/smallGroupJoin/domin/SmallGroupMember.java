@@ -1,7 +1,7 @@
 package com.example.wegather.smallGroupJoin.domin;
 
 import com.example.wegather.global.BaseTimeEntity;
-import com.example.wegather.group.domain.SmallGroup;
+import com.example.wegather.group.domain.entity.SmallGroup;
 import com.example.wegather.member.domain.entity.Member;
 import java.time.LocalDateTime;
 import javax.persistence.Entity;

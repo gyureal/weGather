@@ -3,7 +3,7 @@ package com.example.wegather.integration;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.example.wegather.global.vo.MemberType;
-import com.example.wegather.group.domain.SmallGroup;
+import com.example.wegather.group.domain.entity.SmallGroup;
 import com.example.wegather.group.domain.repotitory.SmallGroupRepository;
 import com.example.wegather.group.dto.CreateSmallGroupRequest;
 import com.example.wegather.group.dto.SmallGroupDto;

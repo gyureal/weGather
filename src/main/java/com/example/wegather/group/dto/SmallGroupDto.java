@@ -1,6 +1,6 @@
 package com.example.wegather.group.dto;
 
-import com.example.wegather.group.domain.SmallGroup;
+import com.example.wegather.group.domain.entity.SmallGroup;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;

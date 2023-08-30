@@ -6,7 +6,7 @@ import com.example.wegather.RepositoryTest;
 import com.example.wegather.global.vo.Address;
 import com.example.wegather.global.vo.MemberType;
 import com.example.wegather.global.vo.PhoneNumber;
-import com.example.wegather.group.domain.SmallGroup;
+import com.example.wegather.group.domain.entity.SmallGroup;
 import com.example.wegather.group.dto.SmallGroupSearchCondition;
 import com.example.wegather.group.domain.vo.MaxMemberCount;
 import com.example.wegather.member.domain.entity.Member;

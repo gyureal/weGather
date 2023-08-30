@@ -3,7 +3,7 @@ package com.example.wegather.smallGroupJoin.domin;
 import com.example.wegather.auth.MemberDetails;
 import com.example.wegather.global.auth.AuthenticationManager;
 import com.example.wegather.global.customException.AuthenticationException;
-import com.example.wegather.group.domain.SmallGroup;
+import com.example.wegather.group.domain.entity.SmallGroup;
 import com.example.wegather.group.domain.repotitory.SmallGroupRepository;
 import com.example.wegather.member.domain.entity.Member;
 import com.example.wegather.member.domain.MemberRepository;

@@ -4,6 +4,7 @@ import com.example.wegather.auth.MemberDetails;
 import com.example.wegather.global.auth.AuthenticationManagerImpl;
 import com.example.wegather.global.customException.AuthenticationException;
 import com.example.wegather.global.vo.Address;
+import com.example.wegather.group.domain.entity.SmallGroup;
 import com.example.wegather.group.domain.repotitory.SmallGroupRepository;
 import com.example.wegather.group.dto.CreateSmallGroupRequest;
 import com.example.wegather.group.dto.SmallGroupSearchCondition;
