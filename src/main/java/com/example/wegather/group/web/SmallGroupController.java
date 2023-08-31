@@ -115,7 +115,7 @@ public class SmallGroupController {
    * @param interestId
    * @return
    */
-  @PostMapping("/{id}/interest")
+  @DeleteMapping("/{id}/interest")
   public ResponseEntity<List<InterestDto>> removeInterest(
       @PathVariable Long id, @RequestParam Long interestId) {
     smallGroupService.removeSmallGroupInterest(id, interestId);
