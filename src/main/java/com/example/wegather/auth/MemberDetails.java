@@ -32,6 +32,10 @@ public class MemberDetails implements UserDetails {
     return role == MemberType.ROLE_ADMIN;
   }
 
+  public Long getMemberId() {
+    return id;
+  }
+
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
     List<GrantedAuthority> authorities = new ArrayList<>();

@@ -8,12 +8,14 @@ import com.example.wegather.member.domain.entity.Member;
 import com.example.wegather.smallGroupJoin.domin.SmallGroupMember;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -36,7 +38,7 @@ public class SmallGroup extends BaseTimeEntity {
   private Long id;
   private String name;
   private String description;
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   private Member leader;
   @Embedded
   @AttributeOverrides({
@@ -53,7 +55,7 @@ public class SmallGroup extends BaseTimeEntity {
   @OneToMany(mappedBy = "smallGroup")
   private List<SmallGroupMember> members;
 
-  @OneToMany(mappedBy = "smallGroup", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "smallGroup", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<SmallGroupInterest> smallGroupInterests = new ArrayList<>();
 
   @Builder
@@ -73,8 +75,8 @@ public class SmallGroup extends BaseTimeEntity {
     this.maxMemberCount = maxMemberCount;
   }
 
-  public boolean isLeader(String username) {
-    return leader.getUsername().getValue().equals(username);
+  public boolean isLeader(Long id) {
+    return Objects.equals(leader.getId(), id);
   }
 
   public void addInterest(Interest interest) {

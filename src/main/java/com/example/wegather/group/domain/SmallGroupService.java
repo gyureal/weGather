@@ -64,12 +64,8 @@ public class SmallGroupService {
   public void editSmallGroup(Long id, UpdateSmallGroupRequest request) {
     SmallGroup smallGroup = getSmallGroup(id);
 
-    MemberDetails principal = authManager.getPrincipal();
+    validateUpdatable(smallGroup, DO_NOT_HAVE_AUTHORITY_TO_UPDATE_GROUP);
 
-    if (!smallGroup.isLeader(principal.getUsername()) && !principal.isAdmin()) {
-      throw new AuthenticationException(DO_NOT_HAVE_AUTHORITY_TO_UPDATE_GROUP);
-    }
-    
     smallGroup.updateSmallGroupInfo(
         request.getGroupName(),
         request.getDescription(),
@@ -77,15 +73,19 @@ public class SmallGroupService {
         MaxMemberCount.of(request.getMaxMemberCount()));
   }
 
+  private void validateUpdatable(SmallGroup smallGroup, String doNotHaveAuthorityToUpdateGroup) {
+    MemberDetails principal = authManager.getPrincipal();
+
+    if (!smallGroup.isLeader(principal.getMemberId()) && !principal.isAdmin()) {
+      throw new AuthenticationException(doNotHaveAuthorityToUpdateGroup);
+    }
+  }
+
   @Transactional
   public void deleteSmallGroup(Long id) {
     SmallGroup smallGroup = getSmallGroup(id);
 
-    MemberDetails principal = authManager.getPrincipal();
-
-    if (!smallGroup.isLeader(principal.getUsername()) && !principal.isAdmin()) {
-      throw new AuthenticationException(DO_NOT_HAVE_AUTHORITY_TO_DELETE_GROUP);
-    }
+    validateUpdatable(smallGroup, DO_NOT_HAVE_AUTHORITY_TO_DELETE_GROUP);
 
     smallGroupRepository.deleteById(id);
   }
