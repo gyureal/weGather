@@ -10,10 +10,14 @@ import com.example.wegather.group.dto.CreateSmallGroupRequest;
 import com.example.wegather.group.dto.SmallGroupSearchCondition;
 import com.example.wegather.group.dto.UpdateSmallGroupRequest;
 import com.example.wegather.group.domain.vo.MaxMemberCount;
-import com.example.wegather.interest.domain.Interests;
+import com.example.wegather.interest.domain.Interest;
+import com.example.wegather.interest.domain.InterestRepository;
+import com.example.wegather.interest.dto.InterestDto;
 import com.example.wegather.member.domain.entity.Member;
 import com.example.wegather.member.domain.MemberRepository;
 import com.example.wegather.member.domain.vo.Username;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,13 +27,16 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class SmallGroupService {
+
   private static final String GROUP_NOT_FOUND = "소모임을 찾을 수 없습니다.";
   private static final String USERNAME_IN_AUTH_NOT_FOUND = "인증정보에 있는 회원정보를 찾을 수 없습니다.";
   private static final String DO_NOT_HAVE_AUTHORITY_TO_UPDATE_GROUP = "소모임 정보를 수정할 권한이 없습니다.";
   private static final String DO_NOT_HAVE_AUTHORITY_TO_DELETE_GROUP = "소모임을 삭제할 권한이 없습니다.";
+  public static final String INTEREST_NOT_FOUND = "관심사를 찾을 수 없습니다.";
   private final SmallGroupRepository groupRepository;
   private final MemberRepository memberRepository;
   private final AuthenticationManagerImpl authManager;
+  private final InterestRepository interestRepository;
 
   @Transactional
   public SmallGroup addGroup(CreateSmallGroupRequest request, String username) {
@@ -84,5 +91,26 @@ public class SmallGroupService {
     }
 
     groupRepository.deleteById(id);
+  }
+
+  @Transactional
+  public void addSmallGroupInterest(Long smallGroupId, Long interestId) {
+    SmallGroup smallGroup = getGroup(smallGroupId);
+    Interest interest = findInterestById(interestId);
+
+    smallGroup.addInterest(interest);
+  }
+
+  @Transactional
+  public void removeSmallGroupInterest(Long smallGroupId, Long interestId) {
+    SmallGroup smallGroup = getGroup(smallGroupId);
+    Interest interest = findInterestById(interestId);
+
+    smallGroup.removeInterest(interest);
+  }
+
+  private Interest findInterestById(Long interestId) {
+    return interestRepository.findById(interestId)
+        .orElseThrow(() -> new IllegalArgumentException(INTEREST_NOT_FOUND));
   }
 }

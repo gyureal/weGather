@@ -5,8 +5,10 @@ import com.example.wegather.group.dto.CreateSmallGroupRequest;
 import com.example.wegather.group.dto.SmallGroupDto;
 import com.example.wegather.group.dto.SmallGroupSearchCondition;
 import com.example.wegather.group.dto.UpdateSmallGroupRequest;
+import com.example.wegather.interest.dto.InterestDto;
 import java.net.URI;
 import java.security.Principal;
+import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 
@@ -91,5 +94,31 @@ public class SmallGroupController {
   public ResponseEntity<Void> deleteGroup(@PathVariable Long id) {
     smallGroupService.deleteGroup(id);
     return ResponseEntity.noContent().build();
+  }
+
+  /**
+   * 소모임에 관심사를 추가합니다.
+   * @param id
+   * @param interestId
+   * @return
+   */
+  @PostMapping("/{id}/interest")
+  public ResponseEntity<Void> addInterest(
+      @PathVariable Long id, @RequestParam Long interestId) {
+    smallGroupService.addSmallGroupInterest(id, interestId);
+    return ResponseEntity.ok().build();
+  }
+
+  /**
+   * 소모임에 관심사를 삭제합니다.
+   * @param id
+   * @param interestId
+   * @return
+   */
+  @PostMapping("/{id}/interest")
+  public ResponseEntity<List<InterestDto>> removeInterest(
+      @PathVariable Long id, @RequestParam Long interestId) {
+    smallGroupService.removeSmallGroupInterest(id, interestId);
+    return ResponseEntity.ok().build();
   }
 }
