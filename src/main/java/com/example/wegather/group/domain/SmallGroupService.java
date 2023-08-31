@@ -30,7 +30,7 @@ public class SmallGroupService {
   private static final String DO_NOT_HAVE_AUTHORITY_TO_UPDATE_GROUP = "소모임 정보를 수정할 권한이 없습니다.";
   private static final String DO_NOT_HAVE_AUTHORITY_TO_DELETE_GROUP = "소모임을 삭제할 권한이 없습니다.";
   public static final String INTEREST_NOT_FOUND = "관심사를 찾을 수 없습니다.";
-  private final SmallGroupRepository groupRepository;
+  private final SmallGroupRepository smallGroupRepository;
   private final MemberRepository memberRepository;
   private final AuthenticationManagerImpl authManager;
   private final InterestRepository interestRepository;
@@ -41,7 +41,7 @@ public class SmallGroupService {
     Member member = memberRepository.findByUsername(Username.of(username))
         .orElseThrow(() -> new IllegalStateException(USERNAME_IN_AUTH_NOT_FOUND));
 
-    return groupRepository.save(SmallGroup.builder()
+    return smallGroupRepository.save(SmallGroup.builder()
             .name(request.getGroupName())
             .description(request.getDescription())
             .leader(member)
@@ -52,12 +52,12 @@ public class SmallGroupService {
   }
 
   public SmallGroup getSmallGroup(Long id) {
-    return groupRepository.findById(id)
+    return smallGroupRepository.findById(id)
         .orElseThrow(() -> new IllegalArgumentException(GROUP_NOT_FOUND));
   }
 
   public Page<SmallGroup> searchSmallGroups(SmallGroupSearchCondition cond, Pageable pageable) {
-    return groupRepository.search(cond, pageable);
+    return smallGroupRepository.search(cond, pageable);
   }
 
   @Transactional
@@ -87,7 +87,7 @@ public class SmallGroupService {
       throw new AuthenticationException(DO_NOT_HAVE_AUTHORITY_TO_DELETE_GROUP);
     }
 
-    groupRepository.deleteById(id);
+    smallGroupRepository.deleteById(id);
   }
 
   @Transactional
