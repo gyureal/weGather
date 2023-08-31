@@ -1,5 +1,6 @@
 package com.example.wegather.interest.dto;
 
+import com.example.wegather.group.domain.entity.SmallGroupInterest;
 import com.example.wegather.interest.domain.Interest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,6 +17,13 @@ public class InterestDto {
     return InterestDto.builder()
         .id(interest.getId())
         .name(interest.getName())
+        .build();
+  }
+
+  public static InterestDto from(SmallGroupInterest smallGroupInterest) {
+    return InterestDto.builder()
+        .id(smallGroupInterest.getInterest().getId())
+        .name(smallGroupInterest.getInterest().getName())
         .build();
   }
 }

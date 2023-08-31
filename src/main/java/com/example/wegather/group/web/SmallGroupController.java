@@ -5,8 +5,10 @@ import com.example.wegather.group.dto.CreateSmallGroupRequest;
 import com.example.wegather.group.dto.SmallGroupDto;
 import com.example.wegather.group.dto.SmallGroupSearchCondition;
 import com.example.wegather.group.dto.UpdateSmallGroupRequest;
+import com.example.wegather.interest.dto.InterestDto;
 import java.net.URI;
 import java.security.Principal;
+import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 
@@ -39,7 +42,7 @@ public class SmallGroupController {
       @Valid @RequestBody CreateSmallGroupRequest createSmallGroupRequest,
       Principal principal) {
     SmallGroupDto smallGroupDto = SmallGroupDto.from(
-        smallGroupService.addGroup(createSmallGroupRequest, principal.getName()));
+        smallGroupService.addSmallGroup(createSmallGroupRequest, principal.getName()));
     return ResponseEntity.created(URI.create("/smallGroups/" + smallGroupDto.getId()))
         .body(smallGroupDto);
   }
@@ -51,7 +54,7 @@ public class SmallGroupController {
    */
   @GetMapping("/{id}")
   public ResponseEntity<SmallGroupDto> readGroup(@PathVariable Long id) {
-    return ResponseEntity.ok(SmallGroupDto.from(smallGroupService.getGroup(id)));
+    return ResponseEntity.ok(SmallGroupDto.from(smallGroupService.getSmallGroup(id)));
   }
 
   /**
@@ -64,7 +67,7 @@ public class SmallGroupController {
   public ResponseEntity<Page<SmallGroupDto>> searchGroups(
       @RequestBody SmallGroupSearchCondition cond,
       Pageable pageable) {
-    return ResponseEntity.ok(smallGroupService.searchGroups(cond, pageable).map(SmallGroupDto::from));
+    return ResponseEntity.ok(smallGroupService.searchSmallGroups(cond, pageable).map(SmallGroupDto::from));
   }
 
   /**
@@ -78,7 +81,7 @@ public class SmallGroupController {
       @PathVariable Long id,
       @RequestBody UpdateSmallGroupRequest request) {
 
-    smallGroupService.editGroup(id, request);
+    smallGroupService.editSmallGroup(id, request);
     return ResponseEntity.ok().build();
   }
 
@@ -89,7 +92,33 @@ public class SmallGroupController {
    */
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> deleteGroup(@PathVariable Long id) {
-    smallGroupService.deleteGroup(id);
+    smallGroupService.deleteSmallGroup(id);
     return ResponseEntity.noContent().build();
+  }
+
+  /**
+   * 소모임에 관심사를 추가합니다.
+   * @param id
+   * @param interestId
+   * @return
+   */
+  @PostMapping("/{id}/interest")
+  public ResponseEntity<Void> addInterest(
+      @PathVariable Long id, @RequestParam Long interestId) {
+    smallGroupService.addSmallGroupInterest(id, interestId);
+    return ResponseEntity.ok().build();
+  }
+
+  /**
+   * 소모임에 관심사를 삭제합니다.
+   * @param id
+   * @param interestId
+   * @return
+   */
+  @DeleteMapping("/{id}/interest")
+  public ResponseEntity<List<InterestDto>> removeInterest(
+      @PathVariable Long id, @RequestParam Long interestId) {
+    smallGroupService.removeSmallGroupInterest(id, interestId);
+    return ResponseEntity.ok().build();
   }
 }

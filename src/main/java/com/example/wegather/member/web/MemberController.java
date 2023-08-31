@@ -110,7 +110,7 @@ public class MemberController {
   }
 
   /**
-   *
+   * 회원의 관심사를 추가합니다.
    * @param id 회원 ID
    * @param interestId 추가할 관심사 ID
    * @return

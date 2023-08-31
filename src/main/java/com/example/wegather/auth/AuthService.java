@@ -21,10 +21,6 @@ public class AuthService implements UserDetailsService {
     Member member = memberRepository.findByUsername(Username.of(username))
         .orElseThrow(() -> new UsernameNotFoundException(USERNAME_NOT_FOUND));
 
-    return MemberDetails.builder()
-        .username(member.getUsername().getValue())
-        .password(member.getPassword().getValue())
-        .role(member.getMemberType())
-        .build();
+    return MemberDetails.from(member);
   }
 }

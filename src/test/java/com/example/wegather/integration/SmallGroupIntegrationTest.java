@@ -9,6 +9,8 @@ import com.example.wegather.group.dto.CreateSmallGroupRequest;
 import com.example.wegather.group.dto.SmallGroupDto;
 import com.example.wegather.group.dto.SmallGroupSearchCondition;
 import com.example.wegather.group.dto.UpdateSmallGroupRequest;
+import com.example.wegather.interest.dto.CreateInterestRequest;
+import com.example.wegather.interest.dto.InterestDto;
 import com.example.wegather.member.dto.JoinMemberRequest;
 import com.example.wegather.member.dto.MemberDto;
 import io.restassured.RestAssured;
@@ -248,6 +250,64 @@ public class SmallGroupIntegrationTest extends IntegrationTest {
         .statusCode(HttpStatus.SC_UNAUTHORIZED);
   }
 
+  @Test
+  @DisplayName("소모임에 관심사를 추가합니다.")
+  void addInterestToSmallGroup() {
+    // given
+    InterestDto interestDto = insertInterest("축구");
+
+    // when
+    ExtractableResponse<Response> response = requestAddInterest(group01.getId(),
+        interestDto.getId(), member01);
+
+    // then
+    assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_OK);
+  }
+
+  @Test
+  @DisplayName("소모임장이 아니라서 소모임 관심사 추가에 실패합니다.")
+  void addInterestToSmallGroup_fail_because_not_leader() {
+    // given
+    InterestDto interestDto = insertInterest("축구");
+
+    // when
+    ExtractableResponse<Response> response = requestAddInterest(group01.getId(),
+        interestDto.getId(), member02);
+
+    // then
+    assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_UNAUTHORIZED);
+  }
+
+  @Test
+  @DisplayName("소모임에 관심사를 삭제합니다.")
+  void removeInterestToSmallGroup() {
+    // given
+    InterestDto interestDto = insertInterest("축구");
+    requestAddInterest(group01.getId(), interestDto.getId(), member01);
+
+    // when
+    ExtractableResponse<Response> response = requestRemoveInterest(group01.getId(),
+        interestDto.getId(), member01);
+
+    // then
+    assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_OK);
+  }
+
+  @Test
+  @DisplayName("소모임 장이 아니라서 소모임에 관심사 삭제에 실패합니다.")
+  void removeInterestToSmallGroup_fail_because_not_leader() {
+    // given
+    InterestDto interestDto = insertInterest("축구");
+    requestAddInterest(group01.getId(), interestDto.getId(), member01);
+
+    // when
+    ExtractableResponse<Response> response = requestRemoveInterest(group01.getId(),
+        interestDto.getId(), member02);
+
+    // then
+    assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_UNAUTHORIZED);
+  }
+
   private SmallGroupDto insertGroup(String groupName, Integer maxMemberCount, List<String> interests) {
     CreateSmallGroupRequest request = CreateSmallGroupRequest.builder()
         .groupName(groupName)
@@ -277,5 +337,38 @@ public class SmallGroupIntegrationTest extends IntegrationTest {
     return RestAssured.given().body(request).contentType(ContentType.JSON)
         .when().post("/members")
         .then().extract().as(MemberDto.class);
+  }
+
+  private InterestDto insertInterest(String interestName) {
+    CreateInterestRequest request = CreateInterestRequest.builder()
+        .interestName("축구")
+        .build();
+
+    return RestAssured.given().body(request).contentType(ContentType.JSON)
+        .auth().basic(memberUsername, memberPassword)
+        .when().post("/interests")
+        .then().extract().as(InterestDto.class);
+  }
+
+  private ExtractableResponse<Response> requestAddInterest(Long smallGroupId, Long interestId, MemberDto loginMember) {
+    return RestAssured.given().log().all()
+        .auth().basic(loginMember.getUsername(), memberPassword)
+        .pathParam("id", smallGroupId)
+        .queryParam("interestId", interestId)
+        .contentType(ContentType.JSON)
+        .when().post("/smallGroups/{id}/interest")
+        .then().log().all()
+        .extract();
+  }
+
+  private ExtractableResponse<Response> requestRemoveInterest(Long smallGroupId, Long interestId, MemberDto loginMember) {
+    return RestAssured.given().log().all()
+        .auth().basic(loginMember.getUsername(), memberPassword)
+        .pathParam("id", smallGroupId)
+        .queryParam("interestId", interestId)
+        .contentType(ContentType.JSON)
+        .when().delete("/smallGroups/{id}/interest")
+        .then().log().all()
+        .extract();
   }
 }

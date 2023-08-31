@@ -10,7 +10,8 @@ import com.example.wegather.group.dto.CreateSmallGroupRequest;
 import com.example.wegather.group.dto.SmallGroupSearchCondition;
 import com.example.wegather.group.dto.UpdateSmallGroupRequest;
 import com.example.wegather.group.domain.vo.MaxMemberCount;
-import com.example.wegather.interest.domain.Interests;
+import com.example.wegather.interest.domain.Interest;
+import com.example.wegather.interest.domain.InterestRepository;
 import com.example.wegather.member.domain.entity.Member;
 import com.example.wegather.member.domain.MemberRepository;
 import com.example.wegather.member.domain.vo.Username;
@@ -23,21 +24,24 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class SmallGroupService {
+
   private static final String GROUP_NOT_FOUND = "소모임을 찾을 수 없습니다.";
   private static final String USERNAME_IN_AUTH_NOT_FOUND = "인증정보에 있는 회원정보를 찾을 수 없습니다.";
   private static final String DO_NOT_HAVE_AUTHORITY_TO_UPDATE_GROUP = "소모임 정보를 수정할 권한이 없습니다.";
   private static final String DO_NOT_HAVE_AUTHORITY_TO_DELETE_GROUP = "소모임을 삭제할 권한이 없습니다.";
-  private final SmallGroupRepository groupRepository;
+  public static final String INTEREST_NOT_FOUND = "관심사를 찾을 수 없습니다.";
+  private final SmallGroupRepository smallGroupRepository;
   private final MemberRepository memberRepository;
   private final AuthenticationManagerImpl authManager;
+  private final InterestRepository interestRepository;
 
   @Transactional
-  public SmallGroup addGroup(CreateSmallGroupRequest request, String username) {
+  public SmallGroup addSmallGroup(CreateSmallGroupRequest request, String username) {
 
     Member member = memberRepository.findByUsername(Username.of(username))
         .orElseThrow(() -> new IllegalStateException(USERNAME_IN_AUTH_NOT_FOUND));
 
-    return groupRepository.save(SmallGroup.builder()
+    return smallGroupRepository.save(SmallGroup.builder()
             .name(request.getGroupName())
             .description(request.getDescription())
             .leader(member)
@@ -47,42 +51,70 @@ public class SmallGroupService {
         .build());
   }
 
-  public SmallGroup getGroup(Long id) {
-    return groupRepository.findById(id)
+  public SmallGroup getSmallGroup(Long id) {
+    return smallGroupRepository.findById(id)
         .orElseThrow(() -> new IllegalArgumentException(GROUP_NOT_FOUND));
   }
 
-  public Page<SmallGroup> searchGroups(SmallGroupSearchCondition cond, Pageable pageable) {
-    return groupRepository.search(cond, pageable);
+  public Page<SmallGroup> searchSmallGroups(SmallGroupSearchCondition cond, Pageable pageable) {
+    return smallGroupRepository.search(cond, pageable);
   }
 
   @Transactional
-  public void editGroup(Long id, UpdateSmallGroupRequest request) {
-    SmallGroup smallGroup = getGroup(id);
+  public void editSmallGroup(Long id, UpdateSmallGroupRequest request) {
+    SmallGroup smallGroup = getSmallGroup(id);
 
-    MemberDetails principal = authManager.getPrincipal();
+    validateUpdatable(smallGroup, DO_NOT_HAVE_AUTHORITY_TO_UPDATE_GROUP);
 
-    if (!smallGroup.isLeader(principal.getUsername()) && !principal.isAdmin()) {
-      throw new AuthenticationException(DO_NOT_HAVE_AUTHORITY_TO_UPDATE_GROUP);
-    }
-    
-    smallGroup.updateGroupTotalInfo(
+    smallGroup.updateSmallGroupInfo(
         request.getGroupName(),
         request.getDescription(),
         Address.of(request.getStreetAddress(), request.getLongitude(), request.getLatitude()),
         MaxMemberCount.of(request.getMaxMemberCount()));
   }
 
-  @Transactional
-  public void deleteGroup(Long id) {
-    SmallGroup smallGroup = getGroup(id);
-
+  private void validateUpdatable(SmallGroup smallGroup, String doNotHaveAuthorityToUpdateGroup) {
     MemberDetails principal = authManager.getPrincipal();
 
-    if (!smallGroup.isLeader(principal.getUsername()) && !principal.isAdmin()) {
-      throw new AuthenticationException(DO_NOT_HAVE_AUTHORITY_TO_DELETE_GROUP);
+    if (!smallGroup.isLeader(principal.getMemberId()) && !principal.isAdmin()) {
+      throw new AuthenticationException(doNotHaveAuthorityToUpdateGroup);
     }
+  }
 
-    groupRepository.deleteById(id);
+  @Transactional
+  public void deleteSmallGroup(Long id) {
+    SmallGroup smallGroup = getSmallGroup(id);
+
+    validateUpdatable(smallGroup, DO_NOT_HAVE_AUTHORITY_TO_DELETE_GROUP);
+
+    smallGroupRepository.deleteById(id);
+  }
+
+  @Transactional
+  public void addSmallGroupInterest(Long smallGroupId, Long interestId) {
+    SmallGroup smallGroup = findWithInterestById(smallGroupId);
+    validateUpdatable(smallGroup, DO_NOT_HAVE_AUTHORITY_TO_UPDATE_GROUP);
+    Interest interest = findInterestById(interestId);
+
+    smallGroup.addInterest(interest);
+  }
+
+  @Transactional
+  public void removeSmallGroupInterest(Long smallGroupId, Long interestId) {
+    SmallGroup smallGroup = findWithInterestById(smallGroupId);
+    validateUpdatable(smallGroup, DO_NOT_HAVE_AUTHORITY_TO_UPDATE_GROUP);
+    Interest interest = findInterestById(interestId);
+
+    smallGroup.removeInterest(interest);
+  }
+
+  private SmallGroup findWithInterestById(Long id) {
+    return smallGroupRepository.findWithInterestById(id)
+        .orElseThrow(() -> new IllegalArgumentException(GROUP_NOT_FOUND));
+  }
+
+  private Interest findInterestById(Long interestId) {
+    return interestRepository.findById(interestId)
+        .orElseThrow(() -> new IllegalArgumentException(INTEREST_NOT_FOUND));
   }
 }

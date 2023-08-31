@@ -82,7 +82,7 @@ public class SmallGroupJoinService {
     SmallGroup smallGroup = smallGroupRepository.findById(groupId)
         .orElseThrow(() -> new IllegalArgumentException(SMALL_GROUP_NOT_FOUND));
 
-    if (!smallGroup.isLeader(principal.getUsername()) && !principal.isAdmin()) {
+    if (!smallGroup.isLeader(principal.getMemberId()) && !principal.isAdmin()) {
       throw new AuthenticationException();
     }
 
@@ -109,7 +109,7 @@ public class SmallGroupJoinService {
 
     MemberDetails principal = authManager.getPrincipal();
     String myUsername =principal.getUsername();
-    if (!smallGroup.isLeader(myUsername) && !principal.isAdmin()
+    if (!smallGroup.isLeader(principal.getMemberId()) && !principal.isAdmin()
         && !isAmIDeleteMember(myUsername, memberToDelte)) {
       throw new AuthenticationException(LEAVE_CAN_ONLY_LEADER_ADMIN_SELF);
     }
