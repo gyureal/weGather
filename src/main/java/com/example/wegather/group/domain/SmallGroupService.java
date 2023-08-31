@@ -92,7 +92,7 @@ public class SmallGroupService {
 
   @Transactional
   public void addSmallGroupInterest(Long smallGroupId, Long interestId) {
-    SmallGroup smallGroup = getSmallGroup(smallGroupId);
+    SmallGroup smallGroup = findWithInterestById(smallGroupId);
     Interest interest = findInterestById(interestId);
 
     smallGroup.addInterest(interest);
@@ -100,10 +100,15 @@ public class SmallGroupService {
 
   @Transactional
   public void removeSmallGroupInterest(Long smallGroupId, Long interestId) {
-    SmallGroup smallGroup = getSmallGroup(smallGroupId);
+    SmallGroup smallGroup = findWithInterestById(smallGroupId);
     Interest interest = findInterestById(interestId);
 
     smallGroup.removeInterest(interest);
+  }
+
+  private SmallGroup findWithInterestById(Long id) {
+    return smallGroupRepository.findWithInterestById(id)
+        .orElseThrow(() -> new IllegalArgumentException(GROUP_NOT_FOUND));
   }
 
   private Interest findInterestById(Long interestId) {

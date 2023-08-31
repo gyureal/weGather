@@ -1,13 +1,16 @@
 package com.example.wegather.group.domain.repotitory;
 
 import static com.example.wegather.group.domain.entity.QSmallGroup.smallGroup;
+import static com.example.wegather.group.domain.entity.QSmallGroupInterest.*;
 import static com.example.wegather.member.domain.entity.QMember.member;
 
+import com.example.wegather.group.domain.entity.QSmallGroupInterest;
 import com.example.wegather.group.domain.entity.SmallGroup;
 import com.example.wegather.group.dto.SmallGroupSearchCondition;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -56,5 +59,15 @@ public class SmallGroupRepositoryImpl implements SmallGroupRepositoryQuerydsl {
 
   private BooleanExpression maxMemberCountLt(Integer maxMemberCountTo) {
     return maxMemberCountTo != null ? smallGroup.maxMemberCount.value.lt(maxMemberCountTo) : null;
+  }
+
+  @Override
+  public Optional<SmallGroup> findWithInterestById(Long smallGroupId) {
+    return Optional.ofNullable(queryFactory
+        .selectFrom(smallGroup).distinct()
+          .leftJoin(smallGroup.leader, member).fetchJoin()
+          .leftJoin(smallGroup.smallGroupInterests, smallGroupInterest).fetchJoin()
+        .where(smallGroup.id.eq(smallGroupId))
+        .fetchOne());
   }
 }
