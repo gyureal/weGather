@@ -93,6 +93,7 @@ public class SmallGroupService {
   @Transactional
   public void addSmallGroupInterest(Long smallGroupId, Long interestId) {
     SmallGroup smallGroup = findWithInterestById(smallGroupId);
+    validateUpdatable(smallGroup, DO_NOT_HAVE_AUTHORITY_TO_UPDATE_GROUP);
     Interest interest = findInterestById(interestId);
 
     smallGroup.addInterest(interest);
@@ -101,6 +102,7 @@ public class SmallGroupService {
   @Transactional
   public void removeSmallGroupInterest(Long smallGroupId, Long interestId) {
     SmallGroup smallGroup = findWithInterestById(smallGroupId);
+    validateUpdatable(smallGroup, DO_NOT_HAVE_AUTHORITY_TO_UPDATE_GROUP);
     Interest interest = findInterestById(interestId);
 
     smallGroup.removeInterest(interest);

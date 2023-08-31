@@ -258,10 +258,24 @@ public class SmallGroupIntegrationTest extends IntegrationTest {
 
     // when
     ExtractableResponse<Response> response = requestAddInterest(group01.getId(),
-        interestDto.getId());
+        interestDto.getId(), member01);
 
     // then
     assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_OK);
+  }
+
+  @Test
+  @DisplayName("소모임장이 아니라서 소모임 관심사 추가에 실패합니다.")
+  void addInterestToSmallGroup_fail_because_not_leader() {
+    // given
+    InterestDto interestDto = insertInterest("축구");
+
+    // when
+    ExtractableResponse<Response> response = requestAddInterest(group01.getId(),
+        interestDto.getId(), member02);
+
+    // then
+    assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_UNAUTHORIZED);
   }
 
   @Test
@@ -269,14 +283,29 @@ public class SmallGroupIntegrationTest extends IntegrationTest {
   void removeInterestToSmallGroup() {
     // given
     InterestDto interestDto = insertInterest("축구");
-    requestAddInterest(group01.getId(), interestDto.getId());
+    requestAddInterest(group01.getId(), interestDto.getId(), member01);
 
     // when
     ExtractableResponse<Response> response = requestRemoveInterest(group01.getId(),
-        interestDto.getId());
+        interestDto.getId(), member01);
 
     // then
     assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_OK);
+  }
+
+  @Test
+  @DisplayName("소모임 장이 아니라서 소모임에 관심사 삭제에 실패합니다.")
+  void removeInterestToSmallGroup_fail_because_not_leader() {
+    // given
+    InterestDto interestDto = insertInterest("축구");
+    requestAddInterest(group01.getId(), interestDto.getId(), member01);
+
+    // when
+    ExtractableResponse<Response> response = requestRemoveInterest(group01.getId(),
+        interestDto.getId(), member02);
+
+    // then
+    assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_UNAUTHORIZED);
   }
 
   private SmallGroupDto insertGroup(String groupName, Integer maxMemberCount, List<String> interests) {
@@ -321,9 +350,9 @@ public class SmallGroupIntegrationTest extends IntegrationTest {
         .then().extract().as(InterestDto.class);
   }
 
-  private ExtractableResponse<Response> requestAddInterest(Long smallGroupId, Long interestId) {
+  private ExtractableResponse<Response> requestAddInterest(Long smallGroupId, Long interestId, MemberDto loginMember) {
     return RestAssured.given().log().all()
-        .auth().basic(memberUsername, memberPassword)
+        .auth().basic(loginMember.getUsername(), memberPassword)
         .pathParam("id", smallGroupId)
         .queryParam("interestId", interestId)
         .contentType(ContentType.JSON)
@@ -332,9 +361,9 @@ public class SmallGroupIntegrationTest extends IntegrationTest {
         .extract();
   }
 
-  private ExtractableResponse<Response> requestRemoveInterest(Long smallGroupId, Long interestId) {
+  private ExtractableResponse<Response> requestRemoveInterest(Long smallGroupId, Long interestId, MemberDto loginMember) {
     return RestAssured.given().log().all()
-        .auth().basic(memberUsername, memberPassword)
+        .auth().basic(loginMember.getUsername(), memberPassword)
         .pathParam("id", smallGroupId)
         .queryParam("interestId", interestId)
         .contentType(ContentType.JSON)
