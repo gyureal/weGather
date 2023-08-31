@@ -5,7 +5,6 @@ import com.example.wegather.global.vo.Address;
 import com.example.wegather.group.domain.vo.MaxMemberCount;
 import com.example.wegather.interest.domain.Interest;
 import com.example.wegather.member.domain.entity.Member;
-import com.example.wegather.member.domain.entity.MemberInterest;
 import com.example.wegather.smallGroupJoin.domin.SmallGroupMember;
 import java.util.ArrayList;
 import java.util.List;
@@ -67,7 +66,7 @@ public class SmallGroup extends BaseTimeEntity {
     this.maxMemberCount = maxMemberCount;
   }
 
-  public void updateGroupTotalInfo(String name, String description, Address address, MaxMemberCount maxMemberCount) {
+  public void updateSmallGroupInfo(String name, String description, Address address, MaxMemberCount maxMemberCount) {
     this.name = name;
     this.description = description;
     this.address = address;

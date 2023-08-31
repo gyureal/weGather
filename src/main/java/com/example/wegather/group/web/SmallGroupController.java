@@ -42,7 +42,7 @@ public class SmallGroupController {
       @Valid @RequestBody CreateSmallGroupRequest createSmallGroupRequest,
       Principal principal) {
     SmallGroupDto smallGroupDto = SmallGroupDto.from(
-        smallGroupService.addGroup(createSmallGroupRequest, principal.getName()));
+        smallGroupService.addSmallGroup(createSmallGroupRequest, principal.getName()));
     return ResponseEntity.created(URI.create("/smallGroups/" + smallGroupDto.getId()))
         .body(smallGroupDto);
   }
@@ -54,7 +54,7 @@ public class SmallGroupController {
    */
   @GetMapping("/{id}")
   public ResponseEntity<SmallGroupDto> readGroup(@PathVariable Long id) {
-    return ResponseEntity.ok(SmallGroupDto.from(smallGroupService.getGroup(id)));
+    return ResponseEntity.ok(SmallGroupDto.from(smallGroupService.getSmallGroup(id)));
   }
 
   /**
@@ -67,7 +67,7 @@ public class SmallGroupController {
   public ResponseEntity<Page<SmallGroupDto>> searchGroups(
       @RequestBody SmallGroupSearchCondition cond,
       Pageable pageable) {
-    return ResponseEntity.ok(smallGroupService.searchGroups(cond, pageable).map(SmallGroupDto::from));
+    return ResponseEntity.ok(smallGroupService.searchSmallGroups(cond, pageable).map(SmallGroupDto::from));
   }
 
   /**
@@ -81,7 +81,7 @@ public class SmallGroupController {
       @PathVariable Long id,
       @RequestBody UpdateSmallGroupRequest request) {
 
-    smallGroupService.editGroup(id, request);
+    smallGroupService.editSmallGroup(id, request);
     return ResponseEntity.ok().build();
   }
 
@@ -92,7 +92,7 @@ public class SmallGroupController {
    */
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> deleteGroup(@PathVariable Long id) {
-    smallGroupService.deleteGroup(id);
+    smallGroupService.deleteSmallGroup(id);
     return ResponseEntity.noContent().build();
   }
 

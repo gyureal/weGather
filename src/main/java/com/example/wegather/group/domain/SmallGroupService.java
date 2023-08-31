@@ -12,12 +12,9 @@ import com.example.wegather.group.dto.UpdateSmallGroupRequest;
 import com.example.wegather.group.domain.vo.MaxMemberCount;
 import com.example.wegather.interest.domain.Interest;
 import com.example.wegather.interest.domain.InterestRepository;
-import com.example.wegather.interest.dto.InterestDto;
 import com.example.wegather.member.domain.entity.Member;
 import com.example.wegather.member.domain.MemberRepository;
 import com.example.wegather.member.domain.vo.Username;
-import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -39,7 +36,7 @@ public class SmallGroupService {
   private final InterestRepository interestRepository;
 
   @Transactional
-  public SmallGroup addGroup(CreateSmallGroupRequest request, String username) {
+  public SmallGroup addSmallGroup(CreateSmallGroupRequest request, String username) {
 
     Member member = memberRepository.findByUsername(Username.of(username))
         .orElseThrow(() -> new IllegalStateException(USERNAME_IN_AUTH_NOT_FOUND));
@@ -54,18 +51,18 @@ public class SmallGroupService {
         .build());
   }
 
-  public SmallGroup getGroup(Long id) {
+  public SmallGroup getSmallGroup(Long id) {
     return groupRepository.findById(id)
         .orElseThrow(() -> new IllegalArgumentException(GROUP_NOT_FOUND));
   }
 
-  public Page<SmallGroup> searchGroups(SmallGroupSearchCondition cond, Pageable pageable) {
+  public Page<SmallGroup> searchSmallGroups(SmallGroupSearchCondition cond, Pageable pageable) {
     return groupRepository.search(cond, pageable);
   }
 
   @Transactional
-  public void editGroup(Long id, UpdateSmallGroupRequest request) {
-    SmallGroup smallGroup = getGroup(id);
+  public void editSmallGroup(Long id, UpdateSmallGroupRequest request) {
+    SmallGroup smallGroup = getSmallGroup(id);
 
     MemberDetails principal = authManager.getPrincipal();
 
@@ -73,7 +70,7 @@ public class SmallGroupService {
       throw new AuthenticationException(DO_NOT_HAVE_AUTHORITY_TO_UPDATE_GROUP);
     }
     
-    smallGroup.updateGroupTotalInfo(
+    smallGroup.updateSmallGroupInfo(
         request.getGroupName(),
         request.getDescription(),
         Address.of(request.getStreetAddress(), request.getLongitude(), request.getLatitude()),
@@ -81,8 +78,8 @@ public class SmallGroupService {
   }
 
   @Transactional
-  public void deleteGroup(Long id) {
-    SmallGroup smallGroup = getGroup(id);
+  public void deleteSmallGroup(Long id) {
+    SmallGroup smallGroup = getSmallGroup(id);
 
     MemberDetails principal = authManager.getPrincipal();
 
@@ -95,7 +92,7 @@ public class SmallGroupService {
 
   @Transactional
   public void addSmallGroupInterest(Long smallGroupId, Long interestId) {
-    SmallGroup smallGroup = getGroup(smallGroupId);
+    SmallGroup smallGroup = getSmallGroup(smallGroupId);
     Interest interest = findInterestById(interestId);
 
     smallGroup.addInterest(interest);
@@ -103,7 +100,7 @@ public class SmallGroupService {
 
   @Transactional
   public void removeSmallGroupInterest(Long smallGroupId, Long interestId) {
-    SmallGroup smallGroup = getGroup(smallGroupId);
+    SmallGroup smallGroup = getSmallGroup(smallGroupId);
     Interest interest = findInterestById(interestId);
 
     smallGroup.removeInterest(interest);
