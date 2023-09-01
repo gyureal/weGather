@@ -9,7 +9,7 @@ import lombok.Getter;
 @AllArgsConstructor
 @Builder
 public class SmallGroupSearchCondition {
-  private String groupName;
+  private String smallGroupName;
   private String streetAddress;
   private String leaderUsername;
   private Integer maxMemberCountFrom;

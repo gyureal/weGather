@@ -29,7 +29,7 @@ public class SmallGroupRepositoryImpl implements SmallGroupRepositoryQuerydsl {
         .selectFrom(smallGroup)
         .join(smallGroup.leader, member)
         .where(
-            groupNameContains(cond.getGroupName()),
+            groupNameContains(cond.getSmallGroupName()),
             streetAddressContains(cond.getStreetAddress()),
             leaderUsernameLike(cond.getLeaderUsername()),
             maxMemberCountGoe(cond.getMaxMemberCountFrom()),

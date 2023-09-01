@@ -114,7 +114,7 @@ public class SmallGroupIntegrationTest extends IntegrationTest {
   @DisplayName("그룹 이름과 최대회원수 범위로 소그룹 조회를 성공합니다.")
   void searchSmallGroupByGroupNameAndMaxMemberCountRangeSuccessfully() {
     SmallGroupSearchCondition smallGroupSearchCondition = SmallGroupSearchCondition.builder()
-        .groupName("사모")
+        .smallGroupName("사모")
         .maxMemberCountFrom(100)
         .maxMemberCountTo(201)
         .build();
