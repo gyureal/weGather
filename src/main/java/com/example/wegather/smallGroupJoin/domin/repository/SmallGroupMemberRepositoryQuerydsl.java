@@ -1,8 +1,7 @@
 package com.example.wegather.smallGroupJoin.domin.repository;
 
-import com.example.wegather.smallGroupJoin.domin.MemberStatus;
-import com.example.wegather.smallGroupJoin.domin.SmallGroupMember;
-import java.util.Optional;
+import com.example.wegather.smallGroupJoin.domin.vo.MemberStatus;
+import com.example.wegather.smallGroupJoin.domin.entity.SmallGroupMember;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.lang.Nullable;

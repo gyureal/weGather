@@ -5,7 +5,7 @@ import com.example.wegather.global.vo.Address;
 import com.example.wegather.group.domain.vo.MaxMemberCount;
 import com.example.wegather.interest.domain.Interest;
 import com.example.wegather.member.domain.entity.Member;
-import com.example.wegather.smallGroupJoin.domin.SmallGroupMember;
+import com.example.wegather.smallGroupJoin.domin.entity.SmallGroupMember;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;

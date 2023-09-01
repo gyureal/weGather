@@ -1,4 +1,4 @@
-package com.example.wegather.smallGroupJoin.domin;
+package com.example.wegather.smallGroupJoin.domin.vo;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

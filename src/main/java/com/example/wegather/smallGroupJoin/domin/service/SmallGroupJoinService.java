@@ -1,4 +1,4 @@
-package com.example.wegather.smallGroupJoin.domin;
+package com.example.wegather.smallGroupJoin.domin.service;
 
 import com.example.wegather.auth.MemberDetails;
 import com.example.wegather.global.auth.AuthenticationManager;
@@ -8,7 +8,9 @@ import com.example.wegather.group.domain.repotitory.SmallGroupRepository;
 import com.example.wegather.member.domain.entity.Member;
 import com.example.wegather.member.domain.MemberRepository;
 import com.example.wegather.member.domain.vo.Username;
+import com.example.wegather.smallGroupJoin.domin.entity.SmallGroupMember;
 import com.example.wegather.smallGroupJoin.domin.repository.SmallGroupMemberRepository;
+import com.example.wegather.smallGroupJoin.domin.vo.MemberStatus;
 import java.time.Clock;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;

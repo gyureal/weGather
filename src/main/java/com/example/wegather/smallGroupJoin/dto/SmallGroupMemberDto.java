@@ -1,8 +1,8 @@
 package com.example.wegather.smallGroupJoin.dto;
 
 import com.example.wegather.member.dto.MemberDto;
-import com.example.wegather.smallGroupJoin.domin.MemberStatus;
-import com.example.wegather.smallGroupJoin.domin.SmallGroupMember;
+import com.example.wegather.smallGroupJoin.domin.vo.MemberStatus;
+import com.example.wegather.smallGroupJoin.domin.entity.SmallGroupMember;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

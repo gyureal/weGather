@@ -1,11 +1,9 @@
 package com.example.wegather.smallGroupJoin.web;
 
 import com.example.wegather.global.customException.AuthenticationException;
-import com.example.wegather.smallGroupJoin.domin.MemberStatus;
-import com.example.wegather.smallGroupJoin.domin.SmallGroupJoinService;
+import com.example.wegather.smallGroupJoin.domin.vo.MemberStatus;
+import com.example.wegather.smallGroupJoin.domin.service.SmallGroupJoinService;
 import com.example.wegather.smallGroupJoin.dto.SmallGroupMemberDto;
-import java.util.Optional;
-import javax.validation.constraints.Null;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

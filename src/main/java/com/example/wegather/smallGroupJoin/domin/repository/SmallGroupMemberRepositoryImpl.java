@@ -2,10 +2,10 @@ package com.example.wegather.smallGroupJoin.domin.repository;
 
 import static com.example.wegather.group.domain.entity.QSmallGroup.smallGroup;
 import static com.example.wegather.member.domain.entity.QMember.member;
-import static com.example.wegather.smallGroupJoin.domin.QSmallGroupMember.*;
+import static com.example.wegather.smallGroupJoin.domin.entity.QSmallGroupMember.smallGroupMember;
 
-import com.example.wegather.smallGroupJoin.domin.MemberStatus;
-import com.example.wegather.smallGroupJoin.domin.SmallGroupMember;
+import com.example.wegather.smallGroupJoin.domin.vo.MemberStatus;
+import com.example.wegather.smallGroupJoin.domin.entity.SmallGroupMember;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;

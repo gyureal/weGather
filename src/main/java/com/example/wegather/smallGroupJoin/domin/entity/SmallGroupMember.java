@@ -1,8 +1,9 @@
-package com.example.wegather.smallGroupJoin.domin;
+package com.example.wegather.smallGroupJoin.domin.entity;
 
 import com.example.wegather.global.BaseTimeEntity;
 import com.example.wegather.group.domain.entity.SmallGroup;
 import com.example.wegather.member.domain.entity.Member;
+import com.example.wegather.smallGroupJoin.domin.vo.MemberStatus;
 import java.time.LocalDateTime;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
