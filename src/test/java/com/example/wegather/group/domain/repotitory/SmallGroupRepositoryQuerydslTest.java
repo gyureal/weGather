@@ -56,7 +56,7 @@ class SmallGroupRepositoryQuerydslTest extends RepositoryTest {
   void searchGroupOnlyName() {
     // given
     SmallGroupSearchCondition cond = SmallGroupSearchCondition.builder()
-        .groupName("탁사모")
+        .smallGroupName("탁사모")
         .build();
 
     int size = 10;
@@ -136,7 +136,7 @@ class SmallGroupRepositoryQuerydslTest extends RepositoryTest {
   @DisplayName("그룹이름과 도로명 주소로 조회")
   void searchGroupGroupNameAndStreetAddress() {
     SmallGroupSearchCondition cond = SmallGroupSearchCondition.builder()
-        .groupName("토익")
+        .smallGroupName("토익")
         .streetAddress("서울")
         .build();
 
