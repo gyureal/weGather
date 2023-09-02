@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
@@ -28,13 +29,14 @@ public class SmallGroupJoinService {
    *    - 이미 가입 요청한 회원일 경우
    *    - 소모임장인 경우
    */
-  public void requestJoin(Long smallGroupId, Long loginId) {
+  public Long requestJoin(Long smallGroupId, Long loginId) {
     SmallGroup smallGroup = findSmallGroupById(smallGroupId);
     Member member = findMemberById(loginId);
 
     validRequestJoin(smallGroup, member);
 
-    smallGroupJoinRepository.save(SmallGroupJoin.of(smallGroup, member));
+    return smallGroupJoinRepository.save(SmallGroupJoin.of(smallGroup, member))
+        .getId();
   }
 
   private void validRequestJoin(SmallGroup smallGroup, Member member) {
@@ -67,6 +69,34 @@ public class SmallGroupJoinService {
   private void validateGetAllJoinRequests(SmallGroup smallGroup, Long loginId) {
     if (!smallGroup.isLeader(loginId)) {
       throw new NoPermissionException("소모임장만 조회 가능합니다.");
+    }
+  }
+
+  /**
+   * 소모임 가입 요청 승인
+   *
+   * @param id       소모임 ID
+   * @param requestId 가입 요청 ID
+   * @param loginId  로그인한 회원의 ID
+   * @throws NoPermissionException - 소모임장이 아닌 경우
+   */
+  @Transactional
+  public void approveJoinRequest(Long id, Long requestId, Long loginId) {
+    SmallGroup smallGroup = findSmallGroupById(id);
+    validateApproveJoinRequest(smallGroup, loginId);
+
+    SmallGroupJoin smallGroupJoin = findSmallGroupJoinById(requestId);
+    smallGroupJoin.approve();
+  }
+
+  private SmallGroupJoin findSmallGroupJoinById(Long requestId) {
+    return smallGroupJoinRepository.findById(requestId)
+        .orElseThrow(() -> new IllegalArgumentException("해당 소모임 가입 요청을 찾을 수 없습니다."));
+  }
+
+  private void validateApproveJoinRequest(SmallGroup smallGroup, Long loginId) {
+    if (!smallGroup.isLeader(loginId)) {
+      throw new NoPermissionException("소모임장만 승인 가능합니다.");
     }
   }
 

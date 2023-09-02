@@ -27,10 +27,9 @@ public class SmallGroupJoinController {
    * @return
    */
   @PostMapping("/requests")
-  public ResponseEntity<Void> requestSmallGroupJoin(@PathVariable Long id, @AuthenticationPrincipal
+  public ResponseEntity<Long> requestSmallGroupJoin(@PathVariable Long id, @AuthenticationPrincipal
       MemberDetails memberDetails) {
-    smallGroupJoinService.requestJoin(id, memberDetails.getMemberId());
-    return ResponseEntity.ok().build();
+    return ResponseEntity.ok(smallGroupJoinService.requestJoin(id, memberDetails.getMemberId()));
   }
 
   /**
@@ -47,5 +46,13 @@ public class SmallGroupJoinController {
       Pageable pageable) {
     return ResponseEntity.ok(smallGroupJoinService.getAllJoinRequests(
         id, memberDetails.getMemberId() ,pageable));
+  }
+
+  @PostMapping("/requests/{requestId}/approve")
+  public ResponseEntity<Void> approveJoinRequeest(
+      @PathVariable Long id, @PathVariable Long requestId,
+      @AuthenticationPrincipal MemberDetails memberDetails) {
+    smallGroupJoinService.approveJoinRequest(id, requestId, memberDetails.getMemberId());
+    return ResponseEntity.ok().build();
   }
 }

@@ -110,6 +110,43 @@ class SmallGroupJoinIntegrationTest extends IntegrationTest{
     assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_FORBIDDEN);
   }
 
+  @Test
+  @DisplayName("소모임 가입 요청을 승인합니다.")
+  void approveSmallGroupJoin_success() {
+    SmallGroupDto smallGroup = group01;
+    MemberDto joinMember = member02;
+    Long requestId = requestSmallGroupJoinRequest(smallGroup, joinMember).as(Long.class);// 가입 요청
+
+    ExtractableResponse<Response> response = requestApproveSmallGroupJoin(
+        smallGroup, requestId, member01);
+
+    assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_OK);
+  }
+
+  @Test
+  @DisplayName("소모임장이 아니어서 소모임 가입 요청을 실패합니다.")
+  void approveSmallGroupJoin_fail_because_not_leader() {
+    SmallGroupDto smallGroup = group01;
+    MemberDto joinMember = member02;
+    Long requestId = requestSmallGroupJoinRequest(smallGroup, joinMember).as(Long.class);// 가입 요청
+
+    ExtractableResponse<Response> response = requestApproveSmallGroupJoin(
+        smallGroup, requestId, member02);
+
+    assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_FORBIDDEN);
+  }
+
+  private ExtractableResponse<Response> requestApproveSmallGroupJoin(SmallGroupDto smallGroup,
+      Long requestId, MemberDto loginMember) {
+    ExtractableResponse<Response> response = RestAssured.given().log().all()
+        .auth().basic(loginMember.getUsername(), memberPassword)
+        .pathParam("id", smallGroup.getId())
+        .pathParam("requestId", requestId)
+        .when().post("smallGroups/{id}/join/requests/{requestId}/approve")
+        .then().log().all().extract();
+    return response;
+  }
+
   private ExtractableResponse<Response> requestReadAllJoinRequests(SmallGroupDto smallGroup,
       int page, MemberDto requester) {
     ExtractableResponse<Response> response = RestAssured.given().log().all()
