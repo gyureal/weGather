@@ -13,6 +13,7 @@ import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -50,6 +51,24 @@ class SmallGroupJoinIntegrationTest extends IntegrationTest{
     ExtractableResponse<Response> response = requestSmallGroupJoinRequest(
         smallGroup, joinMember);
 
+    assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_BAD_REQUEST);
+  }
+
+  @Test
+  @DisplayName("최대 회원수를 초과하여 소모임 가입 요청에 실패합니다.")
+  @Disabled //TODO: 소모임 회원 기능 구현 후 구현할 것
+  void smallGroupJoinRequest_fail_because_exceed_max_member_count() {
+    // given
+    SmallGroupDto smallGroup = insertSmallGroup("group01", 1, member01);
+    MemberDto joinMember1 = member01;
+    requestSmallGroupJoinRequest(smallGroup, joinMember1);  // 1명 추가 -> 최대 회원수 도달
+
+    MemberDto joinMember2 = member02;
+
+    // when
+    ExtractableResponse<Response> response = requestSmallGroupJoinRequest(smallGroup, joinMember2);
+
+    // then
     assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_BAD_REQUEST);
   }
 
