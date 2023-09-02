@@ -6,7 +6,6 @@ import com.example.wegather.group.domain.vo.MaxMemberCount;
 import com.example.wegather.interest.domain.Interest;
 import com.example.wegather.member.domain.entity.Member;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import javax.persistence.AttributeOverride;
@@ -51,9 +50,6 @@ public class SmallGroup extends BaseTimeEntity {
   @Embedded
   @AttributeOverride(name = "value", column = @Column(name = "max_member_count"))
   private MaxMemberCount maxMemberCount;
-
-  @OneToMany(mappedBy = "smallGroup")
-  private List<SmallGroupMember> members;
 
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "smallGroup", cascade = CascadeType.ALL, orphanRemoval = true)
   private Set<SmallGroupInterest> smallGroupInterests = new HashSet<>();

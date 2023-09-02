@@ -7,7 +7,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -25,9 +24,17 @@ public class SmallGroupMember extends BaseTimeEntity {
   private Long id;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "smallGroup_id")
   private SmallGroup smallGroup;
 
   @ManyToOne(fetch = FetchType.LAZY)    // 외래키를 설정해 주지 않기 위해 JoinColumn을 명시해 주지 않는다.
   private Member member;
+
+  private SmallGroupMember(SmallGroup smallGroup, Member member) {
+    this.smallGroup = smallGroup;
+    this.member = member;
+  }
+  
+  public static SmallGroupMember of(SmallGroup smallGroup, Member member) {
+    return new SmallGroupMember(smallGroup, member);
+  }
 }

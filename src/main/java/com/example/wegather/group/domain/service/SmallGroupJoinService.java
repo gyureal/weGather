@@ -3,7 +3,9 @@ package com.example.wegather.group.domain.service;
 import com.example.wegather.global.customException.NoPermissionException;
 import com.example.wegather.group.domain.entity.SmallGroup;
 import com.example.wegather.group.domain.entity.SmallGroupJoin;
+import com.example.wegather.group.domain.entity.SmallGroupMember;
 import com.example.wegather.group.domain.repotitory.SmallGroupJoinRepository;
+import com.example.wegather.group.domain.repotitory.SmallGroupMemberRepository;
 import com.example.wegather.group.domain.repotitory.SmallGroupRepository;
 import com.example.wegather.group.dto.GroupJoinRequestDto;
 import com.example.wegather.member.domain.MemberRepository;
@@ -20,6 +22,7 @@ public class SmallGroupJoinService {
   private final SmallGroupRepository smallGroupRepository;
   private final SmallGroupJoinRepository smallGroupJoinRepository;
   private final MemberRepository memberRepository;
+  private final SmallGroupMemberRepository smallGroupMemberRepository;
 
   /**
    * 가입 요청 유효성 체크
@@ -74,7 +77,7 @@ public class SmallGroupJoinService {
 
   /**
    * 소모임 가입 요청 승인
-   *
+   * 소모임 멤버에 추가됩니다.
    * @param id       소모임 ID
    * @param requestId 가입 요청 ID
    * @param loginId  로그인한 회원의 ID
@@ -84,9 +87,11 @@ public class SmallGroupJoinService {
   public void approveJoinRequest(Long id, Long requestId, Long loginId) {
     SmallGroup smallGroup = findSmallGroupById(id);
     validateIsLeader(smallGroup, loginId);
-
+    // 소모임 가입 승인
     SmallGroupJoin smallGroupJoin = findSmallGroupJoinById(requestId);
     smallGroupJoin.approve();
+    // 소모임 회원 추가
+    smallGroupMemberRepository.save(SmallGroupMember.of(smallGroup, smallGroupJoin.getMember()));
   }
 
   /**
