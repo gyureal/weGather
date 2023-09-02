@@ -89,6 +89,14 @@ public class SmallGroupJoinService {
     smallGroupJoin.approve();
   }
 
+  /**
+   * 소모임 가입 요청 거절
+   *
+   * @param id       소모임 ID
+   * @param requestId 가입 요청 ID
+   * @param loginId  로그인한 회원의 ID
+   * @throws NoPermissionException - 소모임장이 아닌 경우
+   */
   @Transactional
   public void rejectJoinRequest(Long id, Long requestId, Long loginId) {
     SmallGroup smallGroup = findSmallGroupById(id);
