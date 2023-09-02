@@ -25,4 +25,22 @@ public class SmallGroupJoin extends BaseTimeEntity {
   private Member member;
   @Enumerated(EnumType.STRING)
   private JoinRequestStatus status;
+
+  private SmallGroupJoin(SmallGroup smallGroup, Member member) {
+    this.smallGroup = smallGroup;
+    this.member = member;
+    this.status = JoinRequestStatus.REQUEST;
+  }
+
+  public static SmallGroupJoin of(SmallGroup smallGroup, Member member) {
+    return new SmallGroupJoin(smallGroup, member);
+  }
+
+  public void approve() {
+    status = JoinRequestStatus.APPROVE;
+  }
+
+  public void reject() {
+    status = JoinRequestStatus.REJECT;
+  }
 }
