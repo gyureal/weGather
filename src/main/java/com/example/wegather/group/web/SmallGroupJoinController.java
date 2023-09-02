@@ -20,6 +20,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class SmallGroupJoinController {
   private final SmallGroupJoinService smallGroupJoinService;
 
+  /**
+   * 소모임 가입 요청
+   * @param id 소모임 ID
+   * @param memberDetails 로그인한 회원
+   * @return
+   */
   @PostMapping("/requests")
   public ResponseEntity<Void> requestSmallGroupJoin(@PathVariable Long id, @AuthenticationPrincipal
       MemberDetails memberDetails) {
@@ -27,6 +33,13 @@ public class SmallGroupJoinController {
     return ResponseEntity.ok().build();
   }
 
+  /**
+   * 소모임 가입 요청 회원 목록 조회
+   * @param id 소모임 ID
+   * @param memberDetails 로그인한 회원
+   * @param pageable 페이징 정보
+   * @return
+   */
   @GetMapping("/requests")
   public ResponseEntity<Page<GroupJoinRequestDto>> readAllJoinRequests(
       @PathVariable Long id,
