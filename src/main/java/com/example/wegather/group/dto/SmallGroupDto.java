@@ -19,7 +19,7 @@ public class SmallGroupDto {
   private String streetAddress;
   private Double longitude;
   private Double latitude;
-  private Integer maxMemberCount;
+  private Long maxMemberCount;
 
   public static SmallGroupDto from(SmallGroup smallGroup) {
     return SmallGroupDto.builder()
@@ -31,7 +31,7 @@ public class SmallGroupDto {
         .streetAddress(smallGroup.getAddress().getStreetAddress())
         .longitude(smallGroup.getAddress().getLongitude())
         .latitude(smallGroup.getAddress().getLatitude())
-        .maxMemberCount(smallGroup.getMaxMemberCount().getValue())
+        .maxMemberCount(smallGroup.getMaxMemberCount())
         .build();
   }
 }

@@ -9,7 +9,6 @@ import com.example.wegather.group.domain.repotitory.SmallGroupRepository;
 import com.example.wegather.group.dto.CreateSmallGroupRequest;
 import com.example.wegather.group.dto.SmallGroupSearchCondition;
 import com.example.wegather.group.dto.UpdateSmallGroupRequest;
-import com.example.wegather.group.domain.vo.MaxMemberCount;
 import com.example.wegather.interest.domain.Interest;
 import com.example.wegather.interest.domain.InterestRepository;
 import com.example.wegather.member.domain.entity.Member;
@@ -47,7 +46,7 @@ public class SmallGroupService {
             .leader(member)
             .address(Address.of(request.getStreetAddress(), request.getLongitude(),
                 request.getLatitude()))
-            .maxMemberCount(MaxMemberCount.of(request.getMaxMemberCount()))
+            .maxMemberCount(request.getMaxMemberCount())
         .build());
   }
 
@@ -70,7 +69,7 @@ public class SmallGroupService {
         request.getGroupName(),
         request.getDescription(),
         Address.of(request.getStreetAddress(), request.getLongitude(), request.getLatitude()),
-        MaxMemberCount.of(request.getMaxMemberCount()));
+        request.getMaxMemberCount());
   }
 
   private void validateUpdatable(SmallGroup smallGroup, String doNotHaveAuthorityToUpdateGroup) {

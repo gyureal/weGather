@@ -54,11 +54,11 @@ public class SmallGroupRepositoryImpl implements SmallGroupRepositoryQuerydsl {
   }
 
   private BooleanExpression maxMemberCountGoe(Integer maxMemberCountFrom) {
-    return maxMemberCountFrom != null ? smallGroup.maxMemberCount.value.goe(maxMemberCountFrom) : null;
+    return maxMemberCountFrom != null ? smallGroup.maxMemberCount.goe(maxMemberCountFrom) : null;
   }
 
   private BooleanExpression maxMemberCountLt(Integer maxMemberCountTo) {
-    return maxMemberCountTo != null ? smallGroup.maxMemberCount.value.lt(maxMemberCountTo) : null;
+    return maxMemberCountTo != null ? smallGroup.maxMemberCount.lt(maxMemberCountTo) : null;
   }
 
   @Override

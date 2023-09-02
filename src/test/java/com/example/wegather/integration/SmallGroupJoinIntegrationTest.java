@@ -30,7 +30,7 @@ class SmallGroupJoinIntegrationTest extends IntegrationTest{
   void initData() {
     member01 = insertMember("member01", memberPassword, MemberType.ROLE_USER);
     member02 = insertMember("member02", memberPassword, MemberType.ROLE_USER);
-    group01 = insertSmallGroup("group01", 100, member01);
+    group01 = insertSmallGroup("group01", 100L, member01);
   }
 
   @Test
@@ -61,7 +61,7 @@ class SmallGroupJoinIntegrationTest extends IntegrationTest{
   @Disabled //TODO: 소모임 회원 기능 구현 후 구현할 것
   void smallGroupJoinRequest_fail_because_exceed_max_member_count() {
     // given
-    SmallGroupDto smallGroup = insertSmallGroup("group01", 1, member01);
+    SmallGroupDto smallGroup = insertSmallGroup("group01", 1L, member01);
     MemberDto joinMember1 = member01;
     requestSmallGroupJoinRequest(smallGroup, joinMember1);  // 1명 추가 -> 최대 회원수 도달
 
@@ -185,7 +185,7 @@ class SmallGroupJoinIntegrationTest extends IntegrationTest{
     return response;
   }
 
-  private SmallGroupDto insertSmallGroup(String groupName, Integer maxMemberCount, MemberDto member) {
+  private SmallGroupDto insertSmallGroup(String groupName, Long maxMemberCount, MemberDto member) {
     CreateSmallGroupRequest request = CreateSmallGroupRequest.builder()
         .groupName(groupName)
         .description("테스트입니다.")

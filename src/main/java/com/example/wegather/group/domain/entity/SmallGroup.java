@@ -2,7 +2,6 @@ package com.example.wegather.group.domain.entity;
 
 import com.example.wegather.global.BaseTimeEntity;
 import com.example.wegather.global.vo.Address;
-import com.example.wegather.group.domain.vo.MaxMemberCount;
 import com.example.wegather.interest.domain.Interest;
 import com.example.wegather.member.domain.entity.Member;
 import java.util.HashSet;
@@ -46,17 +45,14 @@ public class SmallGroup extends BaseTimeEntity {
       @AttributeOverride(name = "latitude", column = @Column(name = "latitude"))
   })
   private Address address;
-
-  @Embedded
-  @AttributeOverride(name = "value", column = @Column(name = "max_member_count"))
-  private MaxMemberCount maxMemberCount;
+  private Long maxMemberCount;
 
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "smallGroup", cascade = CascadeType.ALL, orphanRemoval = true)
   private Set<SmallGroupInterest> smallGroupInterests = new HashSet<>();
 
   @Builder
   public SmallGroup(String name, String description, Member leader, Address address,
-      MaxMemberCount maxMemberCount) {
+      Long maxMemberCount) {
     this.name = name;
     this.description = description;
     this.leader = leader;
@@ -64,7 +60,7 @@ public class SmallGroup extends BaseTimeEntity {
     this.maxMemberCount = maxMemberCount;
   }
 
-  public void updateSmallGroupInfo(String name, String description, Address address, MaxMemberCount maxMemberCount) {
+  public void updateSmallGroupInfo(String name, String description, Address address, Long maxMemberCount) {
     this.name = name;
     this.description = description;
     this.address = address;
@@ -81,6 +77,10 @@ public class SmallGroup extends BaseTimeEntity {
 
   public void removeInterest(Interest interest) {
     this.smallGroupInterests.add(SmallGroupInterest.of(this, interest));
+  }
+
+  public boolean isExceedMaxMember(Long nowCount) {
+    return maxMemberCount >= nowCount;
   }
 
   @Override

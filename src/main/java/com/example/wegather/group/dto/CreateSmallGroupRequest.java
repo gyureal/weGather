@@ -23,5 +23,5 @@ public class CreateSmallGroupRequest {
   private Double latitude;
   @NotNull
   @Min(0)
-  private Integer maxMemberCount;
+  private Long maxMemberCount;
 }
