@@ -1,4 +1,4 @@
-package com.example.wegather.group.domain;
+package com.example.wegather.group.domain.service;
 
 import com.example.wegather.auth.MemberDetails;
 import com.example.wegather.global.auth.AuthenticationManagerImpl;

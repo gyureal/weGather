@@ -130,7 +130,6 @@ class InterestIntegrationTest extends IntegrationTest {
     assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_NO_CONTENT);
   }
 
-
   private InterestDto insertInterest(String interestName) {
     CreateInterestRequest request = CreateInterestRequest.builder()
         .interestName(interestName)

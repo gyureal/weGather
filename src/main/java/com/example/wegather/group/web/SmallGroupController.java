@@ -1,6 +1,6 @@
 package com.example.wegather.group.web;
 
-import com.example.wegather.group.domain.SmallGroupService;
+import com.example.wegather.group.domain.service.SmallGroupService;
 import com.example.wegather.group.dto.CreateSmallGroupRequest;
 import com.example.wegather.group.dto.SmallGroupDto;
 import com.example.wegather.group.dto.SmallGroupSearchCondition;
