@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.example.wegather.global.vo.MemberType;
 import com.example.wegather.group.dto.CreateSmallGroupRequest;
+import com.example.wegather.group.dto.GroupJoinRequestDto;
 import com.example.wegather.group.dto.SmallGroupDto;
 import com.example.wegather.member.dto.JoinMemberRequest;
 import com.example.wegather.member.dto.MemberDto;
@@ -11,6 +12,7 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.util.List;
 import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -33,7 +35,7 @@ class SmallGroupJoinIntegrationTest extends IntegrationTest{
 
   @Test
   @DisplayName("소모임 가입 요청에 성공합니다.")
-  void smallGroupJoinRequest_successfully() {
+  void smallGroupJoinRequest_success() {
     SmallGroupDto smallGroup = group01;
     MemberDto joinMember = member02;
 
@@ -70,6 +72,53 @@ class SmallGroupJoinIntegrationTest extends IntegrationTest{
 
     // then
     assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_BAD_REQUEST);
+  }
+
+  @Test
+  @DisplayName("소모임 가입 요청 목록을 조회합니다.")
+  void readAllJoinRequests_success() {
+    SmallGroupDto smallGroup = group01;
+    MemberDto joinMember = member02;
+    requestSmallGroupJoinRequest(smallGroup, joinMember); // 가입 요청
+    int page = 0;
+
+    ExtractableResponse<Response> response = requestReadAllJoinRequests(
+        smallGroup, page, member01);
+
+    assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_OK);
+    List<GroupJoinRequestDto> content = response.jsonPath()
+        .getList("content", GroupJoinRequestDto.class);
+    GroupJoinRequestDto requestDto = content.get(0);
+    assertThat(requestDto.getSmallGroupJoinId()).isEqualTo(group01.getId());
+    assertThat(requestDto.getMemberId()).isEqualTo(joinMember.getId());
+    assertThat(requestDto.getUsername()).isEqualTo(joinMember.getUsername());
+    assertThat(requestDto.getName()).isEqualTo(joinMember.getName());
+    assertThat(requestDto.getProfileImage()).isEqualTo(joinMember.getProfileImage());
+  }
+
+  @Test
+  @DisplayName("소모임장이 아니라서 소모임 가입 요청 목록 조회에 실패합니다.")
+  void readAllJoinRequests_fail_because_not_leader() {
+    SmallGroupDto smallGroup = group01;
+    MemberDto joinMember = member02;
+    requestSmallGroupJoinRequest(smallGroup, joinMember); // 가입 요청
+    int page = 0;
+
+    ExtractableResponse<Response> response = requestReadAllJoinRequests(
+        smallGroup, page, member02);
+
+    assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_BAD_REQUEST);
+  }
+
+  private ExtractableResponse<Response> requestReadAllJoinRequests(SmallGroupDto smallGroup,
+      int page, MemberDto requester) {
+    ExtractableResponse<Response> response = RestAssured.given().log().all()
+        .auth().basic(requester.getUsername(), memberPassword)
+        .pathParam("id", smallGroup.getId())
+        .queryParam("page", page)
+        .when().get("smallGroups/{id}/join/requests")
+        .then().log().all().extract();
+    return response;
   }
 
   private static ExtractableResponse<Response> requestSmallGroupJoinRequest(

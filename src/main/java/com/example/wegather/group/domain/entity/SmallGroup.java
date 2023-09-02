@@ -86,4 +86,21 @@ public class SmallGroup extends BaseTimeEntity {
   public void removeInterest(Interest interest) {
     this.smallGroupInterests.add(SmallGroupInterest.of(this, interest));
   }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    SmallGroup that = (SmallGroup) o;
+    return id.equals(that.id);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id);
+  }
 }

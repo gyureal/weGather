@@ -105,6 +105,10 @@ public class Member extends BaseTimeEntity {
     return profileImage.getValue();
   }
 
+  public String getUsernameStr() {
+    return username.getValue();
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
