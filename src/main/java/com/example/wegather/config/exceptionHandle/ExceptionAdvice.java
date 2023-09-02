@@ -1,6 +1,7 @@
 package com.example.wegather.config.exceptionHandle;
 
 import com.example.wegather.global.customException.AuthenticationException;
+import com.example.wegather.global.customException.NoPermissionException;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -41,6 +42,12 @@ public class ExceptionAdvice {
     @ExceptionHandler(AuthenticationException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ErrorResponse handleAuthenticationException(AuthenticationException ex) {
+        return ErrorResponse.of(generateLogId(ex), ex);
+    }
+
+    @ExceptionHandler(NoPermissionException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ErrorResponse handleNoPermissionException(NoPermissionException ex) {
         return ErrorResponse.of(generateLogId(ex), ex);
     }
 
