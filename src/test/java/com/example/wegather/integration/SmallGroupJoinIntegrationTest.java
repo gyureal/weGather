@@ -15,7 +15,6 @@ import io.restassured.response.Response;
 import java.util.List;
 import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -24,13 +23,15 @@ class SmallGroupJoinIntegrationTest extends IntegrationTest{
   private static final String memberPassword = "1234";
   private MemberDto member01;
   private MemberDto member02;
+  private MemberDto member03;
   private SmallGroupDto group01;
 
   @BeforeEach
   void initData() {
     member01 = insertMember("member01", memberPassword, MemberType.ROLE_USER);
     member02 = insertMember("member02", memberPassword, MemberType.ROLE_USER);
-    group01 = insertSmallGroup("group01", 100, member01);
+    member03 = insertMember("member03", memberPassword, MemberType.ROLE_USER);
+    group01 = insertSmallGroup("group01", 100L, member01);
   }
 
   @Test
@@ -58,18 +59,17 @@ class SmallGroupJoinIntegrationTest extends IntegrationTest{
 
   @Test
   @DisplayName("최대 회원수를 초과하여 소모임 가입 요청에 실패합니다.")
-  @Disabled //TODO: 소모임 회원 기능 구현 후 구현할 것
   void smallGroupJoinRequest_fail_because_exceed_max_member_count() {
     // given
-    SmallGroupDto smallGroup = insertSmallGroup("group01", 1, member01);
-    MemberDto joinMember1 = member01;
-    requestSmallGroupJoinRequest(smallGroup, joinMember1);  // 1명 추가 -> 최대 회원수 도달
+    SmallGroupDto smallGroup = insertSmallGroup("group01", 1L, member01);
+    MemberDto joinMember1 = member02;
+    Long newRequestId = requestSmallGroupJoinRequest(smallGroup, joinMember1).as(
+        Long.class); // 1명 가입 요청
+    requestApproveSmallGroupJoin(smallGroup, newRequestId, member01); // 승인 -> 1명 가입
 
-    MemberDto joinMember2 = member02;
-
+    MemberDto joinMember2 = member03;
     // when
     ExtractableResponse<Response> response = requestSmallGroupJoinRequest(smallGroup, joinMember2);
-
     // then
     assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_BAD_REQUEST);
   }
@@ -137,7 +137,7 @@ class SmallGroupJoinIntegrationTest extends IntegrationTest{
   }
 
   @Test
-  @DisplayName("소모임 가입 거절을 승인합니다.")
+  @DisplayName("소모임 가입 요청을 거절합니다.")
   void rejectSmallGroupJoin_success() {
     SmallGroupDto smallGroup = group01;
     MemberDto joinMember = member02;
@@ -185,7 +185,7 @@ class SmallGroupJoinIntegrationTest extends IntegrationTest{
     return response;
   }
 
-  private SmallGroupDto insertSmallGroup(String groupName, Integer maxMemberCount, MemberDto member) {
+  private SmallGroupDto insertSmallGroup(String groupName, Long maxMemberCount, MemberDto member) {
     CreateSmallGroupRequest request = CreateSmallGroupRequest.builder()
         .groupName(groupName)
         .description("테스트입니다.")

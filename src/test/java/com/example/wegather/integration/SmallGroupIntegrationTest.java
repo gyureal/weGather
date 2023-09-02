@@ -58,9 +58,9 @@ public class SmallGroupIntegrationTest extends IntegrationTest {
     member02 = insertMember("member02", "1234", MemberType.ROLE_USER);
     admin01 = insertMember("admin01", "1234", MemberType.ROLE_ADMIN);
 
-    group01 = insertGroup("탁사모", 300, Arrays.asList("탁구", "친목"));
-    group02 = insertGroup("책사모", 100, Arrays.asList("독서", "친목"));
-    group03 = insertGroup("토사모", 200, Arrays.asList("토익", "스터디"));
+    group01 = insertGroup("탁사모", 300L, Arrays.asList("탁구", "친목"));
+    group02 = insertGroup("책사모", 100L, Arrays.asList("독서", "친목"));
+    group03 = insertGroup("토사모", 200L, Arrays.asList("토익", "스터디"));
   }
 
   @Test
@@ -72,7 +72,7 @@ public class SmallGroupIntegrationTest extends IntegrationTest {
         .groupName("볼사모")
         .description("볼링을 사랑하는 사람들의 모임입니다.")
         .streetAddress("서울특별시 중구 세종대로 125")
-        .maxMemberCount(300)
+        .maxMemberCount(300L)
         .build();
 
     ExtractableResponse<Response> response = RestAssured.given().log().all()
@@ -178,7 +178,7 @@ public class SmallGroupIntegrationTest extends IntegrationTest {
         .groupName("수정 모임")
         .description("수정하였습니다.")
         .streetAddress("수정광역시 수정로")
-        .maxMemberCount(123)
+        .maxMemberCount(123L)
         .build();
 
     ExtractableResponse<Response> response = RestAssured
@@ -197,7 +197,7 @@ public class SmallGroupIntegrationTest extends IntegrationTest {
     assertThat(updated.getName()).isEqualTo(request.getGroupName());
     assertThat(updated.getDescription()).isEqualTo(request.getDescription());
     assertThat(updated.getAddress().getStreetAddress()).isEqualTo(request.getStreetAddress());
-    assertThat(updated.getMaxMemberCount().getValue()).isEqualTo(request.getMaxMemberCount());
+    assertThat(updated.getMaxMemberCount()).isEqualTo(request.getMaxMemberCount());
   }
   @Test
   @DisplayName("소모임장이 아니어서 소모임 수정에 실패합니다.")
@@ -206,7 +206,7 @@ public class SmallGroupIntegrationTest extends IntegrationTest {
         .groupName("수정 모임")
         .description("수정하였습니다.")
         .streetAddress("수정광역시 수정로")
-        .maxMemberCount(123)
+        .maxMemberCount(123L)
         .build();
 
     RestAssured
@@ -308,7 +308,7 @@ public class SmallGroupIntegrationTest extends IntegrationTest {
     assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_UNAUTHORIZED);
   }
 
-  private SmallGroupDto insertGroup(String groupName, Integer maxMemberCount, List<String> interests) {
+  private SmallGroupDto insertGroup(String groupName, Long maxMemberCount, List<String> interests) {
     CreateSmallGroupRequest request = CreateSmallGroupRequest.builder()
         .groupName(groupName)
         .description("테스트입니다.")
