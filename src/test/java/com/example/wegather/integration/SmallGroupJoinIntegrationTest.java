@@ -136,6 +136,23 @@ class SmallGroupJoinIntegrationTest extends IntegrationTest{
     assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_FORBIDDEN);
   }
 
+  @Test
+  @DisplayName("소모임 가입 거절을 승인합니다.")
+  void rejectSmallGroupJoin_success() {
+    SmallGroupDto smallGroup = group01;
+    MemberDto joinMember = member02;
+    Long requestId = requestSmallGroupJoinRequest(smallGroup, joinMember).as(Long.class);// 가입 요청
+
+    ExtractableResponse<Response> response = RestAssured.given().log().all()
+        .auth().basic(member01.getUsername(), memberPassword)
+        .pathParam("id", smallGroup.getId())
+        .pathParam("requestId", requestId)
+        .when().post("smallGroups/{id}/join/requests/{requestId}/reject")
+        .then().log().all().extract();
+
+    assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_OK);
+  }
+
   private ExtractableResponse<Response> requestApproveSmallGroupJoin(SmallGroupDto smallGroup,
       Long requestId, MemberDto loginMember) {
     ExtractableResponse<Response> response = RestAssured.given().log().all()

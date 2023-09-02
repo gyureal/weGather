@@ -83,10 +83,19 @@ public class SmallGroupJoinService {
   @Transactional
   public void approveJoinRequest(Long id, Long requestId, Long loginId) {
     SmallGroup smallGroup = findSmallGroupById(id);
-    validateApproveJoinRequest(smallGroup, loginId);
+    validateIsLeader(smallGroup, loginId);
 
     SmallGroupJoin smallGroupJoin = findSmallGroupJoinById(requestId);
     smallGroupJoin.approve();
+  }
+
+  @Transactional
+  public void rejectJoinRequest(Long id, Long requestId, Long loginId) {
+    SmallGroup smallGroup = findSmallGroupById(id);
+    validateIsLeader(smallGroup, loginId);
+
+    SmallGroupJoin smallGroupJoin = findSmallGroupJoinById(requestId);
+    smallGroupJoin.reject();
   }
 
   private SmallGroupJoin findSmallGroupJoinById(Long requestId) {
@@ -94,9 +103,9 @@ public class SmallGroupJoinService {
         .orElseThrow(() -> new IllegalArgumentException("해당 소모임 가입 요청을 찾을 수 없습니다."));
   }
 
-  private void validateApproveJoinRequest(SmallGroup smallGroup, Long loginId) {
+  private void validateIsLeader(SmallGroup smallGroup, Long loginId) {
     if (!smallGroup.isLeader(loginId)) {
-      throw new NoPermissionException("소모임장만 승인 가능합니다.");
+      throw new NoPermissionException("소모임장만 가능합니다.");
     }
   }
 

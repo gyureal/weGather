@@ -49,10 +49,18 @@ public class SmallGroupJoinController {
   }
 
   @PostMapping("/requests/{requestId}/approve")
-  public ResponseEntity<Void> approveJoinRequeest(
+  public ResponseEntity<Void> approveJoinRequest(
       @PathVariable Long id, @PathVariable Long requestId,
       @AuthenticationPrincipal MemberDetails memberDetails) {
     smallGroupJoinService.approveJoinRequest(id, requestId, memberDetails.getMemberId());
+    return ResponseEntity.ok().build();
+  }
+
+  @PostMapping("/requests/{requestId}/reject")
+  public ResponseEntity<Void> rejectJoinRequest(
+      @PathVariable Long id, @PathVariable Long requestId,
+      @AuthenticationPrincipal MemberDetails memberDetails) {
+    smallGroupJoinService.rejectJoinRequest(id, requestId, memberDetails.getMemberId());
     return ResponseEntity.ok().build();
   }
 }
