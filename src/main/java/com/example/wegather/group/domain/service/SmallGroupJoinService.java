@@ -1,5 +1,6 @@
 package com.example.wegather.group.domain.service;
 
+import com.example.wegather.global.customException.NoPermissionException;
 import com.example.wegather.group.domain.entity.SmallGroup;
 import com.example.wegather.group.domain.entity.SmallGroupJoin;
 import com.example.wegather.group.domain.repotitory.SmallGroupJoinRepository;
@@ -50,7 +51,7 @@ public class SmallGroupJoinService {
    * @param id 조회할 소모임 ID
    * @param loginId 로그인한 회원의 ID
    * @param pageable 페이징 파라메터
-   * @throws IllegalStateException
+   * @throws NoPermissionException
    *    - 요청자가 소모임장이 아닌 경우
    * @return
    */
@@ -65,7 +66,7 @@ public class SmallGroupJoinService {
 
   private void validateGetAllJoinRequests(SmallGroup smallGroup, Long loginId) {
     if (!smallGroup.isLeader(loginId)) {
-      throw new IllegalStateException("소모임장만 조회 가능합니다.");
+      throw new NoPermissionException("소모임장만 조회 가능합니다.");
     }
   }
 

@@ -107,7 +107,7 @@ class SmallGroupJoinIntegrationTest extends IntegrationTest{
     ExtractableResponse<Response> response = requestReadAllJoinRequests(
         smallGroup, page, member02);
 
-    assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_BAD_REQUEST);
+    assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_FORBIDDEN);
   }
 
   private ExtractableResponse<Response> requestReadAllJoinRequests(SmallGroupDto smallGroup,
