@@ -31,6 +31,8 @@ public class SmallGroupJoinService {
    * @throws IllegalArgumentException
    *    - 이미 가입 요청한 회원일 경우
    *    - 소모임장인 경우
+   * @throws IllegalStateException
+   *    - 최대 회원수를 초과한 경우
    */
   public Long requestJoin(Long smallGroupId, Long loginId) {
     SmallGroup smallGroup = findSmallGroupById(smallGroupId);
@@ -49,6 +51,7 @@ public class SmallGroupJoinService {
     if (smallGroup.isLeader(member.getId())) {
       throw new IllegalArgumentException("소모임장은 가입 요청할 수 없습니다.");
     }
+    validateExceedMaxCount(smallGroup);
   }
 
   /**
@@ -81,7 +84,10 @@ public class SmallGroupJoinService {
    * @param id       소모임 ID
    * @param requestId 가입 요청 ID
    * @param loginId  로그인한 회원의 ID
-   * @throws NoPermissionException - 소모임장이 아닌 경우
+   * @throws NoPermissionException
+   *    - 소모임장이 아닌 경우
+   * @throws IllegalStateException
+   *    - 최대 회원수를 초과한 경우
    */
   @Transactional
   public void approveJoinRequest(Long id, Long requestId, Long loginId) {
@@ -90,8 +96,23 @@ public class SmallGroupJoinService {
     // 소모임 가입 승인
     SmallGroupJoin smallGroupJoin = findSmallGroupJoinById(requestId);
     smallGroupJoin.approve();
+    // 소모임 멤버 추가
+    addSmallGroupMember(smallGroup, smallGroupJoin);
+  }
+
+  private void addSmallGroupMember(SmallGroup smallGroup, SmallGroupJoin smallGroupJoin) {
+    // 회원수 체크
+    validateExceedMaxCount(smallGroup);
     // 소모임 회원 추가
     smallGroupMemberRepository.save(SmallGroupMember.of(smallGroup, smallGroupJoin.getMember()));
+  }
+
+  // 최대 회원수를 넘는지 체크합니다.
+  private void validateExceedMaxCount(SmallGroup smallGroup) {
+    Long nowMemberCount = smallGroupMemberRepository.countBySmallGroup(smallGroup);
+    if (smallGroup.isExceedMaxMember(nowMemberCount)) {
+      throw new IllegalStateException("가입 가능한 최대 회원수를 초과했습니다.");
+    }
   }
 
   /**

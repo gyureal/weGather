@@ -80,7 +80,7 @@ public class SmallGroup extends BaseTimeEntity {
   }
 
   public boolean isExceedMaxMember(Long nowCount) {
-    return maxMemberCount >= nowCount;
+    return maxMemberCount <= nowCount;
   }
 
   @Override
