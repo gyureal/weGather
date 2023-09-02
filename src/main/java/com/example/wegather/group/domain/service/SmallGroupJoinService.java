@@ -23,14 +23,14 @@ public class SmallGroupJoinService {
   /**
    * 가입 요청 유효성 체크
    * @param smallGroupId 가입할 소모임 ID
-   * @param memberId 로그인한 회원의 ID
+   * @param loginId 로그인한 회원의 ID
    * @throws IllegalArgumentException
    *    - 이미 가입 요청한 회원일 경우
    *    - 소모임장인 경우
    */
-  public void requestJoin(Long smallGroupId, Long memberId) {
+  public void requestJoin(Long smallGroupId, Long loginId) {
     SmallGroup smallGroup = findSmallGroupById(smallGroupId);
-    Member member = findMemberById(memberId);
+    Member member = findMemberById(loginId);
 
     validRequestJoin(smallGroup, member);
 
