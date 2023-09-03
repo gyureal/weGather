@@ -5,7 +5,7 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
-import com.example.wegather.global.customException.FileUploadException;
+import com.example.wegather.global.exception.customException.FileUploadException;
 import java.io.IOException;
 import java.io.InputStream;
 import lombok.RequiredArgsConstructor;

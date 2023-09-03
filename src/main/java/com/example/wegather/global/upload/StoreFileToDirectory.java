@@ -1,8 +1,8 @@
 package com.example.wegather.global.upload;
 
-import com.example.wegather.global.customException.FileDeleteException;
-import com.example.wegather.global.customException.FileGetException;
-import com.example.wegather.global.customException.FileUploadException;
+import com.example.wegather.global.exception.customException.FileDeleteException;
+import com.example.wegather.global.exception.customException.FileGetException;
+import com.example.wegather.global.exception.customException.FileUploadException;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -15,7 +15,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
-import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j

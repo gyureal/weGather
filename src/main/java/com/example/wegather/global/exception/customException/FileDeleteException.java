@@ -1,4 +1,4 @@
-package com.example.wegather.global.customException;
+package com.example.wegather.global.exception.customException;
 
 public class FileDeleteException extends RuntimeException {
   public FileDeleteException(String message) {

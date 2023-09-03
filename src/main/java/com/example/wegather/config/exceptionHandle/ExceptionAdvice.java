@@ -1,7 +1,7 @@
 package com.example.wegather.config.exceptionHandle;
 
-import com.example.wegather.global.customException.AuthenticationException;
-import com.example.wegather.global.customException.NoPermissionException;
+import com.example.wegather.global.exception.customException.AuthenticationException;
+import com.example.wegather.global.exception.customException.NoPermissionException;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

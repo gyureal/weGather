@@ -1,6 +1,6 @@
 package com.example.wegather.groupJoin.domain.service;
 
-import com.example.wegather.global.customException.NoPermissionException;
+import com.example.wegather.global.exception.customException.NoPermissionException;
 import com.example.wegather.group.domain.entity.SmallGroup;
 import com.example.wegather.groupJoin.domain.entity.SmallGroupJoin;
 import com.example.wegather.groupJoin.domain.entity.SmallGroupMember;

@@ -4,7 +4,7 @@ import static com.example.wegather.global.Message.Error.MEMBER_NOT_FOUND;
 import static com.example.wegather.global.Message.Error.USERNAME_DUPLICATED;
 
 import com.example.wegather.global.auth.AuthenticationManager;
-import com.example.wegather.global.customException.AuthenticationException;
+import com.example.wegather.global.exception.customException.AuthenticationException;
 import com.example.wegather.global.dto.AddressRequest;
 import com.example.wegather.global.upload.StoreFile;
 import com.example.wegather.global.upload.UploadFile;
@@ -18,7 +18,6 @@ import com.example.wegather.member.domain.vo.Username;
 import com.example.wegather.member.dto.JoinMemberRequest;
 import com.example.wegather.member.dto.MemberDto;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
