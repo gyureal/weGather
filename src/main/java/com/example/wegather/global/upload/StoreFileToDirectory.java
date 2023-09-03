@@ -1,5 +1,9 @@
 package com.example.wegather.global.upload;
 
+import static com.example.wegather.global.exception.ErrorCode.FAIL_TO_DELETE_FILE;
+import static com.example.wegather.global.exception.ErrorCode.FAIL_TO_GET_FILE;
+import static com.example.wegather.global.exception.ErrorCode.FAIL_TO_UPLOAD_FILE;
+
 import com.example.wegather.global.exception.customException.FileDeleteException;
 import com.example.wegather.global.exception.customException.FileGetException;
 import com.example.wegather.global.exception.customException.FileUploadException;
@@ -21,9 +25,6 @@ import org.springframework.web.multipart.MultipartFile;
 //@Service
 public class StoreFileToDirectory implements StoreFile {
 
-  private static final String FAIL_TO_UPLOAD_PROFILE_IMAGE = "회원 프로필 이미지 업로드에 실패했습니다.";
-  private static final String FAIL_TO_GET_FILE = "파일을 가져오는데 실패했습니다.";
-  private static final String FAIL_TO_DELETE_FILE = "파일 삭제에 실패했습니다.";
   @Value("${file.dir}")
   private String fileDir;
 
@@ -32,7 +33,7 @@ public class StoreFileToDirectory implements StoreFile {
     try {
       return new UrlResource("file:" + getFullPath(filename));
     } catch (MalformedURLException e) {
-      throw new FileGetException(FAIL_TO_GET_FILE);
+      throw new FileGetException(FAIL_TO_GET_FILE.getDescription());
     }
   }
 
@@ -68,7 +69,7 @@ public class StoreFileToDirectory implements StoreFile {
     try {
       multipartFile.transferTo(new File(getFullPath(storeFileName)));
     } catch (IOException e) {
-      throw new FileUploadException(FAIL_TO_UPLOAD_PROFILE_IMAGE, e);
+      throw new FileUploadException(FAIL_TO_UPLOAD_FILE.getDescription(), e);
     }
 
     return new UploadFile(originalFilename, storeFileName);
@@ -84,7 +85,7 @@ public class StoreFileToDirectory implements StoreFile {
     try {
       Files.delete(filePath);
     } catch (IOException | SecurityException e) {
-      throw new FileDeleteException(FAIL_TO_DELETE_FILE);
+      throw new FileDeleteException(FAIL_TO_DELETE_FILE.getDescription());
     }
   }
 

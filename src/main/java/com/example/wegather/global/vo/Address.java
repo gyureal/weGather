@@ -1,6 +1,6 @@
 package com.example.wegather.global.vo;
 
-import static com.example.wegather.global.Message.Error.STREET_ADDRESS_MUST_NOT_EMPTY;
+import static com.example.wegather.global.exception.ErrorCode.*;
 
 import javax.persistence.Embeddable;
 import lombok.AccessLevel;
@@ -29,7 +29,7 @@ public class Address {
 
   void validateAddress(String streetAddress, Double longitude, Double latitude) {
     if (!StringUtils.hasText(streetAddress)) {
-      throw new IllegalArgumentException(STREET_ADDRESS_MUST_NOT_EMPTY);
+      throw new IllegalArgumentException(STREET_ADDRESS_MUST_NOT_EMPTY.getDescription());
     }
   }
 }

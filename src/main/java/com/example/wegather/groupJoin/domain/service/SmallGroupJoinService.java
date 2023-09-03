@@ -1,5 +1,7 @@
 package com.example.wegather.groupJoin.domain.service;
 
+import static com.example.wegather.global.exception.ErrorCode.*;
+
 import com.example.wegather.global.exception.customException.NoPermissionException;
 import com.example.wegather.group.domain.entity.SmallGroup;
 import com.example.wegather.groupJoin.domain.entity.SmallGroupJoin;
@@ -46,10 +48,10 @@ public class SmallGroupJoinService {
 
   private void validRequestJoin(SmallGroup smallGroup, Member member) {
     if (smallGroupJoinRepository.existsBySmallGroupAndMember(smallGroup, member)) {
-      throw new IllegalArgumentException("이미 가입 요청한 회원입니다.");
+      throw new IllegalArgumentException(ALREADY_REQUEST_JOIN_MEMBER.getDescription());
     }
     if (smallGroup.isLeader(member.getId())) {
-      throw new IllegalArgumentException("소모임장은 가입 요청할 수 없습니다.");
+      throw new IllegalArgumentException(LEADER_CANNOT_REQUEST_JOIN.getDescription());
     }
     validateExceedMaxCount(smallGroup);
   }
@@ -74,7 +76,7 @@ public class SmallGroupJoinService {
 
   private void validateGetAllJoinRequests(SmallGroup smallGroup, Long loginId) {
     if (!smallGroup.isLeader(loginId)) {
-      throw new NoPermissionException("소모임장만 조회 가능합니다.");
+      throw new NoPermissionException(LEADER_ONLY.getDescription());
     }
   }
 
@@ -111,7 +113,7 @@ public class SmallGroupJoinService {
   private void validateExceedMaxCount(SmallGroup smallGroup) {
     Long nowMemberCount = smallGroupMemberRepository.countBySmallGroup(smallGroup);
     if (smallGroup.isExceedMaxMember(nowMemberCount)) {
-      throw new IllegalStateException("가입 가능한 최대 회원수를 초과했습니다.");
+      throw new IllegalStateException(EXCESS_MAX_MEMBER_COUNT.getDescription());
     }
   }
 
@@ -134,22 +136,22 @@ public class SmallGroupJoinService {
 
   private SmallGroupJoin findSmallGroupJoinById(Long requestId) {
     return smallGroupJoinRepository.findById(requestId)
-        .orElseThrow(() -> new IllegalArgumentException("해당 소모임 가입 요청을 찾을 수 없습니다."));
+        .orElseThrow(() -> new IllegalArgumentException(SMALL_GROUP_JOIN_NOT_FOUND.getDescription()));
   }
 
   private void validateIsLeader(SmallGroup smallGroup, Long loginId) {
     if (!smallGroup.isLeader(loginId)) {
-      throw new NoPermissionException("소모임장만 가능합니다.");
+      throw new NoPermissionException(LEADER_ONLY.getDescription());
     }
   }
 
   private SmallGroup findSmallGroupById(Long id) {
     return smallGroupRepository.findById(id)
-        .orElseThrow(() -> new IllegalArgumentException("소모임을 찾을 수 없습니다."));
+        .orElseThrow(() -> new IllegalArgumentException(SMALL_GROUP_NOT_FOUND.getDescription()));
   }
 
   private Member findMemberById(Long id) {
     return memberRepository.findById(id)
-        .orElseThrow(() -> new IllegalStateException("로그인한 회원 정보를 찾을 수 없습니다."));
+        .orElseThrow(() -> new IllegalStateException(MEMBER_NOT_FOUND.getDescription()));
   }
 }

@@ -1,6 +1,7 @@
 package com.example.wegather.interest.domain;
 
-import static com.example.wegather.global.Message.Error.*;
+import static com.example.wegather.global.exception.ErrorCode.INTEREST_NAME_ALREADY_EXISTS;
+import static com.example.wegather.global.exception.ErrorCode.INTEREST_NOT_FOUND;
 
 import com.example.wegather.interest.dto.CreateInterestRequest;
 import java.util.List;
@@ -23,7 +24,7 @@ public class InterestService {
 
     boolean isNameExists = interestRepository.existsByName(request.getInterestName());
     if (isNameExists) {
-      throw new IllegalArgumentException(INTEREST_NAME_ALREADY_EXISTS);
+      throw new IllegalArgumentException(INTEREST_NAME_ALREADY_EXISTS.getDescription());
     }
     return interestRepository.save(Interest.of(request.getInterestName()));
   }
@@ -44,7 +45,7 @@ public class InterestService {
    */
   public Interest getInterest(Long id) {
     return interestRepository.findById(id)
-        .orElseThrow(() -> new IllegalArgumentException(INTEREST_NOT_FOUND));
+        .orElseThrow(() -> new IllegalArgumentException(INTEREST_NOT_FOUND.getDescription()));
   }
 
   /**

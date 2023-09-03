@@ -6,6 +6,7 @@ import com.example.wegather.global.exception.customException.NoPermissionExcepti
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -36,6 +37,14 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(IllegalStateException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleIllegalArgumentException(IllegalStateException ex) {
+        UUID uuid = generateLogId();
+        log.info(INFO_LOG_TEMPLATE, uuid, ex.getClass().getSimpleName(), ex);
+        return ErrorResponse.of(uuid, ex);
+    }
+
+    @ExceptionHandler(UsernameNotFoundException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleUsernameNotFoundException(UsernameNotFoundException ex) {
         UUID uuid = generateLogId();
         log.info(INFO_LOG_TEMPLATE, uuid, ex.getClass().getSimpleName(), ex);
         return ErrorResponse.of(uuid, ex);

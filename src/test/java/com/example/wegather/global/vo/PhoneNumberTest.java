@@ -1,6 +1,6 @@
 package com.example.wegather.global.vo;
 
-import static com.example.wegather.global.Message.Error.PHONE_NUMBER_RULE_VIOLATION;
+import static com.example.wegather.global.exception.ErrorCode.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -28,6 +28,6 @@ class PhoneNumberTest {
     assertThatThrownBy(() -> {
       PhoneNumber result = PhoneNumber.of(phoneNumber);
     }).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage(PHONE_NUMBER_RULE_VIOLATION);
+        .hasMessage(PHONE_NUMBER_RULE_VIOLATION.getDescription());
   }
 }

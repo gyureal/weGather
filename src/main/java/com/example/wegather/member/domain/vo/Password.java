@@ -1,6 +1,6 @@
 package com.example.wegather.member.domain.vo;
 
-import static com.example.wegather.global.Message.Error.PASSWORD_RULE_VIOLATION;
+import static com.example.wegather.global.exception.ErrorCode.*;
 
 import java.util.regex.Pattern;
 import javax.persistence.Embeddable;
@@ -35,7 +35,7 @@ public class Password {
 
   void validatePasswordRule(String value) {
     if (!PASSWORD_RULE.matcher(value).matches()) {
-      throw new IllegalArgumentException(PASSWORD_RULE_VIOLATION);
+      throw new IllegalArgumentException(PASSWORD_RULE_VIOLATION.getDescription());
     }
   }
 }

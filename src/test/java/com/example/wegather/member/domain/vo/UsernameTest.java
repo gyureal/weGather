@@ -1,6 +1,6 @@
 package com.example.wegather.member.domain.vo;
 
-import static com.example.wegather.global.Message.Error.*;
+import static com.example.wegather.global.exception.ErrorCode.*;
 import static org.assertj.core.api.Assertions.*;
 
 import org.junit.jupiter.api.DisplayName;
@@ -28,7 +28,7 @@ class UsernameTest {
     assertThatThrownBy(() -> {
       Username result = Username.of(username);
     }).isInstanceOf(IllegalArgumentException.class)
-            .hasMessage(USERNAME_RULE_VIOLATION);
+            .hasMessage(USERNAME_RULE_VIOLATION.getDescription());
   }
 
   @Test
@@ -41,7 +41,7 @@ class UsernameTest {
     assertThatThrownBy(() -> {
       Username result = Username.of(username);
     }).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage(USERNAME_RULE_VIOLATION);
+        .hasMessage(USERNAME_RULE_VIOLATION.getDescription());
   }
 
   @Test
@@ -54,7 +54,7 @@ class UsernameTest {
     assertThatThrownBy(() -> {
       Username result = Username.of(username);
     }).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage(USERNAME_RULE_VIOLATION);
+        .hasMessage(USERNAME_RULE_VIOLATION.getDescription());
   }
 
 }
