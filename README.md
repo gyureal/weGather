@@ -1,22 +1,16 @@
 # 🗒️ [Side Project] weGather (소모임 서비스)
-> 지역과 관심사가 비슷한 사람 끼리 모임을 만들 수 있는 서비스
+> 지역과 관심사가 비슷한 사람 끼리 모임을 만들 수 있는 서비스 입니다.
 
 
 ## 🔧 사용 기술 (Tech Stack)
-- java 11
-- spring
-    - springboot 2.7.5
-    - spring-security
-    - spring-data-jpa
-- querydsl 5.0.0
-- test
-    - junit5
-    - assertj
-    - rest-assured:4.4.0 
-- infra
-    - mysql
-    - redis
-    - s3
+### Development
+<img src="https://img.shields.io/badge/java-007396?style=for-the-badge&logo=Java&logoColor=white"> <img src="https://img.shields.io/badge/springboot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white"> <img src="https://img.shields.io/badge/spring security-6DB33F?style=for-the-badge&logo=springsecurity&logoColor=white">  <img src="https://img.shields.io/badge/spring data jpa-6DB33F?style=for-the-badge&logo=spring&logoColor=white"> <img src="https://img.shields.io/badge/query dsl-007DB8?style=for-the-badge&logo=spring jpa&logoColor=white">
+
+### Test
+<img src="https://img.shields.io/badge/junit5-25A162?style=for-the-badge&logo=junit5&logoColor=white"> <img src="https://img.shields.io/badge/assertj-A5915F?style=for-the-badge&logo=assertj&logoColor=white"> <img src="https://img.shields.io/badge/rest assured-006272?style=for-the-badge&logo=rest-assured&logoColor=white">
+    
+### DB
+<img src="https://img.shields.io/badge/mysql-4479A1?style=for-the-badge&logo=mysql&logoColor=white"> <img src="https://img.shields.io/badge/amazon s3-569A31?style=for-the-badge&logo=amazons3&logoColor=white"> <img src="https://img.shields.io/badge/redis-DC382D?style=for-the-badge&logo=redis&logoColor=white">
 
 ## 🔎 프로젝트 기능
 ### 회원
@@ -33,7 +27,9 @@ https://great-lizard-b83.notion.site/API-d1ca66eb2a554be68e47284d727a59e3?pvs=4
 
 ## 📖 ERD
 https://www.erdcloud.com/d/J3yFTcYwZDscXNmSY
-![weGather](https://github.com/gyureal/weGather/assets/78974381/f59b336a-1c7d-42a5-bb23-1bc9bd2d9b0a)
+
+<img width="824" alt="image" src="https://github.com/gyureal/weGather/assets/78974381/009ad5f4-7c24-46b8-b2f9-32c871d8160b">
+
 
 ---
 ## 📕 Trouble Shooting
