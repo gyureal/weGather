@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.example.wegather.global.vo.MemberType;
 import com.example.wegather.group.dto.CreateSmallGroupRequest;
-import com.example.wegather.group.dto.GroupJoinRequestDto;
+import com.example.wegather.groupJoin.dto.GroupJoinRequestDto;
 import com.example.wegather.group.dto.SmallGroupDto;
 import com.example.wegather.member.dto.JoinMemberRequest;
 import com.example.wegather.member.dto.MemberDto;
