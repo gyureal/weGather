@@ -1,6 +1,6 @@
 package com.example.wegather.global.vo;
 
-import static com.example.wegather.global.Message.Error.STREET_ADDRESS_MUST_NOT_EMPTY;
+import static com.example.wegather.global.exception.ErrorCode.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -32,6 +32,6 @@ class AddressTest {
     assertThatThrownBy(() -> {
       Address result = Address.of(streetAddress, longitude, latitude);
     }).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage(STREET_ADDRESS_MUST_NOT_EMPTY);
+        .hasMessage(STREET_ADDRESS_MUST_NOT_EMPTY.getDescription());
   }
 }

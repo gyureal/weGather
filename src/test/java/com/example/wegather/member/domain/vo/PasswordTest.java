@@ -1,7 +1,6 @@
 package com.example.wegather.member.domain.vo;
 
-import static com.example.wegather.global.Message.Error.PASSWORD_RULE_VIOLATION;
-import static com.example.wegather.global.Message.Error.USERNAME_RULE_VIOLATION;
+import static com.example.wegather.global.exception.ErrorCode.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -33,7 +32,7 @@ class PasswordTest {
     assertThatThrownBy(() -> {
       Password result = Password.of(password, passwordEncoder);
     }).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage(PASSWORD_RULE_VIOLATION);
+        .hasMessage(PASSWORD_RULE_VIOLATION.getDescription());
   }
 
   @Test
@@ -46,6 +45,6 @@ class PasswordTest {
     assertThatThrownBy(() -> {
       Password result = Password.of(password, passwordEncoder);
     }).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage(PASSWORD_RULE_VIOLATION);
+        .hasMessage(PASSWORD_RULE_VIOLATION.getDescription());
   }
 }

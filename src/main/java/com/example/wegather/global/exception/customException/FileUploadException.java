@@ -1,4 +1,4 @@
-package com.example.wegather.global.customException;
+package com.example.wegather.global.exception.customException;
 
 import lombok.extern.slf4j.Slf4j;
 

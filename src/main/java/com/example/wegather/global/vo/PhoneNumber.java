@@ -1,7 +1,10 @@
 package com.example.wegather.global.vo;
 
-import static com.example.wegather.global.Message.Error.PHONE_NUMBER_RULE_VIOLATION;
 
+
+import static com.example.wegather.global.exception.ErrorCode.*;
+
+import com.example.wegather.global.exception.ErrorCode;
 import java.util.regex.Pattern;
 import javax.persistence.Embeddable;
 import lombok.AccessLevel;
@@ -30,7 +33,7 @@ public class PhoneNumber {
       return;
     }
     if (!PHONE_NUMBER_RULE.matcher(value).matches()) {
-      throw new IllegalArgumentException(PHONE_NUMBER_RULE_VIOLATION);
+      throw new IllegalArgumentException(PHONE_NUMBER_RULE_VIOLATION.getDescription());
     }
   }
 }

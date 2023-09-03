@@ -1,6 +1,6 @@
 package com.example.wegather.member.web;
 
-import com.example.wegather.global.customException.FileUploadException;
+import com.example.wegather.global.exception.customException.FileUploadException;
 import com.example.wegather.global.dto.AddressRequest;
 import com.example.wegather.interest.dto.InterestDto;
 import com.example.wegather.member.domain.MemberService;

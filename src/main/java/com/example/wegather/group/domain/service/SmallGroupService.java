@@ -1,8 +1,10 @@
 package com.example.wegather.group.domain.service;
 
+import static com.example.wegather.global.exception.ErrorCode.*;
+
 import com.example.wegather.auth.MemberDetails;
 import com.example.wegather.global.auth.AuthenticationManagerImpl;
-import com.example.wegather.global.customException.AuthenticationException;
+import com.example.wegather.global.exception.customException.AuthenticationException;
 import com.example.wegather.global.vo.Address;
 import com.example.wegather.group.domain.entity.SmallGroup;
 import com.example.wegather.group.domain.repotitory.SmallGroupRepository;
@@ -24,11 +26,6 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class SmallGroupService {
 
-  private static final String GROUP_NOT_FOUND = "소모임을 찾을 수 없습니다.";
-  private static final String USERNAME_IN_AUTH_NOT_FOUND = "인증정보에 있는 회원정보를 찾을 수 없습니다.";
-  private static final String DO_NOT_HAVE_AUTHORITY_TO_UPDATE_GROUP = "소모임 정보를 수정할 권한이 없습니다.";
-  private static final String DO_NOT_HAVE_AUTHORITY_TO_DELETE_GROUP = "소모임을 삭제할 권한이 없습니다.";
-  public static final String INTEREST_NOT_FOUND = "관심사를 찾을 수 없습니다.";
   private final SmallGroupRepository smallGroupRepository;
   private final MemberRepository memberRepository;
   private final AuthenticationManagerImpl authManager;
@@ -38,7 +35,7 @@ public class SmallGroupService {
   public SmallGroup addSmallGroup(CreateSmallGroupRequest request, String username) {
 
     Member member = memberRepository.findByUsername(Username.of(username))
-        .orElseThrow(() -> new IllegalStateException(USERNAME_IN_AUTH_NOT_FOUND));
+        .orElseThrow(() -> new IllegalStateException(MEMBER_NOT_FOUND.getDescription()));
 
     return smallGroupRepository.save(SmallGroup.builder()
             .name(request.getGroupName())
@@ -52,7 +49,7 @@ public class SmallGroupService {
 
   public SmallGroup getSmallGroup(Long id) {
     return smallGroupRepository.findById(id)
-        .orElseThrow(() -> new IllegalArgumentException(GROUP_NOT_FOUND));
+        .orElseThrow(() -> new IllegalArgumentException(SMALL_GROUP_NOT_FOUND.getDescription()));
   }
 
   public Page<SmallGroup> searchSmallGroups(SmallGroupSearchCondition cond, Pageable pageable) {
@@ -63,7 +60,7 @@ public class SmallGroupService {
   public void editSmallGroup(Long id, UpdateSmallGroupRequest request) {
     SmallGroup smallGroup = getSmallGroup(id);
 
-    validateUpdatable(smallGroup, DO_NOT_HAVE_AUTHORITY_TO_UPDATE_GROUP);
+    validateUpdatable(smallGroup, DO_NOT_HAVE_AUTHORITY_TO_UPDATE_GROUP.getDescription());
 
     smallGroup.updateSmallGroupInfo(
         request.getGroupName(),
@@ -84,7 +81,7 @@ public class SmallGroupService {
   public void deleteSmallGroup(Long id) {
     SmallGroup smallGroup = getSmallGroup(id);
 
-    validateUpdatable(smallGroup, DO_NOT_HAVE_AUTHORITY_TO_DELETE_GROUP);
+    validateUpdatable(smallGroup, DO_NOT_HAVE_AUTHORITY_TO_DELETE_GROUP.getDescription());
 
     smallGroupRepository.deleteById(id);
   }
@@ -92,7 +89,7 @@ public class SmallGroupService {
   @Transactional
   public void addSmallGroupInterest(Long smallGroupId, Long interestId) {
     SmallGroup smallGroup = findWithInterestById(smallGroupId);
-    validateUpdatable(smallGroup, DO_NOT_HAVE_AUTHORITY_TO_UPDATE_GROUP);
+    validateUpdatable(smallGroup, DO_NOT_HAVE_AUTHORITY_TO_UPDATE_GROUP.getDescription());
     Interest interest = findInterestById(interestId);
 
     smallGroup.addInterest(interest);
@@ -101,7 +98,7 @@ public class SmallGroupService {
   @Transactional
   public void removeSmallGroupInterest(Long smallGroupId, Long interestId) {
     SmallGroup smallGroup = findWithInterestById(smallGroupId);
-    validateUpdatable(smallGroup, DO_NOT_HAVE_AUTHORITY_TO_UPDATE_GROUP);
+    validateUpdatable(smallGroup, DO_NOT_HAVE_AUTHORITY_TO_UPDATE_GROUP.getDescription());
     Interest interest = findInterestById(interestId);
 
     smallGroup.removeInterest(interest);
@@ -109,11 +106,11 @@ public class SmallGroupService {
 
   private SmallGroup findWithInterestById(Long id) {
     return smallGroupRepository.findWithInterestById(id)
-        .orElseThrow(() -> new IllegalArgumentException(GROUP_NOT_FOUND));
+        .orElseThrow(() -> new IllegalArgumentException(SMALL_GROUP_NOT_FOUND.getDescription()));
   }
 
   private Interest findInterestById(Long interestId) {
     return interestRepository.findById(interestId)
-        .orElseThrow(() -> new IllegalArgumentException(INTEREST_NOT_FOUND));
+        .orElseThrow(() -> new IllegalArgumentException(INTEREST_NOT_FOUND.getDescription()));
   }
 }

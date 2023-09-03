@@ -1,11 +1,14 @@
 package com.example.wegather.global.upload;
 
+import static com.example.wegather.global.exception.ErrorCode.*;
+
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
-import com.example.wegather.global.customException.FileUploadException;
+import com.example.wegather.global.exception.ErrorCode;
+import com.example.wegather.global.exception.customException.FileUploadException;
 import java.io.IOException;
 import java.io.InputStream;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +24,6 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 public class StoreFileToAWS implements StoreFile {
 
-  private static final String FAIL_TO_UPLOAD_FILE_TO_AWS_S3 = "AWS S3에 파일 업로드를 실패했습니다.";
   @Value("${application.bucket.name}")
   private String bucketName;
 
@@ -45,7 +47,7 @@ public class StoreFileToAWS implements StoreFile {
     try (InputStream inputStream = multipartFile.getInputStream()) {
       s3Client.putObject(new PutObjectRequest(bucketName, storeFileName, inputStream, objectMetadata));
     } catch (IOException e) {
-      throw new FileUploadException(FAIL_TO_UPLOAD_FILE_TO_AWS_S3);
+      throw new FileUploadException(FAIL_TO_UPLOAD_FILE.getDescription());
     }
 
     return UploadFile.of(multipartFile.getOriginalFilename(), storeFileName);

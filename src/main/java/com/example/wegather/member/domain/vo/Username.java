@@ -1,6 +1,6 @@
 package com.example.wegather.member.domain.vo;
 
-import static com.example.wegather.global.Message.Error.USERNAME_RULE_VIOLATION;
+import static com.example.wegather.global.exception.ErrorCode.USERNAME_RULE_VIOLATION;
 
 import java.util.regex.Pattern;
 import javax.persistence.Embeddable;
@@ -32,7 +32,7 @@ public class Username {
 
   void validateNamingRule(String value) {
     if (!USERNAME_RULE.matcher(value).matches()) {
-      throw new IllegalArgumentException(USERNAME_RULE_VIOLATION);
+      throw new IllegalArgumentException(USERNAME_RULE_VIOLATION.getDescription());
     }
   }
 }

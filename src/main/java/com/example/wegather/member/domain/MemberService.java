@@ -1,10 +1,11 @@
 package com.example.wegather.member.domain;
 
-import static com.example.wegather.global.Message.Error.MEMBER_NOT_FOUND;
-import static com.example.wegather.global.Message.Error.USERNAME_DUPLICATED;
+
+import static com.example.wegather.global.exception.ErrorCode.MEMBER_NOT_FOUND;
+import static com.example.wegather.global.exception.ErrorCode.USERNAME_DUPLICATED;
 
 import com.example.wegather.global.auth.AuthenticationManager;
-import com.example.wegather.global.customException.AuthenticationException;
+import com.example.wegather.global.exception.customException.AuthenticationException;
 import com.example.wegather.global.dto.AddressRequest;
 import com.example.wegather.global.upload.StoreFile;
 import com.example.wegather.global.upload.UploadFile;
@@ -18,7 +19,6 @@ import com.example.wegather.member.domain.vo.Username;
 import com.example.wegather.member.dto.JoinMemberRequest;
 import com.example.wegather.member.dto.MemberDto;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -41,7 +41,7 @@ public class MemberService {
   @Transactional
   public MemberDto joinMember(JoinMemberRequest request) {
     if (memberRepository.existsByUsername(Username.of(request.getUsername()))) {
-      throw new IllegalArgumentException(USERNAME_DUPLICATED);
+      throw new IllegalArgumentException(USERNAME_DUPLICATED.getDescription());
     }
 
     return MemberDto.from(memberRepository.save(Member.builder()
@@ -63,7 +63,7 @@ public class MemberService {
 
   public Member getMember(Long id) {
     return memberRepository.findById(id)
-        .orElseThrow(() -> new IllegalArgumentException(MEMBER_NOT_FOUND));
+        .orElseThrow(() -> new IllegalArgumentException(MEMBER_NOT_FOUND.getDescription()));
   }
 
   @Transactional

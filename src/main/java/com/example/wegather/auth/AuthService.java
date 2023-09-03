@@ -1,5 +1,8 @@
 package com.example.wegather.auth;
 
+import static com.example.wegather.global.exception.ErrorCode.*;
+
+import com.example.wegather.global.exception.ErrorCode;
 import com.example.wegather.member.domain.entity.Member;
 import com.example.wegather.member.domain.MemberRepository;
 import com.example.wegather.member.domain.vo.Username;
@@ -13,13 +16,12 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AuthService implements UserDetailsService {
 
-  private static final String USERNAME_NOT_FOUND = "사용자 정보를 찾을 수 없습니다.";
   private final MemberRepository memberRepository;
 
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
     Member member = memberRepository.findByUsername(Username.of(username))
-        .orElseThrow(() -> new UsernameNotFoundException(USERNAME_NOT_FOUND));
+        .orElseThrow(() -> new UsernameNotFoundException(USERNAME_NOT_FOUND.getDescription()));
 
     return MemberDetails.from(member);
   }
