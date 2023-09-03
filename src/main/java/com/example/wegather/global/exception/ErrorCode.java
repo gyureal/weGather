@@ -13,7 +13,7 @@ public enum ErrorCode {
    * 공통 에러 메세지
    * 규칙 : 1000 ~ 19999
    */
-  INTERNAL_SERVER_ERROR("1000", "일시적인 장애 입니다."),
+  INTERNAL_SERVER_ERROR("1000", "서버 내부 에러입니다."),
   FAIL_TO_UPLOAD_FILE("1001", "파일 업로드에 실패했습니다."),
   INVALID_INPUT_ERROR("1002","올바르지 않은 입력입니다."),
 
@@ -48,6 +48,20 @@ public enum ErrorCode {
     }
   }
 
+  /**
+   * 에러 메세지에 해당하는 에러코드가 존재하는지 확인합니다.
+   * @param description 에러메세지
+   * @return
+   */
+  public static boolean isErrorCodeExists(String description) {
+    return ERROR_CODE_MAP.containsKey(description);
+  }
+
+  /**
+   * 에러 메제지에 해당하는 에러코드 Enum 을 반환합니다.
+   * @param description 에러메세지
+   * @return
+   */
   public static ErrorCode findCode(String description) {
     return ERROR_CODE_MAP.get(description);
   }
