@@ -1,6 +1,15 @@
 # 🗒️ [Side Project] weGather (소모임 서비스)
 > 지역과 관심사가 비슷한 사람 끼리 모임을 만들 수 있는 서비스 입니다.
 
+## ⚙ 개발 환경
+```
+운영체제 :  Mac OS
+통합개발환경(IDE) : IntelliJ
+JDK 버전 : JDK 11
+데이터 베이스 : Mysql
+빌드 툴 : Gradle-7.6.1
+관리 툴 : GitHub
+```
 
 ## 🔧 사용 기술 (Tech Stack)
 ### Development
