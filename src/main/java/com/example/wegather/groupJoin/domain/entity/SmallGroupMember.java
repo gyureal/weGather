@@ -1,6 +1,7 @@
-package com.example.wegather.group.domain.entity;
+package com.example.wegather.groupJoin.domain.entity;
 
 import com.example.wegather.global.BaseTimeEntity;
+import com.example.wegather.group.domain.entity.SmallGroup;
 import com.example.wegather.member.domain.entity.Member;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;

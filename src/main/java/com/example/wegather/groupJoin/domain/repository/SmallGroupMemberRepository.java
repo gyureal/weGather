@@ -1,7 +1,7 @@
-package com.example.wegather.group.domain.repotitory;
+package com.example.wegather.groupJoin.domain.repository;
 
 import com.example.wegather.group.domain.entity.SmallGroup;
-import com.example.wegather.group.domain.entity.SmallGroupMember;
+import com.example.wegather.groupJoin.domain.entity.SmallGroupMember;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface SmallGroupMemberRepository extends JpaRepository<SmallGroupMember, Long> {
