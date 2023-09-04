@@ -1,3 +1,7 @@
+env:  
+  S3_BUCKET_NAME: my-neighbor-solver
+  PROJECT_NAME: weGather
+
 name: deploy # (0) GitHub Action에서 보여질 이름을 지정합니다. 
 
 on:
