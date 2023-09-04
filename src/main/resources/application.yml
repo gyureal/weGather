@@ -1,7 +1,7 @@
 spring:
   profiles:
     group:
-      default:
+      local:
         - app
         - aws
         - db-local
@@ -9,3 +9,4 @@ spring:
         - app
         - aws
         - db-dev
+    active: local
