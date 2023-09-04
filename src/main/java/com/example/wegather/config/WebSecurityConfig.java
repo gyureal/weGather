@@ -20,6 +20,7 @@ public class WebSecurityConfig {
     http.csrf().disable();
     http.authorizeRequests()
         .antMatchers(HttpMethod.POST,"/members").permitAll()
+        .antMatchers("/health").permitAll()
         .anyRequest().authenticated()
         .and()
         .httpBasic();
