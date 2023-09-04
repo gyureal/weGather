@@ -47,6 +47,17 @@ jobs:
     - name: Build with Gradle
       run: ./gradlew clean build # (8) 해당 프로젝트를 build 합니다.
       shell: bash
+
+    - name: Build with Gradle
+      run: ./gradlew clean build # (8)
+      shell: bash
+
+    - name: Get current time
+      uses: 1466587594/get-current-time@v2  # (9)
+      id: current-time
+      with:
+        format: YYYY-MM-DDTHH-mm-ss 
+        utcOffset: "+09:00"
       
     - name: Make zip file
       run: zip -r ./$PROJECT_NAME.zip .         # (12)
