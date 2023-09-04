@@ -25,3 +25,17 @@ logging:
 
 file:
   dir: /Users/yonggyujeong/temp/
+
+cloud:
+  aws:
+    credentials:
+      accessKey: test
+      secretKey: test
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
+application:
+  bucket:
+    name: my-neighbor-solver
+
