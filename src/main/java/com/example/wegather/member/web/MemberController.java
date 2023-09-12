@@ -1,5 +1,6 @@
 package com.example.wegather.member.web;
 
+import com.example.wegather.auth.MemberDetails;
 import com.example.wegather.global.exception.customException.FileUploadException;
 import com.example.wegather.global.dto.AddressRequest;
 import com.example.wegather.interest.dto.InterestDto;
@@ -10,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -72,8 +74,9 @@ public class MemberController {
    * @return
    */
   @PutMapping("/{id}/image")
-  public ResponseEntity<Void> updateProfileImage(@PathVariable Long id, @RequestParam MultipartFile profileImage) {
-    memberService.updateProfileImage(id, profileImage);
+  public ResponseEntity<Void> updateProfileImage(@AuthenticationPrincipal MemberDetails principal,
+      @PathVariable Long id, @RequestParam MultipartFile profileImage) {
+    memberService.updateProfileImage(principal, id, profileImage);
     return ResponseEntity.ok().build();
   }
 
@@ -87,9 +90,9 @@ public class MemberController {
    * @return
    */
   @PutMapping("/{id}/address")
-  public ResponseEntity<Void> updateMemberAddress(@PathVariable Long id, @RequestBody
-      AddressRequest addressRequest) {
-    memberService.updateMemberAddress(id, addressRequest);
+  public ResponseEntity<Void> updateMemberAddress(@AuthenticationPrincipal MemberDetails principal,
+      @PathVariable Long id, @RequestBody AddressRequest addressRequest) {
+    memberService.updateMemberAddress(principal, id, addressRequest);
     return ResponseEntity.ok().build();
   }
 
@@ -100,8 +103,9 @@ public class MemberController {
    * @return
    */
   @PostMapping("/{id}/interests")
-  public ResponseEntity<List<InterestDto>> addMemberInterests(@PathVariable Long id, @RequestParam Long interestId) {
-    return ResponseEntity.ok(memberService.addInterest(id, interestId));
+  public ResponseEntity<List<InterestDto>> addMemberInterests(@AuthenticationPrincipal MemberDetails principal,
+      @PathVariable Long id, @RequestParam Long interestId) {
+    return ResponseEntity.ok(memberService.addInterest(principal, id, interestId));
   }
 
   /**
@@ -111,7 +115,8 @@ public class MemberController {
    * @return
    */
   @DeleteMapping("/{id}/interests")
-  public ResponseEntity<List<InterestDto>> removeMemberInterests(@PathVariable Long id, @RequestParam Long interestId) {
-    return ResponseEntity.ok(memberService.removeInterest(id, interestId));
+  public ResponseEntity<List<InterestDto>> removeMemberInterests(@AuthenticationPrincipal MemberDetails principal,
+      @PathVariable Long id, @RequestParam Long interestId) {
+    return ResponseEntity.ok(memberService.removeInterest(principal, id, interestId));
   }
 }

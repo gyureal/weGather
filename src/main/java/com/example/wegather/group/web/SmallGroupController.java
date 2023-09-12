@@ -1,5 +1,6 @@
 package com.example.wegather.group.web;
 
+import com.example.wegather.auth.MemberDetails;
 import com.example.wegather.group.domain.service.SmallGroupService;
 import com.example.wegather.group.dto.CreateSmallGroupRequest;
 import com.example.wegather.group.dto.SmallGroupDto;
@@ -14,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -78,10 +80,11 @@ public class SmallGroupController {
    */
   @PutMapping("/{id}")
   public ResponseEntity<Void> updateGroup(
+      @AuthenticationPrincipal MemberDetails principal,
       @PathVariable Long id,
       @RequestBody UpdateSmallGroupRequest request) {
 
-    smallGroupService.editSmallGroup(id, request);
+    smallGroupService.editSmallGroup(principal, id, request);
     return ResponseEntity.ok().build();
   }
 
@@ -91,8 +94,8 @@ public class SmallGroupController {
    * @return
    */
   @DeleteMapping("/{id}")
-  public ResponseEntity<Void> deleteGroup(@PathVariable Long id) {
-    smallGroupService.deleteSmallGroup(id);
+  public ResponseEntity<Void> deleteGroup(@AuthenticationPrincipal MemberDetails principal, @PathVariable Long id) {
+    smallGroupService.deleteSmallGroup(principal, id);
     return ResponseEntity.noContent().build();
   }
 
@@ -104,8 +107,9 @@ public class SmallGroupController {
    */
   @PostMapping("/{id}/interest")
   public ResponseEntity<Void> addInterest(
+      @AuthenticationPrincipal MemberDetails principal,
       @PathVariable Long id, @RequestParam Long interestId) {
-    smallGroupService.addSmallGroupInterest(id, interestId);
+    smallGroupService.addSmallGroupInterest(principal, id, interestId);
     return ResponseEntity.ok().build();
   }
 
@@ -117,8 +121,9 @@ public class SmallGroupController {
    */
   @DeleteMapping("/{id}/interest")
   public ResponseEntity<List<InterestDto>> removeInterest(
+      @AuthenticationPrincipal MemberDetails principal,
       @PathVariable Long id, @RequestParam Long interestId) {
-    smallGroupService.removeSmallGroupInterest(id, interestId);
+    smallGroupService.removeSmallGroupInterest(principal, id, interestId);
     return ResponseEntity.ok().build();
   }
 }
