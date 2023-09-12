@@ -3,22 +3,18 @@ package com.example.wegather.integration;
 import static com.example.wegather.global.vo.MemberType.*;
 import static io.restassured.module.mockmvc.RestAssuredMockMvc.*;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.in;
 
-import com.example.wegather.global.dto.AddressRequest;
-import com.example.wegather.interest.domain.Interest;
 import com.example.wegather.interest.dto.CreateInterestRequest;
 import com.example.wegather.interest.dto.InterestDto;
 import com.example.wegather.member.domain.MemberRepository;
 import com.example.wegather.global.vo.MemberType;
-import com.example.wegather.member.dto.JoinMemberRequest;
+import com.example.wegather.auth.dto.SignUpRequest;
 import com.example.wegather.member.dto.MemberDto;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.module.mockmvc.response.MockMvcResponse;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import java.util.Arrays;
 import java.util.List;
 import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.BeforeEach;
@@ -48,16 +44,16 @@ class MemberIntegrationTest extends IntegrationTest {
 
   @BeforeEach
   void init() {
-    member01 = insertMember("test01", "김지유", ROLE_USER);
-    member02 = insertMember("test02", "김진주", ROLE_USER);
-    member03 = insertMember("test03", "박세미", ROLE_USER);
+    member01 = insertTestMember("test01", "김지유", ROLE_USER);
+    member02 = insertTestMember("test02", "김진주", ROLE_USER);
+    member03 = insertTestMember("test03", "박세미", ROLE_USER);
   }
 
   @Test
   @DisplayName("회원을 생성합니다.")
   @WithMockUser("USER")
   void joinMemberSuccessfully() {
-    JoinMemberRequest request = JoinMemberRequest.builder()
+    SignUpRequest request = SignUpRequest.builder()
         .username("test1")
         .password("password")
         .name("김지유")
@@ -65,13 +61,7 @@ class MemberIntegrationTest extends IntegrationTest {
         .memberType(ROLE_USER)
         .build();
 
-    ExtractableResponse<MockMvcResponse> response =
-      given().log().all()
-        .body(request)
-        .contentType(ContentType.JSON)
-        .when().post("/members")
-        .then().log().all()
-        .extract();
+    ExtractableResponse<MockMvcResponse> response = insertMember(request);
 
     assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_CREATED);
     MemberDto memberDto = response.body().as(MemberDto.class);
@@ -88,9 +78,9 @@ class MemberIntegrationTest extends IntegrationTest {
   void joinMemberFailWhenUsernameAlreadyExists() {
     // given
     String username = "duplicate1";
-    insertMember(username, "김지유", ROLE_USER);
+    insertTestMember(username, "김지유", ROLE_USER);
 
-    JoinMemberRequest request = JoinMemberRequest.builder()
+    SignUpRequest request = SignUpRequest.builder()
         .username(username)
         .password("password")
         .name("김지유")
@@ -99,13 +89,7 @@ class MemberIntegrationTest extends IntegrationTest {
         .build();
 
     // when
-    ExtractableResponse<MockMvcResponse> response =
-        given().log().all()
-        .body(request)
-        .contentType(ContentType.JSON)
-        .when().post("/members")
-        .then().log().all()
-        .extract();
+    ExtractableResponse<MockMvcResponse> response = insertMember(request);
 
     assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_BAD_REQUEST);
   }
@@ -219,29 +203,6 @@ class MemberIntegrationTest extends IntegrationTest {
   }
 
   @Test
-  @DisplayName("관리자가 회원의 주소를 수정합니다.")
-  void changeAddressSuccessfully() {
-    // given
-    AddressRequest addressRequest = AddressRequest.builder()
-        .streetAddress("서울시 중앙대로 123-123")
-        .longitude(203.123)
-        .latitude(123.123)
-        .build();
-    // when
-    ExtractableResponse<Response> response =
-        RestAssured.given().log().all()
-            .auth().basic("test01", "password")
-            .body(addressRequest)
-            .contentType(ContentType.JSON)
-            .when().put("/members/{id}/address", member01.getId())
-            .then().log().all()
-            .extract();
-
-    // then
-    assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_OK);
-  }
-
-  @Test
   @DisplayName("회원의 관심사를 추가합니다.")
   @WithMockUser("USER")
   void addMemberInterestsSuccessfully() {
@@ -309,8 +270,8 @@ class MemberIntegrationTest extends IntegrationTest {
   }
 
 
-  private MemberDto insertMember(String username, String name, MemberType memberType) {
-    JoinMemberRequest request = JoinMemberRequest.builder()
+  private MemberDto insertTestMember(String username, String name, MemberType memberType) {
+    SignUpRequest request = SignUpRequest.builder()
         .username(username)
         .password("password")
         .name(name)
@@ -318,8 +279,15 @@ class MemberIntegrationTest extends IntegrationTest {
         .memberType(memberType)
         .build();
 
-    return given().body(request).contentType(ContentType.JSON)
-        .when().post("/members")
-        .then().extract().as(MemberDto.class);
+    return insertMember(request).as(MemberDto.class);
+  }
+
+  private ExtractableResponse<MockMvcResponse> insertMember(SignUpRequest request) {
+     return given().log().all()
+        .body(request)
+        .contentType(ContentType.JSON)
+        .when().post("/sign-up")
+        .then().log().all()
+        .extract();
   }
 }

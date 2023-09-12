@@ -2,27 +2,21 @@ package com.example.wegather.member.domain;
 
 
 import static com.example.wegather.global.exception.ErrorCode.MEMBER_NOT_FOUND;
-import static com.example.wegather.global.exception.ErrorCode.USERNAME_DUPLICATED;
 
 import com.example.wegather.global.auth.AuthenticationManager;
 import com.example.wegather.global.exception.customException.AuthenticationException;
 import com.example.wegather.global.dto.AddressRequest;
 import com.example.wegather.global.upload.StoreFile;
 import com.example.wegather.global.upload.UploadFile;
-import com.example.wegather.global.vo.PhoneNumber;
 import com.example.wegather.interest.domain.Interest;
 import com.example.wegather.interest.domain.InterestRepository;
 import com.example.wegather.interest.dto.InterestDto;
 import com.example.wegather.member.domain.entity.Member;
-import com.example.wegather.member.domain.vo.Password;
-import com.example.wegather.member.domain.vo.Username;
-import com.example.wegather.member.dto.JoinMemberRequest;
 import com.example.wegather.member.dto.MemberDto;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -35,23 +29,8 @@ public class MemberService {
   private final MemberRepository memberRepository;
   private final InterestRepository interestRepository;
   private final StoreFile storeFile;
-  private final PasswordEncoder passwordEncoder;
   private final AuthenticationManager authManager;
 
-  @Transactional
-  public MemberDto joinMember(JoinMemberRequest request) {
-    if (memberRepository.existsByUsername(Username.of(request.getUsername()))) {
-      throw new IllegalArgumentException(USERNAME_DUPLICATED.getDescription());
-    }
-
-    return MemberDto.from(memberRepository.save(Member.builder()
-            .username(Username.of(request.getUsername()))
-            .password(Password.of(request.getPassword(), passwordEncoder))
-            .name(request.getName())
-            .phoneNumber(PhoneNumber.of(request.getPhoneNumber()))
-            .memberType(request.getMemberType())
-        .build()));
-  }
 
   public Page<Member> getAllMembers(Pageable pageable) {
     return memberRepository.findAll(pageable);

@@ -11,7 +11,7 @@ import com.example.wegather.group.dto.SmallGroupSearchCondition;
 import com.example.wegather.group.dto.UpdateSmallGroupRequest;
 import com.example.wegather.interest.dto.CreateInterestRequest;
 import com.example.wegather.interest.dto.InterestDto;
-import com.example.wegather.member.dto.JoinMemberRequest;
+import com.example.wegather.auth.dto.SignUpRequest;
 import com.example.wegather.member.dto.MemberDto;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -326,7 +326,7 @@ public class SmallGroupIntegrationTest extends IntegrationTest {
   }
 
   private MemberDto insertMember(String username, String password, MemberType memberType) {
-    JoinMemberRequest request = JoinMemberRequest.builder()
+    SignUpRequest request = SignUpRequest.builder()
         .username(username)
         .password(password)
         .name("testUser")
@@ -335,7 +335,7 @@ public class SmallGroupIntegrationTest extends IntegrationTest {
         .build();
 
     return RestAssured.given().body(request).contentType(ContentType.JSON)
-        .when().post("/members")
+        .when().post("/sign-up")
         .then().extract().as(MemberDto.class);
   }
 

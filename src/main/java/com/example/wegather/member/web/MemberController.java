@@ -4,11 +4,8 @@ import com.example.wegather.global.exception.customException.FileUploadException
 import com.example.wegather.global.dto.AddressRequest;
 import com.example.wegather.interest.dto.InterestDto;
 import com.example.wegather.member.domain.MemberService;
-import com.example.wegather.member.dto.JoinMemberRequest;
 import com.example.wegather.member.dto.MemberDto;
-import java.net.URI;
 import java.util.List;
-import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -30,19 +27,6 @@ import org.springframework.web.multipart.MultipartFile;
 public class MemberController {
 
   private final MemberService memberService;
-  /**
-   * 회원을 새로 추가합니다. (회원가입)
-   * @param request 회원가입시 입력되는 회원정보
-   * @return 생성된 회원에 접근할 수 있는 endpoint
-   * @throws IllegalArgumentException
-   *    회원 username 이 중복된 경우
-   *    username, password, phoneNumber, address 등이 형식에 맞지 않는 경우
-   */
-  @PostMapping
-  public ResponseEntity<MemberDto> createMember(@Valid @RequestBody JoinMemberRequest request) {
-    MemberDto memberDto = memberService.joinMember(request);
-    return ResponseEntity.created(URI.create("/members/" + memberDto.getId())).body(memberDto);
-  }
 
   /**
    * 전체 회원을 조회합니다.
@@ -94,7 +78,7 @@ public class MemberController {
   }
 
   /**
-   *
+   * 회원의 주소를 수정합니다.
    * @param id
    * @param addressRequest
    * @throws IllegalArgumentException
