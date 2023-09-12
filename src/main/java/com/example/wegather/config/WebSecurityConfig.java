@@ -19,7 +19,7 @@ public class WebSecurityConfig {
     log.info("-------securityFilterChain-------");
     http.csrf().disable();
     http.authorizeRequests()
-        .antMatchers(HttpMethod.POST,"/members").permitAll()
+        .antMatchers(HttpMethod.POST,"/sign-up").permitAll()
         .antMatchers("/health").permitAll()
         .anyRequest().authenticated()
         .and()
