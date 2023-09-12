@@ -1,5 +1,6 @@
 package com.example.wegather.auth;
 
+import com.example.wegather.auth.dto.SignInRequest;
 import com.example.wegather.auth.dto.SignUpRequest;
 import com.example.wegather.member.dto.MemberDto;
 import java.net.URI;
@@ -28,5 +29,11 @@ public class AuthController {
   public ResponseEntity<MemberDto> signUp(@Valid @RequestBody SignUpRequest request) {
     MemberDto memberDto = authService.signUp(request);
     return ResponseEntity.created(URI.create("/members/" + memberDto.getId())).body(memberDto);
+  }
+
+  @PostMapping("/sign-in")
+  public ResponseEntity<Void> signIn(@RequestBody SignInRequest request) {
+    authService.signIn(request);
+    return ResponseEntity.ok().build();
   }
 }

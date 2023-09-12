@@ -2,6 +2,7 @@ package com.example.wegather.auth;
 
 import static com.example.wegather.global.exception.ErrorCode.*;
 
+import com.example.wegather.auth.dto.SignInRequest;
 import com.example.wegather.global.vo.PhoneNumber;
 import com.example.wegather.member.domain.entity.Member;
 import com.example.wegather.member.domain.MemberRepository;
@@ -10,28 +11,22 @@ import com.example.wegather.member.domain.vo.Username;
 import com.example.wegather.auth.dto.SignUpRequest;
 import com.example.wegather.member.dto.MemberDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class AuthService implements UserDetailsService {
+public class AuthService {
 
+  private final AuthenticationManager authenticationManager;
   private final MemberRepository memberRepository;
   private final PasswordEncoder passwordEncoder;
 
-
-  @Override
-  public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-    Member member = memberRepository.findByUsername(Username.of(username))
-        .orElseThrow(() -> new UsernameNotFoundException(USERNAME_NOT_FOUND.getDescription()));
-
-    return MemberDetails.from(member);
-  }
 
   @Transactional
   public MemberDto signUp(SignUpRequest request) {
@@ -46,5 +41,12 @@ public class AuthService implements UserDetailsService {
         .phoneNumber(PhoneNumber.of(request.getPhoneNumber()))
         .memberType(request.getMemberType())
         .build()));
+  }
+
+  public void signIn(SignInRequest request) {
+    UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
+        request.getUsername(), request.getPassword());
+    Authentication authenticate = authenticationManager.authenticate(token);
+    SecurityContextHolder.getContext().setAuthentication(authenticate);
   }
 }

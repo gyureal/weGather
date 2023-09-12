@@ -3,7 +3,6 @@ package com.example.wegather.member.domain;
 
 import static com.example.wegather.global.exception.ErrorCode.MEMBER_NOT_FOUND;
 
-import com.example.wegather.global.auth.AuthenticationManager;
 import com.example.wegather.global.exception.customException.AuthenticationException;
 import com.example.wegather.global.dto.AddressRequest;
 import com.example.wegather.global.upload.StoreFile;
@@ -29,7 +28,7 @@ public class MemberService {
   private final MemberRepository memberRepository;
   private final InterestRepository interestRepository;
   private final StoreFile storeFile;
-  private final AuthenticationManager authManager;
+  private final com.example.wegather.global.auth.authManager authManager;
 
 
   public Page<Member> getAllMembers(Pageable pageable) {
