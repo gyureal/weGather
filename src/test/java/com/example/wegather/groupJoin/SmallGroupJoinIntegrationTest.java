@@ -1,4 +1,4 @@
-package com.example.wegather.integration;
+package com.example.wegather.groupJoin;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -7,6 +7,7 @@ import com.example.wegather.group.dto.CreateSmallGroupRequest;
 import com.example.wegather.groupJoin.dto.GroupJoinRequestDto;
 import com.example.wegather.group.dto.SmallGroupDto;
 import com.example.wegather.auth.dto.SignUpRequest;
+import com.example.wegather.IntegrationTest;
 import com.example.wegather.member.dto.MemberDto;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -19,7 +20,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 @DisplayName("소모임 가입 통합 테스트")
-class SmallGroupJoinIntegrationTest extends IntegrationTest{
+class SmallGroupJoinIntegrationTest extends IntegrationTest {
   private static final String memberPassword = "1234";
   private MemberDto member01;
   private MemberDto member02;

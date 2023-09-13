@@ -1,4 +1,4 @@
-package com.example.wegather.integration;
+package com.example.wegather.group;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -9,6 +9,7 @@ import com.example.wegather.group.dto.CreateSmallGroupRequest;
 import com.example.wegather.group.dto.SmallGroupDto;
 import com.example.wegather.group.dto.SmallGroupSearchCondition;
 import com.example.wegather.group.dto.UpdateSmallGroupRequest;
+import com.example.wegather.IntegrationTest;
 import com.example.wegather.interest.dto.CreateInterestRequest;
 import com.example.wegather.interest.dto.InterestDto;
 import com.example.wegather.auth.dto.SignUpRequest;

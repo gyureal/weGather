@@ -1,8 +1,9 @@
-package com.example.wegather.integration;
+package com.example.wegather.interest;
 
 import static io.restassured.module.mockmvc.RestAssuredMockMvc.given;
 import static org.assertj.core.api.Assertions.*;
 
+import com.example.wegather.IntegrationTest;
 import com.example.wegather.interest.dto.CreateInterestRequest;
 import com.example.wegather.interest.dto.InterestDto;
 import io.restassured.http.ContentType;

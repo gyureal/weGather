@@ -1,9 +1,10 @@
-package com.example.wegather.integration;
+package com.example.wegather.member;
 
 import static com.example.wegather.global.vo.MemberType.*;
 import static io.restassured.module.mockmvc.RestAssuredMockMvc.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.example.wegather.IntegrationTest;
 import com.example.wegather.interest.dto.CreateInterestRequest;
 import com.example.wegather.interest.dto.InterestDto;
 import com.example.wegather.member.domain.MemberRepository;
