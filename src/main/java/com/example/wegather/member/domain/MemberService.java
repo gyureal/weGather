@@ -2,27 +2,21 @@ package com.example.wegather.member.domain;
 
 
 import static com.example.wegather.global.exception.ErrorCode.MEMBER_NOT_FOUND;
-import static com.example.wegather.global.exception.ErrorCode.USERNAME_DUPLICATED;
 
-import com.example.wegather.global.auth.AuthenticationManager;
+import com.example.wegather.auth.MemberDetails;
 import com.example.wegather.global.exception.customException.AuthenticationException;
 import com.example.wegather.global.dto.AddressRequest;
 import com.example.wegather.global.upload.StoreFile;
 import com.example.wegather.global.upload.UploadFile;
-import com.example.wegather.global.vo.PhoneNumber;
 import com.example.wegather.interest.domain.Interest;
 import com.example.wegather.interest.domain.InterestRepository;
 import com.example.wegather.interest.dto.InterestDto;
 import com.example.wegather.member.domain.entity.Member;
-import com.example.wegather.member.domain.vo.Password;
-import com.example.wegather.member.domain.vo.Username;
-import com.example.wegather.member.dto.JoinMemberRequest;
 import com.example.wegather.member.dto.MemberDto;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -35,23 +29,7 @@ public class MemberService {
   private final MemberRepository memberRepository;
   private final InterestRepository interestRepository;
   private final StoreFile storeFile;
-  private final PasswordEncoder passwordEncoder;
-  private final AuthenticationManager authManager;
 
-  @Transactional
-  public MemberDto joinMember(JoinMemberRequest request) {
-    if (memberRepository.existsByUsername(Username.of(request.getUsername()))) {
-      throw new IllegalArgumentException(USERNAME_DUPLICATED.getDescription());
-    }
-
-    return MemberDto.from(memberRepository.save(Member.builder()
-            .username(Username.of(request.getUsername()))
-            .password(Password.of(request.getPassword(), passwordEncoder))
-            .name(request.getName())
-            .phoneNumber(PhoneNumber.of(request.getPhoneNumber()))
-            .memberType(request.getMemberType())
-        .build()));
-  }
 
   public Page<Member> getAllMembers(Pageable pageable) {
     return memberRepository.findAll(pageable);
@@ -72,9 +50,9 @@ public class MemberService {
   }
 
   @Transactional
-  public void updateProfileImage(Long id, MultipartFile profileImage) {
+  public void updateProfileImage(MemberDetails principal,Long id, MultipartFile profileImage) {
     Member member = getMember(id);
-    validateUpdatable(member.getUsername().getValue());
+    validateUpdatable(principal, member.getUsername().getValue());
 
     UploadFile uploadFile;
     uploadFile = storeFile.storeFile(profileImage);
@@ -83,17 +61,17 @@ public class MemberService {
   }
 
   @Transactional
-  public void updateMemberAddress(Long id, AddressRequest addressRequest) {
+  public void updateMemberAddress(MemberDetails principal,Long id, AddressRequest addressRequest) {
     Member member = getMember(id);
-    validateUpdatable(member.getUsername().getValue());
+    validateUpdatable(principal, member.getUsername().getValue());
 
     member.changeAddress(addressRequest.convertAddressEntity());
   }
 
   @Transactional
-  public List<InterestDto> addInterest(Long id, Long interestsId) {
+  public List<InterestDto> addInterest(MemberDetails principal,Long id, Long interestsId) {
     Member member = getMember(id);
-    validateUpdatable(member.getUsername().getValue());
+    validateUpdatable(principal, member.getUsername().getValue());
 
     Interest interest = findInterest(interestsId);
 
@@ -107,9 +85,9 @@ public class MemberService {
   }
 
   @Transactional
-  public List<InterestDto> removeInterest(Long id, Long interestsId) {
+  public List<InterestDto> removeInterest(MemberDetails principal, Long id, Long interestsId) {
     Member member = getMember(id);
-    validateUpdatable(member.getUsername().getValue());
+    validateUpdatable(principal, member.getUsername().getValue());
 
     Interest interest = findInterest(interestsId);
 
@@ -117,14 +95,14 @@ public class MemberService {
     return member.getInterestDtos();
   }
 
-  private void validateUpdatable(String username) {
-    if (!isSelfOrAdmin(username)) {
+  private void validateUpdatable(MemberDetails principal, String username) {
+    if (!isSelfOrAdmin(principal, username)) {
       throw new AuthenticationException(DON_NOT_HAVE_AUTH_TO_UPDATE_MEMBER);
     }
   }
 
-  private boolean isSelfOrAdmin(String username) {
-    if(username.equals(authManager.getUsername()) || authManager.getPrincipal().isAdmin()) {
+  private boolean isSelfOrAdmin(MemberDetails principal, String username) {
+    if(username.equals(principal.getUsername()) || principal.isAdmin()) {
       return true;
     }
     return false;

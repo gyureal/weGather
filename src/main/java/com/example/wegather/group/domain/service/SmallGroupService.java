@@ -3,7 +3,6 @@ package com.example.wegather.group.domain.service;
 import static com.example.wegather.global.exception.ErrorCode.*;
 
 import com.example.wegather.auth.MemberDetails;
-import com.example.wegather.global.auth.AuthenticationManagerImpl;
 import com.example.wegather.global.exception.customException.AuthenticationException;
 import com.example.wegather.global.vo.Address;
 import com.example.wegather.group.domain.entity.SmallGroup;
@@ -28,7 +27,6 @@ public class SmallGroupService {
 
   private final SmallGroupRepository smallGroupRepository;
   private final MemberRepository memberRepository;
-  private final AuthenticationManagerImpl authManager;
   private final InterestRepository interestRepository;
 
   @Transactional
@@ -57,10 +55,10 @@ public class SmallGroupService {
   }
 
   @Transactional
-  public void editSmallGroup(Long id, UpdateSmallGroupRequest request) {
+  public void editSmallGroup(MemberDetails principal, Long id, UpdateSmallGroupRequest request) {
     SmallGroup smallGroup = getSmallGroup(id);
 
-    validateUpdatable(smallGroup, DO_NOT_HAVE_AUTHORITY_TO_UPDATE_GROUP.getDescription());
+    validateUpdatable(principal, smallGroup, DO_NOT_HAVE_AUTHORITY_TO_UPDATE_GROUP.getDescription());
 
     smallGroup.updateSmallGroupInfo(
         request.getGroupName(),
@@ -69,8 +67,7 @@ public class SmallGroupService {
         request.getMaxMemberCount());
   }
 
-  private void validateUpdatable(SmallGroup smallGroup, String doNotHaveAuthorityToUpdateGroup) {
-    MemberDetails principal = authManager.getPrincipal();
+  private void validateUpdatable(MemberDetails principal, SmallGroup smallGroup, String doNotHaveAuthorityToUpdateGroup) {
 
     if (!smallGroup.isLeader(principal.getMemberId()) && !principal.isAdmin()) {
       throw new AuthenticationException(doNotHaveAuthorityToUpdateGroup);
@@ -78,27 +75,27 @@ public class SmallGroupService {
   }
 
   @Transactional
-  public void deleteSmallGroup(Long id) {
+  public void deleteSmallGroup(MemberDetails principal, Long id) {
     SmallGroup smallGroup = getSmallGroup(id);
 
-    validateUpdatable(smallGroup, DO_NOT_HAVE_AUTHORITY_TO_DELETE_GROUP.getDescription());
+    validateUpdatable(principal, smallGroup, DO_NOT_HAVE_AUTHORITY_TO_DELETE_GROUP.getDescription());
 
     smallGroupRepository.deleteById(id);
   }
 
   @Transactional
-  public void addSmallGroupInterest(Long smallGroupId, Long interestId) {
+  public void addSmallGroupInterest(MemberDetails principal, Long smallGroupId, Long interestId) {
     SmallGroup smallGroup = findWithInterestById(smallGroupId);
-    validateUpdatable(smallGroup, DO_NOT_HAVE_AUTHORITY_TO_UPDATE_GROUP.getDescription());
+    validateUpdatable(principal, smallGroup, DO_NOT_HAVE_AUTHORITY_TO_UPDATE_GROUP.getDescription());
     Interest interest = findInterestById(interestId);
 
     smallGroup.addInterest(interest);
   }
 
   @Transactional
-  public void removeSmallGroupInterest(Long smallGroupId, Long interestId) {
+  public void removeSmallGroupInterest(MemberDetails principal, Long smallGroupId, Long interestId) {
     SmallGroup smallGroup = findWithInterestById(smallGroupId);
-    validateUpdatable(smallGroup, DO_NOT_HAVE_AUTHORITY_TO_UPDATE_GROUP.getDescription());
+    validateUpdatable(principal, smallGroup, DO_NOT_HAVE_AUTHORITY_TO_UPDATE_GROUP.getDescription());
     Interest interest = findInterestById(interestId);
 
     smallGroup.removeInterest(interest);

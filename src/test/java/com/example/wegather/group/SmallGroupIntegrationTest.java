@@ -1,7 +1,9 @@
-package com.example.wegather.integration;
+package com.example.wegather.group;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.example.wegather.auth.AuthControllerTest;
+import com.example.wegather.auth.dto.SignInRequest;
 import com.example.wegather.global.vo.MemberType;
 import com.example.wegather.group.domain.entity.SmallGroup;
 import com.example.wegather.group.domain.repotitory.SmallGroupRepository;
@@ -9,16 +11,17 @@ import com.example.wegather.group.dto.CreateSmallGroupRequest;
 import com.example.wegather.group.dto.SmallGroupDto;
 import com.example.wegather.group.dto.SmallGroupSearchCondition;
 import com.example.wegather.group.dto.UpdateSmallGroupRequest;
+import com.example.wegather.IntegrationTest;
+import com.example.wegather.interest.InterestIntegrationTest;
 import com.example.wegather.interest.dto.CreateInterestRequest;
 import com.example.wegather.interest.dto.InterestDto;
-import com.example.wegather.member.dto.JoinMemberRequest;
+import com.example.wegather.auth.dto.SignUpRequest;
 import com.example.wegather.member.dto.MemberDto;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import java.util.Arrays;
+import io.restassured.specification.RequestSpecification;
 import java.util.List;
 import org.apache.http.HttpStatus;
 import org.hibernate.AssertionFailure;
@@ -27,47 +30,35 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.context.WebApplicationContext;
 
 @DisplayName("소모임 통합 테스트")
-public class SmallGroupIntegrationTest extends IntegrationTest {
-
-  @Autowired
-  private WebApplicationContext webApplicationContext;
+class SmallGroupIntegrationTest extends IntegrationTest {
 
   @Autowired
   private SmallGroupRepository smallGroupRepository;
-
-  @BeforeEach
-  void initRestAssuredApplicationContext() {
-    RestAssuredMockMvc.webAppContextSetup(webApplicationContext);
-  }
 
   private static final String memberUsername = "member01";
   private static final String memberPassword = "1234";
   private MemberDto member01;
   private MemberDto member02;
-  private MemberDto admin01;
   private SmallGroupDto group01;
   private SmallGroupDto group02;
   private SmallGroupDto group03;
+
+
 
   @BeforeEach
   void initData() {
     member01 = insertMember(memberUsername, memberPassword, MemberType.ROLE_USER);
     member02 = insertMember("member02", "1234", MemberType.ROLE_USER);
-    admin01 = insertMember("admin01", "1234", MemberType.ROLE_ADMIN);
-
-    group01 = insertGroup("탁사모", 300L, Arrays.asList("탁구", "친목"));
-    group02 = insertGroup("책사모", 100L, Arrays.asList("독서", "친목"));
-    group03 = insertGroup("토사모", 200L, Arrays.asList("토익", "스터디"));
+    group01 = createGroupForTest("탁사모", 300L, member01.getUsername());
+    group02 = createGroupForTest("책사모", 100L, member01.getUsername());
+    group03 = createGroupForTest("토사모", 200L, member01.getUsername());
   }
 
   @Test
   @DisplayName("소모임을 생성합니다.")
   void createInterestSuccessfully() {
-    List<String> interests = Arrays.asList("볼링");
-
     CreateSmallGroupRequest request = CreateSmallGroupRequest.builder()
         .groupName("볼사모")
         .description("볼링을 사랑하는 사람들의 모임입니다.")
@@ -75,13 +66,7 @@ public class SmallGroupIntegrationTest extends IntegrationTest {
         .maxMemberCount(300L)
         .build();
 
-    ExtractableResponse<Response> response = RestAssured.given().log().all()
-        .auth().basic(memberUsername, memberPassword)
-        .body(request)
-        .contentType(ContentType.JSON)
-        .when().post("/smallGroups")
-        .then().log().all()
-        .extract();
+    ExtractableResponse<Response> response = requestCreateGroup(request, member01.getUsername());
 
     assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_CREATED);
     SmallGroupDto result = response.body().as(SmallGroupDto.class);
@@ -94,10 +79,10 @@ public class SmallGroupIntegrationTest extends IntegrationTest {
   @Test
   @DisplayName("id로 소그룹 조회를 성공합니다.")
   void getSmallGroupSuccessfully() {
+    RequestSpecification spec = AuthControllerTest.signIn(member01.getUsername(), memberPassword);
     Long groupId = group01.getId();
 
-    ExtractableResponse<Response> response = RestAssured.given().log().all()
-        .auth().basic(memberUsername, memberPassword)
+    ExtractableResponse<Response> response = RestAssured.given().log().all().spec(spec)
         .pathParam("id", groupId)
         .contentType(ContentType.JSON)
         .when().get("/smallGroups/{id}")
@@ -113,6 +98,8 @@ public class SmallGroupIntegrationTest extends IntegrationTest {
   @Test
   @DisplayName("그룹 이름과 최대회원수 범위로 소그룹 조회를 성공합니다.")
   void searchSmallGroupByGroupNameAndMaxMemberCountRangeSuccessfully() {
+    RequestSpecification spec = AuthControllerTest.signIn(member01.getUsername(), memberPassword);
+
     SmallGroupSearchCondition smallGroupSearchCondition = SmallGroupSearchCondition.builder()
         .smallGroupName("사모")
         .maxMemberCountFrom(100)
@@ -122,10 +109,9 @@ public class SmallGroupIntegrationTest extends IntegrationTest {
     int page = 0;
 
     ExtractableResponse<Response> response = RestAssured.given().log().all()
-        .auth().basic(memberUsername, memberPassword)
-        .body(smallGroupSearchCondition)
+        .spec(spec)
+        .body(smallGroupSearchCondition).contentType(ContentType.JSON)
         .queryParam("size", size, "page", page)
-        .contentType(ContentType.JSON)
         .when().get("/smallGroups")
         .then().log().all()
         .extract();
@@ -145,6 +131,8 @@ public class SmallGroupIntegrationTest extends IntegrationTest {
   @Disabled
   @DisplayName("관심사로 소그룹 조회를 성공합니다.")
   void searchSmallGroupByInterestsSuccessfully() {
+    RequestSpecification spec = AuthControllerTest.signIn(member01.getUsername(), memberPassword);
+
     SmallGroupSearchCondition smallGroupSearchCondition = SmallGroupSearchCondition.builder()
         .interest("친목")
         .build();
@@ -152,7 +140,7 @@ public class SmallGroupIntegrationTest extends IntegrationTest {
     int page = 0;
 
     ExtractableResponse<Response> response = RestAssured.given().log().all()
-        .auth().basic(memberUsername, memberPassword)
+        .spec(spec)
         .body(smallGroupSearchCondition)
         .queryParam("size", size, "page", page)
         .contentType(ContentType.JSON)
@@ -174,6 +162,8 @@ public class SmallGroupIntegrationTest extends IntegrationTest {
   @Test
   @DisplayName("소모임 정보를 수정합니다.")
   void updateSmallGroupSuccessfully() {
+    RequestSpecification spec = AuthControllerTest.signIn(member01.getUsername(), memberPassword);
+
     UpdateSmallGroupRequest request = UpdateSmallGroupRequest.builder()
         .groupName("수정 모임")
         .description("수정하였습니다.")
@@ -183,7 +173,7 @@ public class SmallGroupIntegrationTest extends IntegrationTest {
 
     ExtractableResponse<Response> response = RestAssured
         .given().log().all()
-        .auth().basic(memberUsername, memberPassword)
+        .spec(spec)
         .pathParam("id", group01.getId())
         .body(request)
         .contentType(ContentType.JSON)
@@ -202,6 +192,8 @@ public class SmallGroupIntegrationTest extends IntegrationTest {
   @Test
   @DisplayName("소모임장이 아니어서 소모임 수정에 실패합니다.")
   void updateSmallGroupFailBecauseOfNotLeader() {
+    RequestSpecification spec = AuthControllerTest.signIn(member02.getUsername(), memberPassword);
+
     UpdateSmallGroupRequest request = UpdateSmallGroupRequest.builder()
         .groupName("수정 모임")
         .description("수정하였습니다.")
@@ -211,7 +203,7 @@ public class SmallGroupIntegrationTest extends IntegrationTest {
 
     RestAssured
         .given().log().all()
-        .auth().basic("member02", "1234")
+        .spec(spec)
         .pathParam("id", group01.getId())
         .body(request)
         .contentType(ContentType.JSON)
@@ -223,11 +215,12 @@ public class SmallGroupIntegrationTest extends IntegrationTest {
   @Test
   @DisplayName("소모임 삭제에 성공합니다.")
   void deleteSmallGroupSuccessfully() {
+    RequestSpecification spec = AuthControllerTest.signIn(member01.getUsername(), memberPassword);
     Long id = group01.getId();
 
     RestAssured
         .given().log().all()
-        .auth().basic(memberUsername, memberPassword)
+        .spec(spec)
         .pathParam("id", id)
         .contentType(ContentType.JSON)
         .when().delete("/smallGroups/{id}")
@@ -238,11 +231,13 @@ public class SmallGroupIntegrationTest extends IntegrationTest {
   @Test
   @DisplayName("소모임장이 아니어서 소모임 삭제에 실패합니다.")
   void deleteSmallGroupFailBecauseOfNotLeader() {
+    RequestSpecification spec = AuthControllerTest.signIn(member02.getUsername(), memberPassword);
+
     Long id = group01.getId();
 
     RestAssured
         .given().log().all()
-        .auth().basic("member02", "1234")
+        .spec(spec)
         .pathParam("id", id)
         .contentType(ContentType.JSON)
         .when().delete("/smallGroups/{id}")
@@ -254,7 +249,7 @@ public class SmallGroupIntegrationTest extends IntegrationTest {
   @DisplayName("소모임에 관심사를 추가합니다.")
   void addInterestToSmallGroup() {
     // given
-    InterestDto interestDto = insertInterest("축구");
+    InterestDto interestDto = InterestIntegrationTest.insertInterest("축구", member01.getUsername());
 
     // when
     ExtractableResponse<Response> response = requestAddInterest(group01.getId(),
@@ -268,7 +263,7 @@ public class SmallGroupIntegrationTest extends IntegrationTest {
   @DisplayName("소모임장이 아니라서 소모임 관심사 추가에 실패합니다.")
   void addInterestToSmallGroup_fail_because_not_leader() {
     // given
-    InterestDto interestDto = insertInterest("축구");
+    InterestDto interestDto = InterestIntegrationTest.insertInterest("축구", member01.getUsername());
 
     // when
     ExtractableResponse<Response> response = requestAddInterest(group01.getId(),
@@ -282,7 +277,7 @@ public class SmallGroupIntegrationTest extends IntegrationTest {
   @DisplayName("소모임에 관심사를 삭제합니다.")
   void removeInterestToSmallGroup() {
     // given
-    InterestDto interestDto = insertInterest("축구");
+    InterestDto interestDto = InterestIntegrationTest.insertInterest("축구", member01.getUsername());
     requestAddInterest(group01.getId(), interestDto.getId(), member01);
 
     // when
@@ -297,7 +292,7 @@ public class SmallGroupIntegrationTest extends IntegrationTest {
   @DisplayName("소모임 장이 아니라서 소모임에 관심사 삭제에 실패합니다.")
   void removeInterestToSmallGroup_fail_because_not_leader() {
     // given
-    InterestDto interestDto = insertInterest("축구");
+    InterestDto interestDto = InterestIntegrationTest.insertInterest("축구", member01.getUsername());
     requestAddInterest(group01.getId(), interestDto.getId(), member01);
 
     // when
@@ -308,25 +303,29 @@ public class SmallGroupIntegrationTest extends IntegrationTest {
     assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_UNAUTHORIZED);
   }
 
-  private SmallGroupDto insertGroup(String groupName, Long maxMemberCount, List<String> interests) {
-    CreateSmallGroupRequest request = CreateSmallGroupRequest.builder()
-        .groupName(groupName)
-        .description("테스트입니다.")
-        .streetAddress("서울특별시 중구 세종대로 125")
-        .maxMemberCount(maxMemberCount)
-        .build();
+  private ExtractableResponse<Response> requestCreateGroup(CreateSmallGroupRequest request, String requesterId) {
+    RequestSpecification spec = AuthControllerTest.signIn(requesterId, memberPassword);
 
-    return RestAssured.given().log().all()
-        .auth().basic(memberUsername, memberPassword)
-        .body(request)
-        .contentType(ContentType.JSON)
+    return RestAssured.given().log().all().spec(spec)
+        .body(request).contentType(ContentType.JSON)
         .when().post("/smallGroups")
         .then().log().ifStatusCodeIsEqualTo(HttpStatus.SC_CREATED)
-        .extract().as(SmallGroupDto.class);
+        .extract();
+  }
+
+  private SmallGroupDto createGroupForTest(String groupName, Long maxCount, String requestId) {
+    CreateSmallGroupRequest request = CreateSmallGroupRequest.builder()
+        .groupName(groupName)
+        .description("볼링을 사랑하는 사람들의 모임입니다.")
+        .streetAddress("서울특별시 중구 세종대로 125")
+        .maxMemberCount(maxCount)
+        .build();
+
+    return requestCreateGroup(request, requestId).as(SmallGroupDto.class);
   }
 
   private MemberDto insertMember(String username, String password, MemberType memberType) {
-    JoinMemberRequest request = JoinMemberRequest.builder()
+    SignUpRequest request = SignUpRequest.builder()
         .username(username)
         .password(password)
         .name("testUser")
@@ -334,25 +333,14 @@ public class SmallGroupIntegrationTest extends IntegrationTest {
         .memberType(memberType)
         .build();
 
-    return RestAssured.given().body(request).contentType(ContentType.JSON)
-        .when().post("/members")
-        .then().extract().as(MemberDto.class);
-  }
-
-  private InterestDto insertInterest(String interestName) {
-    CreateInterestRequest request = CreateInterestRequest.builder()
-        .interestName("축구")
-        .build();
-
-    return RestAssured.given().body(request).contentType(ContentType.JSON)
-        .auth().basic(memberUsername, memberPassword)
-        .when().post("/interests")
-        .then().extract().as(InterestDto.class);
+    return AuthControllerTest.signUp(request).as(MemberDto.class);
   }
 
   private ExtractableResponse<Response> requestAddInterest(Long smallGroupId, Long interestId, MemberDto loginMember) {
+    RequestSpecification spec = AuthControllerTest.signIn(loginMember.getUsername(), memberPassword);
+
     return RestAssured.given().log().all()
-        .auth().basic(loginMember.getUsername(), memberPassword)
+        .spec(spec)
         .pathParam("id", smallGroupId)
         .queryParam("interestId", interestId)
         .contentType(ContentType.JSON)
@@ -362,8 +350,10 @@ public class SmallGroupIntegrationTest extends IntegrationTest {
   }
 
   private ExtractableResponse<Response> requestRemoveInterest(Long smallGroupId, Long interestId, MemberDto loginMember) {
+    RequestSpecification spec = AuthControllerTest.signIn(loginMember.getUsername(), memberPassword);
+
     return RestAssured.given().log().all()
-        .auth().basic(loginMember.getUsername(), memberPassword)
+        .spec(spec)
         .pathParam("id", smallGroupId)
         .queryParam("interestId", interestId)
         .contentType(ContentType.JSON)

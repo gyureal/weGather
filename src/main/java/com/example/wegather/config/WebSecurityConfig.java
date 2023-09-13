@@ -5,6 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
@@ -19,12 +21,16 @@ public class WebSecurityConfig {
     log.info("-------securityFilterChain-------");
     http.csrf().disable();
     http.authorizeRequests()
-        .antMatchers(HttpMethod.POST,"/members").permitAll()
+        .antMatchers(HttpMethod.POST,"/sign-up", "/sign-in").permitAll()
         .antMatchers("/health").permitAll()
-        .anyRequest().authenticated()
-        .and()
-        .httpBasic();
+        .anyRequest().authenticated();
 
     return http.build();
+  }
+
+  @Bean
+  public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
+      throws Exception {
+    return authenticationConfiguration.getAuthenticationManager();
   }
 }
