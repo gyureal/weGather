@@ -1,47 +1,48 @@
 package com.example.wegather.interest;
 
-import static io.restassured.module.mockmvc.RestAssuredMockMvc.given;
 import static org.assertj.core.api.Assertions.*;
 
 import com.example.wegather.IntegrationTest;
+import com.example.wegather.auth.dto.SignInRequest;
+import com.example.wegather.auth.dto.SignUpRequest;
+import com.example.wegather.global.vo.MemberType;
 import com.example.wegather.interest.dto.CreateInterestRequest;
 import com.example.wegather.interest.dto.InterestDto;
+import com.example.wegather.member.dto.MemberDto;
+import io.restassured.RestAssured;
+import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.http.ContentType;
-import io.restassured.module.mockmvc.RestAssuredMockMvc;
-import io.restassured.module.mockmvc.response.MockMvcResponse;
 import io.restassured.response.ExtractableResponse;
+import io.restassured.response.Response;
+import io.restassured.specification.RequestSpecification;
 import java.util.List;
 import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.web.context.WebApplicationContext;
 
 @DisplayName("관심사 통합테스트")
-class InterestIntegrationTest extends IntegrationTest {
+public class InterestIntegrationTest extends IntegrationTest {
 
-  @Autowired
-  private WebApplicationContext webApplicationContext;
-
+  private static final String PASSWORD = "1234";
+  MemberDto member01;
   @BeforeEach
-  void initRestAssuredApplicationContext() {
-    RestAssuredMockMvc.webAppContextSetup(webApplicationContext);
+  void init() {
+     member01 = insertMember("member01", PASSWORD, MemberType.ROLE_USER);
   }
 
   @Test
   @DisplayName("관심사를 생성합니다.")
-  @WithMockUser("USER")
   void createInterestSuccessfully() {
+    RequestSpecification spec = sigIn(member01.getUsername(), PASSWORD);
+
     CreateInterestRequest request = CreateInterestRequest.builder()
         .interestName("축구")
         .build();
 
-    ExtractableResponse<MockMvcResponse> response =
-        RestAssuredMockMvc.given().log().all()
-        .body(request)
-        .contentType(ContentType.JSON)
+    ExtractableResponse<Response> response =
+        RestAssured.given().log().all().spec(spec)
+        .body(request).contentType(ContentType.JSON)
         .when().post("/interests")
         .then().log().all()
         .extract();
@@ -53,20 +54,19 @@ class InterestIntegrationTest extends IntegrationTest {
 
   @Test
   @DisplayName("관심사 명이 이미 존재하는 경우 예외를 던집니다.")
-  @WithMockUser("USER")
   void createInterestFailWhenNameAlreadyExists() {
     // given
+    RequestSpecification spec = sigIn(member01.getUsername(), PASSWORD);
     String interestName = "아구";
-    insertInterest(interestName);
+    insertInterest(interestName, member01.getUsername());
 
     CreateInterestRequest request = CreateInterestRequest.builder()
         .interestName(interestName)
         .build();
 
     // when
-    ExtractableResponse<MockMvcResponse> response = given().log().all()
-        .body(request)
-        .contentType(ContentType.JSON)
+    ExtractableResponse<Response> response = RestAssured.given().log().all().spec(spec)
+        .body(request).contentType(ContentType.JSON)
         .when().post("/interests")
         .then().log().all()
         .extract();
@@ -76,16 +76,16 @@ class InterestIntegrationTest extends IntegrationTest {
 
   @Test
   @DisplayName("전체 관심사를 조회합니다.")
-  @WithMockUser("USER")
   void readAllInterestSuccessfully() {
     // given
-    InterestDto baseball = insertInterest("야구");
-    InterestDto running = insertInterest("달리기");
+    RequestSpecification spec = sigIn(member01.getUsername(), PASSWORD);
+    InterestDto baseball = insertInterest("야구", member01.getUsername());
+    InterestDto running = insertInterest("달리기", member01.getUsername());
 
     // when
-    ExtractableResponse<MockMvcResponse> response =
-        given().log().all()
-        .contentType(ContentType.JSON)
+    ExtractableResponse<Response> response =
+      RestAssured.given().log().all()
+        .spec(spec)
         .when().get("/interests")
         .then().log().all()
         .extract();
@@ -99,13 +99,12 @@ class InterestIntegrationTest extends IntegrationTest {
 
   @Test
   @DisplayName("id로 관심사를 조회합니다.")
-  @WithMockUser("USER")
   void readOneInterestByIdSuccessfully() {
-    InterestDto swimming = insertInterest("수영");
+    RequestSpecification spec = sigIn(member01.getUsername(), PASSWORD);
+    InterestDto swimming = insertInterest("수영", member01.getUsername());
 
-    ExtractableResponse<MockMvcResponse> response =
-        RestAssuredMockMvc.given().log().all()
-        .contentType(ContentType.JSON)
+    ExtractableResponse<Response> response =
+        RestAssured.given().log().all().spec(spec)
         .when().get("/interests/{id}", swimming.getId())
         .then().log().all()
         .extract();
@@ -117,12 +116,12 @@ class InterestIntegrationTest extends IntegrationTest {
 
   @Test
   @DisplayName("id로 관심사를 삭제합니다.")
-  @WithMockUser("USER")
   void deleteInterestByIdSuccessfully() {
-    InterestDto swimming = insertInterest("수영");
+    RequestSpecification spec = sigIn(member01.getUsername(), PASSWORD);
+    InterestDto swimming = insertInterest("수영", member01.getUsername());
 
-    ExtractableResponse<MockMvcResponse> response =
-        given().log().all()
+    ExtractableResponse<Response> response =
+      RestAssured.given().log().all().spec(spec)
         .contentType(ContentType.JSON)
         .when().delete("/interests/{id}", swimming.getId())
         .then().log().all()
@@ -131,16 +130,41 @@ class InterestIntegrationTest extends IntegrationTest {
     assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_NO_CONTENT);
   }
 
-  private InterestDto insertInterest(String interestName) {
+  public static InterestDto insertInterest(String interestName, String loginUser) {
+    RequestSpecification spec = sigIn(loginUser, PASSWORD);
+
     CreateInterestRequest request = CreateInterestRequest.builder()
         .interestName(interestName)
         .build();
 
-    return given().log().all()
-        .body(request)
-        .contentType(ContentType.JSON)
+    return RestAssured.given().log().all().spec(spec)
+        .body(request).contentType(ContentType.JSON)
         .when().post("/interests")
         .then().log().all()
         .extract().as(InterestDto.class);
+  }
+
+  private MemberDto insertMember(String username, String password, MemberType memberType) {
+    SignUpRequest request = SignUpRequest.builder()
+        .username(username)
+        .password(password)
+        .name("testUser")
+        .phoneNumber("010-1234-1234")
+        .memberType(memberType)
+        .build();
+
+    return RestAssured.given().body(request).contentType(ContentType.JSON)
+        .when().post("/sign-up")
+        .then().extract().as(MemberDto.class);
+  }
+
+  private static RequestSpecification sigIn(String username, String password) {
+    SignInRequest signInRequest = SignInRequest.of(username, password);
+
+    String sessionId = RestAssured.given().log().all()
+        .body(signInRequest).contentType(ContentType.JSON)
+        .when().post("/sign-in")
+        .sessionId();
+    return new RequestSpecBuilder().setSessionId(sessionId).build();
   }
 }

@@ -1,10 +1,10 @@
 package com.example.wegather.member;
 
 import static com.example.wegather.global.vo.MemberType.*;
-import static io.restassured.module.mockmvc.RestAssuredMockMvc.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.example.wegather.IntegrationTest;
+import com.example.wegather.auth.AuthControllerTest;
 import com.example.wegather.interest.dto.CreateInterestRequest;
 import com.example.wegather.interest.dto.InterestDto;
 import com.example.wegather.member.domain.MemberRepository;
@@ -13,54 +13,45 @@ import com.example.wegather.auth.dto.SignUpRequest;
 import com.example.wegather.member.dto.MemberDto;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import io.restassured.module.mockmvc.response.MockMvcResponse;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import io.restassured.specification.RequestSpecification;
 import java.util.List;
 import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.web.context.WebApplicationContext;
 
 @DisplayName("회원 통합테스트")
 class MemberIntegrationTest extends IntegrationTest {
 
   @Autowired
   MemberRepository memberRepository;
-
-  @Autowired
-  private WebApplicationContext webApplicationContext;
-
+  private static final String memberPassword = "1234";
   MemberDto member01;
   MemberDto member02;
   MemberDto member03;
 
-  @BeforeEach
-  void initRestAssuredApplicationContext() {
-    webAppContextSetup(webApplicationContext);
-  }
 
   @BeforeEach
   void init() {
-    member01 = insertTestMember("test01", "김지유", ROLE_USER);
-    member02 = insertTestMember("test02", "김진주", ROLE_USER);
-    member03 = insertTestMember("test03", "박세미", ROLE_USER);
+    member01 = insertTestMember("test01", memberPassword, ROLE_USER);
+    member02 = insertTestMember("test02", memberPassword, ROLE_USER);
+    member03 = insertTestMember("test03", memberPassword, ROLE_USER);
   }
 
   @Test
   @DisplayName("전체 회원을 조회합니다.")
-  @WithMockUser("USER")
   void readAllMembersSuccessfully() {
     // given
+    RequestSpecification spec = AuthControllerTest.signIn(member01.getUsername(), memberPassword);
     int size = 2;
     int page = 0;
 
     // when
-    ExtractableResponse<MockMvcResponse> response =
-        given().log().all()
+    ExtractableResponse<Response> response =
+    RestAssured.given().log().all().spec(spec)
         .queryParam("size", size, "page", page)
         .contentType(ContentType.JSON)
         .when().get("/members")
@@ -83,12 +74,12 @@ class MemberIntegrationTest extends IntegrationTest {
 
   @Test
   @DisplayName("id로 회원을 조회합니다.")
-  @WithMockUser("USER")
   void readOneMemberByIdSuccessfully() {
     // given
+    RequestSpecification spec = AuthControllerTest.signIn(member01.getUsername(), memberPassword);
     // when
-    ExtractableResponse<MockMvcResponse> response =
-        given().log().all()
+    ExtractableResponse<Response> response =
+        RestAssured.given().log().all().spec(spec)
         .contentType(ContentType.JSON)
         .when().get("/members/{id}", member01.getId())
         .then().log().all()
@@ -102,12 +93,12 @@ class MemberIntegrationTest extends IntegrationTest {
 
   @Test
   @DisplayName("id로 회원을 삭제합니다.")
-  @WithMockUser("USER")
   void deleteMemberByIdSuccessfully() {
     // given
+    RequestSpecification spec = AuthControllerTest.signIn(member01.getUsername(), memberPassword);
     // when
-    ExtractableResponse<MockMvcResponse> response =
-        given().log().all()
+    ExtractableResponse<Response> response =
+        RestAssured.given().log().all().spec(spec)
         .contentType(ContentType.JSON)
         .when().delete("/members/{id}", member01.getId())
         .then().log().all()
@@ -119,7 +110,6 @@ class MemberIntegrationTest extends IntegrationTest {
 
   @Test
   @DisplayName("회원 프로필 이미지를 수정합니다.")
-  @WithMockUser("USER")
   void updateProfileImageSuccessfully() {
 //    String controlName = "profileImage";
 //    String fileName = "image.jpg";
@@ -160,13 +150,12 @@ class MemberIntegrationTest extends IntegrationTest {
 
   @Test
   @DisplayName("회원의 관심사를 추가합니다.")
-  @WithMockUser("USER")
   void addMemberInterestsSuccessfully() {
     // given
-    InterestDto interest1 = insertInterest("공부");
+    InterestDto interest1 = insertInterest("공부", member01);
 
     // when
-    ExtractableResponse<Response> response = requestAddMemberInterest(interest1);
+    ExtractableResponse<Response> response = requestAddMemberInterest(interest1, member01);
 
     // then
     assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_OK);
@@ -175,10 +164,10 @@ class MemberIntegrationTest extends IntegrationTest {
         .contains(interest1.getName());
   }
 
-  private ExtractableResponse<Response> requestAddMemberInterest(InterestDto interest1) {
+  private ExtractableResponse<Response> requestAddMemberInterest(InterestDto interest1, MemberDto loginMember) {
+    RequestSpecification spec = AuthControllerTest.signIn(loginMember.getUsername(), memberPassword);
     ExtractableResponse<Response> response =
-        RestAssured.given().log().all()
-            .auth().basic("test01", "password")
+        RestAssured.given().log().all().spec(spec)
             .queryParam("interestId", interest1.getId())
             .contentType(ContentType.JSON)
             .when().post("/members/{id}/interests", member01.getId())
@@ -189,16 +178,16 @@ class MemberIntegrationTest extends IntegrationTest {
 
   @Test
   @DisplayName("회원의 관심사를 삭제합니다.")
-  @WithMockUser("USER")
   void removeMemberInterestsSuccessfully() {
     // given
-    InterestDto interest1 = insertInterest("공부");
-    requestAddMemberInterest(interest1);
+    InterestDto interest1 = insertInterest("공부", member01);
+    requestAddMemberInterest(interest1, member01);
+    RequestSpecification spec = AuthControllerTest.signIn(member01.getUsername(), memberPassword);
 
     // when
     ExtractableResponse<Response> response =
         RestAssured.given().log().all()
-            .auth().basic("test01", "password")
+            .spec(spec)
             .queryParam("interestId", interest1.getId())
             .contentType(ContentType.JSON)
             .when().delete("/members/{id}/interests", member01.getId())
@@ -212,12 +201,14 @@ class MemberIntegrationTest extends IntegrationTest {
         .doesNotContain(interest1.getName());
   }
 
-  private InterestDto insertInterest(String interestName) {
+  private InterestDto insertInterest(String interestName, MemberDto loginMember) {
+    RequestSpecification spec = AuthControllerTest.signIn(loginMember.getUsername(), memberPassword);
+
     CreateInterestRequest request = CreateInterestRequest.builder()
         .interestName(interestName)
         .build();
 
-    return given()
+    return RestAssured.given().spec(spec)
         .body(request)
         .contentType(ContentType.JSON)
         .when().post("/interests")
@@ -226,24 +217,15 @@ class MemberIntegrationTest extends IntegrationTest {
   }
 
 
-  private MemberDto insertTestMember(String username, String name, MemberType memberType) {
+  private MemberDto insertTestMember(String username, String password, MemberType memberType) {
     SignUpRequest request = SignUpRequest.builder()
         .username(username)
-        .password("password")
-        .name(name)
+        .password(password)
+        .name("testUser")
         .phoneNumber("010-1234-1234")
         .memberType(memberType)
         .build();
 
-    return insertMember(request).as(MemberDto.class);
-  }
-
-  private ExtractableResponse<MockMvcResponse> insertMember(SignUpRequest request) {
-     return given().log().all()
-        .body(request)
-        .contentType(ContentType.JSON)
-        .when().post("/sign-up")
-        .then().log().all()
-        .extract();
+    return AuthControllerTest.signUp(request).as(MemberDto.class);
   }
 }

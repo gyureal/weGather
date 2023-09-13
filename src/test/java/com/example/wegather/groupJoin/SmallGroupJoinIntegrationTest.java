@@ -2,6 +2,7 @@ package com.example.wegather.groupJoin;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.example.wegather.auth.AuthControllerTest;
 import com.example.wegather.global.vo.MemberType;
 import com.example.wegather.group.dto.CreateSmallGroupRequest;
 import com.example.wegather.groupJoin.dto.GroupJoinRequestDto;
@@ -13,6 +14,7 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import io.restassured.specification.RequestSpecification;
 import java.util.List;
 import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.BeforeEach;
@@ -143,9 +145,10 @@ class SmallGroupJoinIntegrationTest extends IntegrationTest {
     SmallGroupDto smallGroup = group01;
     MemberDto joinMember = member02;
     Long requestId = requestSmallGroupJoinRequest(smallGroup, joinMember).as(Long.class);// 가입 요청
+    RequestSpecification spec = AuthControllerTest.signIn(member01.getUsername(), memberPassword);
 
     ExtractableResponse<Response> response = RestAssured.given().log().all()
-        .auth().basic(member01.getUsername(), memberPassword)
+        .spec(spec)
         .pathParam("id", smallGroup.getId())
         .pathParam("requestId", requestId)
         .when().post("smallGroups/{id}/join/requests/{requestId}/reject")
@@ -156,8 +159,9 @@ class SmallGroupJoinIntegrationTest extends IntegrationTest {
 
   private ExtractableResponse<Response> requestApproveSmallGroupJoin(SmallGroupDto smallGroup,
       Long requestId, MemberDto loginMember) {
+    RequestSpecification spec = AuthControllerTest.signIn(loginMember.getUsername(), memberPassword);
     ExtractableResponse<Response> response = RestAssured.given().log().all()
-        .auth().basic(loginMember.getUsername(), memberPassword)
+        .spec(spec)
         .pathParam("id", smallGroup.getId())
         .pathParam("requestId", requestId)
         .when().post("smallGroups/{id}/join/requests/{requestId}/approve")
@@ -166,9 +170,10 @@ class SmallGroupJoinIntegrationTest extends IntegrationTest {
   }
 
   private ExtractableResponse<Response> requestReadAllJoinRequests(SmallGroupDto smallGroup,
-      int page, MemberDto requester) {
+      int page, MemberDto loginMember) {
+    RequestSpecification spec = AuthControllerTest.signIn(loginMember.getUsername(), memberPassword);
     ExtractableResponse<Response> response = RestAssured.given().log().all()
-        .auth().basic(requester.getUsername(), memberPassword)
+        .spec(spec)
         .pathParam("id", smallGroup.getId())
         .queryParam("page", page)
         .when().get("smallGroups/{id}/join/requests")
@@ -177,16 +182,18 @@ class SmallGroupJoinIntegrationTest extends IntegrationTest {
   }
 
   private static ExtractableResponse<Response> requestSmallGroupJoinRequest(
-      SmallGroupDto smallGroup, MemberDto joinMember) {
+      SmallGroupDto smallGroup, MemberDto loginMember) {
+    RequestSpecification spec = AuthControllerTest.signIn(loginMember.getUsername(), memberPassword);
     ExtractableResponse<Response> response = RestAssured.given().log().all()
-        .auth().basic(joinMember.getUsername(), memberPassword)
+        .spec(spec)
         .pathParam("id", smallGroup.getId())
         .when().post("smallGroups/{id}/join/requests")
         .then().log().all().extract();
     return response;
   }
 
-  private SmallGroupDto insertSmallGroup(String groupName, Long maxMemberCount, MemberDto member) {
+  private SmallGroupDto insertSmallGroup(String groupName, Long maxMemberCount, MemberDto loginMember) {
+    RequestSpecification spec = AuthControllerTest.signIn(loginMember.getUsername(), memberPassword);
     CreateSmallGroupRequest request = CreateSmallGroupRequest.builder()
         .groupName(groupName)
         .description("테스트입니다.")
@@ -195,7 +202,7 @@ class SmallGroupJoinIntegrationTest extends IntegrationTest {
         .build();
 
     return RestAssured.given().log().all()
-        .auth().basic(member.getUsername(), memberPassword)
+        .spec(spec)
         .body(request)
         .contentType(ContentType.JSON)
         .when().post("/smallGroups")
@@ -212,8 +219,6 @@ class SmallGroupJoinIntegrationTest extends IntegrationTest {
         .memberType(memberType)
         .build();
 
-    return RestAssured.given().body(request).contentType(ContentType.JSON)
-        .when().post("/sign-up")
-        .then().extract().as(MemberDto.class);
+    return AuthControllerTest.signUp(request).as(MemberDto.class);
   }
 }
