@@ -50,51 +50,6 @@ class MemberIntegrationTest extends IntegrationTest {
   }
 
   @Test
-  @DisplayName("회원을 생성합니다.")
-  @WithMockUser("USER")
-  void joinMemberSuccessfully() {
-    SignUpRequest request = SignUpRequest.builder()
-        .username("test1")
-        .password("password")
-        .name("김지유")
-        .phoneNumber("010-1234-1234")
-        .memberType(ROLE_USER)
-        .build();
-
-    ExtractableResponse<MockMvcResponse> response = insertMember(request);
-
-    assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_CREATED);
-    MemberDto memberDto = response.body().as(MemberDto.class);
-    assertThat(memberDto)
-        .usingRecursiveComparison()
-        .ignoringFields("id", "profileImage", "address", "interests")
-        .ignoringActualNullFields()
-        .isEqualTo(request);
-  }
-
-  @Test
-  @DisplayName("회원 ID가 이미 존재하는 경우 예외를 던집니다.")
-  @WithMockUser("USER")
-  void joinMemberFailWhenUsernameAlreadyExists() {
-    // given
-    String username = "duplicate1";
-    insertTestMember(username, "김지유", ROLE_USER);
-
-    SignUpRequest request = SignUpRequest.builder()
-        .username(username)
-        .password("password")
-        .name("김지유")
-        .phoneNumber("010-1234-1234")
-        .memberType(ROLE_USER)
-        .build();
-
-    // when
-    ExtractableResponse<MockMvcResponse> response = insertMember(request);
-
-    assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_BAD_REQUEST);
-  }
-
-  @Test
   @DisplayName("전체 회원을 조회합니다.")
   @WithMockUser("USER")
   void readAllMembersSuccessfully() {

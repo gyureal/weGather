@@ -7,6 +7,7 @@ import java.net.URI;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -31,6 +32,14 @@ public class AuthController {
     return ResponseEntity.created(URI.create("/members/" + memberDto.getId())).body(memberDto);
   }
 
+  /**
+   * 로그인을 합니다.
+   * @param request
+   *    - username
+   *    - password
+   * @throws UsernameNotFoundException username 에 해당하는 회원을 찾지 못한 경우
+   * @throws org.springframework.security.authentication.BadCredentialsException credential 이 일치하지 않는 경우
+   */
   @PostMapping("/sign-in")
   public ResponseEntity<Void> signIn(@RequestBody SignInRequest request) {
     authService.signIn(request);
