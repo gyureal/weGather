@@ -23,10 +23,9 @@ form.addEventListener('submit', (event) => {
     const [key, value] = entry;
     member[key] = value;
   }
-
+  errorTextsHide();
   signUp(member);
 })
-
 
 const signUp = (member) => {
   axios.request({
@@ -40,9 +39,16 @@ const signUp = (member) => {
     alert('성공');
     window.location.href = '/';
   }).catch((error) => {
-    alert('실패');
-    const errorData = error.response.data;
-
-    console.error(error);
+    console.log(error);
+    const errorDetails = error.response.data.errorDetails;
+    errorDetails.forEach((errorDetail) => {
+      errorTexts.forEach((errorText) => {
+        const fieldName = errorText.getAttribute('data-field');
+        if (errorDetail.field === fieldName) {
+          errorText.textContent = errorDetail.reason;
+          errorText.style.display = 'block';
+        }
+      })
+    })
   });
 };

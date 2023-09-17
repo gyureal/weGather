@@ -8,6 +8,8 @@ import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,13 +20,17 @@ public class AuthController {
 
   private final AuthService authService;
 
+  private final SignUpRequestValidator signUpRequestValidator;
+
+  @InitBinder("signUpRequest")
+  public void initBinder(WebDataBinder webDataBinder) {
+    webDataBinder.addValidators(signUpRequestValidator);
+  }
+
   /**
    * 회원을 새로 추가합니다. (회원가입)
    * @param request 회원가입시 입력되는 회원정보
    * @return 생성된 회원에 접근할 수 있는 endpoint
-   * @throws IllegalArgumentException
-   *    회원 username 이 중복된 경우
-   *    username, password, phoneNumber, address 등이 형식에 맞지 않는 경우
    */
   @PostMapping("/sign-up")
   public ResponseEntity<MemberDto> signUp(@Valid @RequestBody SignUpRequest request) {

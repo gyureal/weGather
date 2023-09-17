@@ -31,10 +31,6 @@ public class AuthService {
 
   @Transactional
   public MemberDto signUp(SignUpRequest request) {
-    if (memberRepository.existsByUsername(Username.of(request.getUsername()))) {
-      throw new IllegalArgumentException(USERNAME_DUPLICATED.getDescription());
-    }
-
     return MemberDto.from(memberRepository.save(Member.builder()
         .username(Username.of(request.getUsername()))
         .password(Password.of(request.getPassword(), passwordEncoder))
