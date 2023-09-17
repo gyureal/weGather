@@ -26,7 +26,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -46,7 +45,7 @@ public class Member extends BaseTimeEntity {
   @Embedded
   @AttributeOverride(name = "value", column = @Column(name = "password"))
   private Password password;
-  private String name;
+  private String email;
   @Embedded
   @AttributeOverride(name = "value", column = @Column(name = "phone_number"))
   private PhoneNumber phoneNumber;
@@ -66,11 +65,11 @@ public class Member extends BaseTimeEntity {
   private List<MemberInterest> memberInterests = new ArrayList<>();
 
   @Builder
-  public Member(Username username, Password password, String name, PhoneNumber phoneNumber,
+  public Member(Username username, Password password, String email, PhoneNumber phoneNumber,
       Address address, MemberType memberType) {
     this.username = username;
     this.password = password;
-    this.name = name;
+    this.email = email;
     this.phoneNumber = phoneNumber;
     this.address = address;
     this.memberType = memberType;

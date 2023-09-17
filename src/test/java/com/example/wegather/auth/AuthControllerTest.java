@@ -28,9 +28,8 @@ public class AuthControllerTest extends IntegrationTest {
   SignUpRequest signUpRequest = SignUpRequest.builder()
       .username("test01")
       .password("password")
-      .name("테스트유져")
+      .email("테스트유져")
       .phoneNumber("010-1234-1234")
-      .memberType(MemberType.ROLE_USER)
       .build();
 
   @Test

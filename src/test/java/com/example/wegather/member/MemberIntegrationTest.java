@@ -36,9 +36,9 @@ class MemberIntegrationTest extends IntegrationTest {
 
   @BeforeEach
   void init() {
-    member01 = insertTestMember("test01", memberPassword, ROLE_USER);
-    member02 = insertTestMember("test02", memberPassword, ROLE_USER);
-    member03 = insertTestMember("test03", memberPassword, ROLE_USER);
+    member01 = insertTestMember("test01", memberPassword);
+    member02 = insertTestMember("test02", memberPassword);
+    member03 = insertTestMember("test03", memberPassword);
   }
 
   @Test
@@ -217,13 +217,12 @@ class MemberIntegrationTest extends IntegrationTest {
   }
 
 
-  private MemberDto insertTestMember(String username, String password, MemberType memberType) {
+  private MemberDto insertTestMember(String username, String password) {
     SignUpRequest request = SignUpRequest.builder()
         .username(username)
         .password(password)
-        .name("testUser")
+        .email("testUser")
         .phoneNumber("010-1234-1234")
-        .memberType(memberType)
         .build();
 
     return AuthControllerTest.signUp(request).as(MemberDto.class);

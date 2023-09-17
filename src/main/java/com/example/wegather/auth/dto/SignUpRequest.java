@@ -16,8 +16,6 @@ public class SignUpRequest {
   @NotEmpty
   private String password;
   @NotEmpty
-  private String name;
+  private String email;
   private String phoneNumber;
-  @NotNull
-  private MemberType memberType;
 }

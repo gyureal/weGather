@@ -16,7 +16,7 @@ import lombok.Getter;
 public class MemberDto {
   private Long id;
   private String username;
-  private String name;
+  private String email;
   private String phoneNumber;
   private AddressDto address;
   private MemberType memberType;
@@ -28,7 +28,7 @@ public class MemberDto {
     return MemberDto.builder()
         .id(member.getId())
         .username(member.getUsername().getValue())
-        .name(member.getName())
+        .email(member.getEmail())
         .phoneNumber(member.getPhoneNumber().getValue())
         .address(AddressDto.from(member.getAddress()))
         .memberType(member.getMemberType())

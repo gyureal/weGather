@@ -31,9 +31,9 @@ class SmallGroupJoinIntegrationTest extends IntegrationTest {
 
   @BeforeEach
   void initData() {
-    member01 = insertMember("member01", memberPassword, MemberType.ROLE_USER);
-    member02 = insertMember("member02", memberPassword, MemberType.ROLE_USER);
-    member03 = insertMember("member03", memberPassword, MemberType.ROLE_USER);
+    member01 = insertMember("member01", memberPassword);
+    member02 = insertMember("member02", memberPassword);
+    member03 = insertMember("member03", memberPassword);
     group01 = insertSmallGroup("group01", 100L, member01);
   }
 
@@ -95,7 +95,7 @@ class SmallGroupJoinIntegrationTest extends IntegrationTest {
     assertThat(requestDto.getSmallGroupJoinId()).isEqualTo(group01.getId());
     assertThat(requestDto.getMemberId()).isEqualTo(joinMember.getId());
     assertThat(requestDto.getUsername()).isEqualTo(joinMember.getUsername());
-    assertThat(requestDto.getName()).isEqualTo(joinMember.getName());
+    assertThat(requestDto.getName()).isEqualTo(joinMember.getEmail());
     assertThat(requestDto.getProfileImage()).isEqualTo(joinMember.getProfileImage());
   }
 
@@ -210,13 +210,12 @@ class SmallGroupJoinIntegrationTest extends IntegrationTest {
         .extract().as(SmallGroupDto.class);
   }
 
-  private MemberDto insertMember(String username, String password, MemberType memberType) {
+  private MemberDto insertMember(String username, String password) {
     SignUpRequest request = SignUpRequest.builder()
         .username(username)
         .password(password)
-        .name("testUser")
+        .email("testUser")
         .phoneNumber("010-1234-1234")
-        .memberType(memberType)
         .build();
 
     return AuthControllerTest.signUp(request).as(MemberDto.class);

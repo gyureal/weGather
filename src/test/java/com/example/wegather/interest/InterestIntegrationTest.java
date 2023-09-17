@@ -28,7 +28,7 @@ public class InterestIntegrationTest extends IntegrationTest {
   MemberDto member01;
   @BeforeEach
   void init() {
-     member01 = insertMember("member01", PASSWORD, MemberType.ROLE_USER);
+     member01 = insertMember("member01", PASSWORD);
   }
 
   @Test
@@ -144,13 +144,12 @@ public class InterestIntegrationTest extends IntegrationTest {
         .extract().as(InterestDto.class);
   }
 
-  private MemberDto insertMember(String username, String password, MemberType memberType) {
+  private MemberDto insertMember(String username, String password) {
     SignUpRequest request = SignUpRequest.builder()
         .username(username)
         .password(password)
-        .name("testUser")
+        .email("testUser")
         .phoneNumber("010-1234-1234")
-        .memberType(memberType)
         .build();
 
     return RestAssured.given().body(request).contentType(ContentType.JSON)

@@ -3,8 +3,6 @@ package com.example.wegather.group;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.example.wegather.auth.AuthControllerTest;
-import com.example.wegather.auth.dto.SignInRequest;
-import com.example.wegather.global.vo.MemberType;
 import com.example.wegather.group.domain.entity.SmallGroup;
 import com.example.wegather.group.domain.repotitory.SmallGroupRepository;
 import com.example.wegather.group.dto.CreateSmallGroupRequest;
@@ -13,7 +11,6 @@ import com.example.wegather.group.dto.SmallGroupSearchCondition;
 import com.example.wegather.group.dto.UpdateSmallGroupRequest;
 import com.example.wegather.IntegrationTest;
 import com.example.wegather.interest.InterestIntegrationTest;
-import com.example.wegather.interest.dto.CreateInterestRequest;
 import com.example.wegather.interest.dto.InterestDto;
 import com.example.wegather.auth.dto.SignUpRequest;
 import com.example.wegather.member.dto.MemberDto;
@@ -49,8 +46,8 @@ class SmallGroupIntegrationTest extends IntegrationTest {
 
   @BeforeEach
   void initData() {
-    member01 = insertMember(memberUsername, memberPassword, MemberType.ROLE_USER);
-    member02 = insertMember("member02", "1234", MemberType.ROLE_USER);
+    member01 = insertMember(memberUsername, memberPassword);
+    member02 = insertMember("member02", "1234");
     group01 = createGroupForTest("탁사모", 300L, member01.getUsername());
     group02 = createGroupForTest("책사모", 100L, member01.getUsername());
     group03 = createGroupForTest("토사모", 200L, member01.getUsername());
@@ -324,13 +321,12 @@ class SmallGroupIntegrationTest extends IntegrationTest {
     return requestCreateGroup(request, requestId).as(SmallGroupDto.class);
   }
 
-  private MemberDto insertMember(String username, String password, MemberType memberType) {
+  private MemberDto insertMember(String username, String password) {
     SignUpRequest request = SignUpRequest.builder()
         .username(username)
         .password(password)
-        .name("testUser")
+        .email("testUser")
         .phoneNumber("010-1234-1234")
-        .memberType(memberType)
         .build();
 
     return AuthControllerTest.signUp(request).as(MemberDto.class);

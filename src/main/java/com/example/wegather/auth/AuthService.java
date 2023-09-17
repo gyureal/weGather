@@ -3,6 +3,7 @@ package com.example.wegather.auth;
 import static com.example.wegather.global.exception.ErrorCode.*;
 
 import com.example.wegather.auth.dto.SignInRequest;
+import com.example.wegather.global.vo.MemberType;
 import com.example.wegather.global.vo.PhoneNumber;
 import com.example.wegather.member.domain.entity.Member;
 import com.example.wegather.member.domain.MemberRepository;
@@ -37,9 +38,9 @@ public class AuthService {
     return MemberDto.from(memberRepository.save(Member.builder()
         .username(Username.of(request.getUsername()))
         .password(Password.of(request.getPassword(), passwordEncoder))
-        .name(request.getName())
+        .email(request.getEmail())
         .phoneNumber(PhoneNumber.of(request.getPhoneNumber()))
-        .memberType(request.getMemberType())
+        .memberType(MemberType.ROLE_USER)
         .build()));
   }
 
