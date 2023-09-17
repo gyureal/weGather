@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.validation.BindingResult;
+import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -91,7 +91,16 @@ public class GlobalExceptionHandler {
     public ErrorResponse handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
         UUID uuid = generateLogId();
         log.info(INFO_LOG_TEMPLATE, uuid, ex.getClass().getSimpleName(), ex);
-        return ErrorResponse.of(uuid, ex.getBindingResult(), ex);
+        ErrorResponse errorResponse = ErrorResponse.of(uuid, ex.getBindingResult(), ex);
+        return errorResponse;
+    }
+
+    @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleHttpMediaTypeNotSupportedException(HttpMediaTypeNotSupportedException ex) {
+        UUID uuid = generateLogId();
+        log.info(INFO_LOG_TEMPLATE, uuid, ex.getClass().getSimpleName(), ex);
+        return ErrorResponse.of(uuid, ex);
     }
 
     /**
