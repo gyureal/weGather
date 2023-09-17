@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -82,6 +84,14 @@ public class GlobalExceptionHandler {
         UUID uuid = generateLogId();
         log.info(INFO_LOG_TEMPLATE, uuid, ex.getClass().getSimpleName(), ex);
         return ErrorResponse.of(uuid, ex);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
+        UUID uuid = generateLogId();
+        log.info(INFO_LOG_TEMPLATE, uuid, ex.getClass().getSimpleName(), ex);
+        return ErrorResponse.of(uuid, ex.getBindingResult(), ex);
     }
 
     /**
