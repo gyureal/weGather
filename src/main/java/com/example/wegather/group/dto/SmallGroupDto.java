@@ -27,7 +27,7 @@ public class SmallGroupDto {
         .groupName(smallGroup.getName())
         .description(smallGroup.getDescription())
         .leaderId(smallGroup.getLeader().getId())
-        .leaderUsername(smallGroup.getLeader().getUsername().getValue())
+        .leaderUsername(smallGroup.getLeader().getUsername())
         .streetAddress(smallGroup.getAddress().getStreetAddress())
         .longitude(smallGroup.getAddress().getLongitude())
         .latitude(smallGroup.getAddress().getLatitude())

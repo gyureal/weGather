@@ -14,7 +14,6 @@ import com.example.wegather.interest.domain.Interest;
 import com.example.wegather.interest.domain.InterestRepository;
 import com.example.wegather.member.domain.entity.Member;
 import com.example.wegather.member.domain.MemberRepository;
-import com.example.wegather.member.domain.vo.Username;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -32,7 +31,7 @@ public class SmallGroupService {
   @Transactional
   public SmallGroup addSmallGroup(CreateSmallGroupRequest request, String username) {
 
-    Member member = memberRepository.findByUsername(Username.of(username))
+    Member member = memberRepository.findByUsername(username)
         .orElseThrow(() -> new IllegalStateException(MEMBER_NOT_FOUND.getDescription()));
 
     return smallGroupRepository.save(SmallGroup.builder()

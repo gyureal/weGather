@@ -22,8 +22,8 @@ public class MemberDetails implements UserDetails {
   public static MemberDetails from(Member member) {
     return MemberDetails.builder()
         .id(member.getId())
-        .username(member.getUsername().getValue())
-        .password(member.getPassword().getValue())
+        .username(member.getUsername())
+        .password(member.getPassword())
         .role(member.getMemberType())
         .build();
   }

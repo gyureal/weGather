@@ -52,7 +52,7 @@ public class MemberService {
   @Transactional
   public void updateProfileImage(MemberDetails principal,Long id, MultipartFile profileImage) {
     Member member = getMember(id);
-    validateUpdatable(principal, member.getUsername().getValue());
+    validateUpdatable(principal, member.getUsername());
 
     UploadFile uploadFile;
     uploadFile = storeFile.storeFile(profileImage);
@@ -63,7 +63,7 @@ public class MemberService {
   @Transactional
   public void updateMemberAddress(MemberDetails principal,Long id, AddressRequest addressRequest) {
     Member member = getMember(id);
-    validateUpdatable(principal, member.getUsername().getValue());
+    validateUpdatable(principal, member.getUsername());
 
     member.changeAddress(addressRequest.convertAddressEntity());
   }
@@ -71,7 +71,7 @@ public class MemberService {
   @Transactional
   public List<InterestDto> addInterest(MemberDetails principal,Long id, Long interestsId) {
     Member member = getMember(id);
-    validateUpdatable(principal, member.getUsername().getValue());
+    validateUpdatable(principal, member.getUsername());
 
     Interest interest = findInterest(interestsId);
 
@@ -87,7 +87,7 @@ public class MemberService {
   @Transactional
   public List<InterestDto> removeInterest(MemberDetails principal, Long id, Long interestsId) {
     Member member = getMember(id);
-    validateUpdatable(principal, member.getUsername().getValue());
+    validateUpdatable(principal, member.getUsername());
 
     Interest interest = findInterest(interestsId);
 

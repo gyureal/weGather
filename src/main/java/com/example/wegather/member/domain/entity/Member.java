@@ -7,8 +7,6 @@ import com.example.wegather.global.vo.PhoneNumber;
 import com.example.wegather.global.vo.MemberType;
 import com.example.wegather.interest.domain.Interest;
 import com.example.wegather.interest.dto.InterestDto;
-import com.example.wegather.member.domain.vo.Password;
-import com.example.wegather.member.domain.vo.Username;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -39,12 +37,8 @@ public class Member extends BaseTimeEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
-  @Embedded
-  @AttributeOverride(name = "value", column = @Column(name = "username"))
-  private Username username;
-  @Embedded
-  @AttributeOverride(name = "value", column = @Column(name = "password"))
-  private Password password;
+  private String username;
+  private String password;
   private String email;
   @Embedded
   @AttributeOverride(name = "value", column = @Column(name = "phone_number"))
@@ -65,7 +59,7 @@ public class Member extends BaseTimeEntity {
   private List<MemberInterest> memberInterests = new ArrayList<>();
 
   @Builder
-  public Member(Username username, Password password, String email, PhoneNumber phoneNumber,
+  public Member(String username, String password, String email, PhoneNumber phoneNumber,
       Address address, MemberType memberType) {
     this.username = username;
     this.password = password;
@@ -102,10 +96,6 @@ public class Member extends BaseTimeEntity {
       return "";
     }
     return profileImage.getValue();
-  }
-
-  public String getUsernameStr() {
-    return username.getValue();
   }
 
   @Override

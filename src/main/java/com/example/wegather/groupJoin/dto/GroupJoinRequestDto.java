@@ -19,7 +19,7 @@ public class GroupJoinRequestDto {
     return GroupJoinRequestDto.builder()
         .smallGroupJoinId(smallGroupJoin.getId())
         .memberId(smallGroupJoin.getMember().getId())
-        .username(smallGroupJoin.getMember().getUsernameStr())
+        .username(smallGroupJoin.getMember().getUsername())
         .name(smallGroupJoin.getMember().getEmail())
         .profileImage(smallGroupJoin.getMember().getProfileImage())
         .build();

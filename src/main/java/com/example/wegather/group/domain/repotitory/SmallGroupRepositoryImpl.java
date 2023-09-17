@@ -50,7 +50,7 @@ public class SmallGroupRepositoryImpl implements SmallGroupRepositoryQuerydsl {
   }
 
   private BooleanExpression leaderUsernameLike(String leaderUsername) {
-    return leaderUsername != null ? smallGroup.leader.username.value.like(leaderUsername) : null;
+    return leaderUsername != null ? smallGroup.leader.username.like(leaderUsername) : null;
   }
 
   private BooleanExpression maxMemberCountGoe(Integer maxMemberCountFrom) {

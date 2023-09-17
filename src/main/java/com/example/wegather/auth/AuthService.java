@@ -7,8 +7,6 @@ import com.example.wegather.global.vo.MemberType;
 import com.example.wegather.global.vo.PhoneNumber;
 import com.example.wegather.member.domain.entity.Member;
 import com.example.wegather.member.domain.MemberRepository;
-import com.example.wegather.member.domain.vo.Password;
-import com.example.wegather.member.domain.vo.Username;
 import com.example.wegather.auth.dto.SignUpRequest;
 import com.example.wegather.member.dto.MemberDto;
 import lombok.RequiredArgsConstructor;
@@ -32,8 +30,8 @@ public class AuthService {
   @Transactional
   public MemberDto signUp(SignUpRequest request) {
     return MemberDto.from(memberRepository.save(Member.builder()
-        .username(Username.of(request.getUsername()))
-        .password(Password.of(request.getPassword(), passwordEncoder))
+        .username(request.getUsername())
+        .password(passwordEncoder.encode(request.getPassword()))
         .email(request.getEmail())
         .phoneNumber(PhoneNumber.of(request.getPhoneNumber()))
         .memberType(MemberType.ROLE_USER)

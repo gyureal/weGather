@@ -2,7 +2,6 @@ package com.example.wegather.auth;
 
 import com.example.wegather.auth.dto.SignUpRequest;
 import com.example.wegather.member.domain.MemberRepository;
-import com.example.wegather.member.domain.vo.Username;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -25,7 +24,7 @@ public class SignUpRequestValidator implements Validator {
           new Object[]{signUpRequest.getEmail()}, "이미 사용중인 이메일 입니다.");
     }
 
-    if (memberRepository.existsByUsername(Username.of(signUpRequest.getUsername()))) {
+    if (memberRepository.existsByUsername(signUpRequest.getUsername())) {
       errors.rejectValue("username", "invalid.username", new Object[]{signUpRequest.getUsername()}, "이미 사용중인 아이디 입니다.");
     }
   }

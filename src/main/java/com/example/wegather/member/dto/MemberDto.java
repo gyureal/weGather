@@ -27,7 +27,7 @@ public class MemberDto {
   public static MemberDto from(Member member) {
     return MemberDto.builder()
         .id(member.getId())
-        .username(member.getUsername().getValue())
+        .username(member.getUsername())
         .email(member.getEmail())
         .phoneNumber(member.getPhoneNumber().getValue())
         .address(AddressDto.from(member.getAddress()))
