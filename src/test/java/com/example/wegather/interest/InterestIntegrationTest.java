@@ -28,7 +28,7 @@ public class InterestIntegrationTest extends IntegrationTest {
   MemberDto member01;
   @BeforeEach
   void init() {
-     member01 = insertMember("member01", PASSWORD);
+     member01 = insertMember("member01", "testUser1@gmail.com" ,PASSWORD);
   }
 
   @Test
@@ -144,11 +144,11 @@ public class InterestIntegrationTest extends IntegrationTest {
         .extract().as(InterestDto.class);
   }
 
-  private MemberDto insertMember(String username, String password) {
+  private MemberDto insertMember(String username, String email ,String password) {
     SignUpRequest request = SignUpRequest.builder()
         .username(username)
         .password(password)
-        .email("testUser")
+        .email(email)
         .phoneNumber("010-1234-1234")
         .build();
 

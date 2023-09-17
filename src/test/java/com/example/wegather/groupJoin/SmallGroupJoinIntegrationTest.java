@@ -31,9 +31,9 @@ class SmallGroupJoinIntegrationTest extends IntegrationTest {
 
   @BeforeEach
   void initData() {
-    member01 = insertMember("member01", memberPassword);
-    member02 = insertMember("member02", memberPassword);
-    member03 = insertMember("member03", memberPassword);
+    member01 = insertMember("member01","testUser1@gmail.com" ,memberPassword);
+    member02 = insertMember("member02","testUser2@gmail.com", memberPassword);
+    member03 = insertMember("member03","testUser3@gmail.com", memberPassword);
     group01 = insertSmallGroup("group01", 100L, member01);
   }
 
@@ -210,11 +210,11 @@ class SmallGroupJoinIntegrationTest extends IntegrationTest {
         .extract().as(SmallGroupDto.class);
   }
 
-  private MemberDto insertMember(String username, String password) {
+  private MemberDto insertMember(String username, String email ,String password) {
     SignUpRequest request = SignUpRequest.builder()
         .username(username)
         .password(password)
-        .email("testUser")
+        .email(email)
         .phoneNumber("010-1234-1234")
         .build();
 

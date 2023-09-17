@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.example.wegather.auth.dto.SignInRequest;
 import com.example.wegather.auth.dto.SignUpRequest;
-import com.example.wegather.global.vo.MemberType;
 import com.example.wegather.IntegrationTest;
 import com.example.wegather.member.domain.MemberRepository;
 import com.example.wegather.member.dto.MemberDto;
@@ -43,7 +42,7 @@ public class AuthControllerTest extends IntegrationTest {
     MemberDto memberDto = response.body().as(MemberDto.class);
     assertThat(memberDto)
         .usingRecursiveComparison()
-        .ignoringFields("id", "profileImage", "address", "interests")
+        .ignoringFields("id", "profileImage", "address", "interests", "memberType")
         .ignoringActualNullFields()
         .isEqualTo(signUpRequest);
   }

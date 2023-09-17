@@ -9,8 +9,6 @@ import com.example.wegather.global.vo.PhoneNumber;
 import com.example.wegather.group.domain.entity.SmallGroup;
 import com.example.wegather.group.dto.SmallGroupSearchCondition;
 import com.example.wegather.member.domain.entity.Member;
-import com.example.wegather.member.domain.vo.Password;
-import com.example.wegather.member.domain.vo.Username;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -30,8 +28,6 @@ class SmallGroupRepositoryQuerydslTest extends RepositoryTest {
 
   @Autowired
   EntityManager entityManager;
-
-  private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
   SmallGroupRepositoryQuerydsl smallGroupRepositoryQuerydsl;
 
@@ -147,8 +143,8 @@ class SmallGroupRepositoryQuerydslTest extends RepositoryTest {
 
   Member insertMember(String username) {
     return em.persistAndFlush(Member.builder()
-            .username(Username.of(username))
-            .password(Password.of("1234", passwordEncoder))
+            .username(username)
+            .password("1234")
             .memberType(MemberType.ROLE_USER)
             .address(Address.of("테스트주소", 123.21, 123.12))
             .phoneNumber(PhoneNumber.of("010-2222-3333"))

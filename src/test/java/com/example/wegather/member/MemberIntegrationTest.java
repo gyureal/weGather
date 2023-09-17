@@ -36,9 +36,9 @@ class MemberIntegrationTest extends IntegrationTest {
 
   @BeforeEach
   void init() {
-    member01 = insertTestMember("test01", memberPassword);
-    member02 = insertTestMember("test02", memberPassword);
-    member03 = insertTestMember("test03", memberPassword);
+    member01 = insertTestMember("test01","testUser1@gmail.com" ,memberPassword);
+    member02 = insertTestMember("test02", "testUser2@gmail.com" ,memberPassword);
+    member03 = insertTestMember("test03", "testUser3@gmail.com", memberPassword);
   }
 
   @Test
@@ -217,11 +217,11 @@ class MemberIntegrationTest extends IntegrationTest {
   }
 
 
-  private MemberDto insertTestMember(String username, String password) {
+  private MemberDto insertTestMember(String username, String email ,String password) {
     SignUpRequest request = SignUpRequest.builder()
         .username(username)
         .password(password)
-        .email("testUser")
+        .email(email)
         .phoneNumber("010-1234-1234")
         .build();
 
