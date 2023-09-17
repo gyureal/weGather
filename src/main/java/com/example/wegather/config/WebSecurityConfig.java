@@ -21,6 +21,8 @@ public class WebSecurityConfig {
     log.info("-------securityFilterChain-------");
     http.csrf().disable();
     http.authorizeRequests()
+        .antMatchers("/css/**", "/js/**", "/images/**").permitAll()
+        .antMatchers("/", "/view", "/view/sign-in", "/view/sign-up").permitAll()
         .antMatchers(HttpMethod.POST,"/sign-up", "/sign-in").permitAll()
         .antMatchers("/health").permitAll()
         .anyRequest().authenticated();
