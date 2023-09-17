@@ -41,14 +41,19 @@ const signUp = (member) => {
   }).catch((error) => {
     console.log(error);
     const errorDetails = error.response.data.errorDetails;
-    errorDetails.forEach((errorDetail) => {
-      errorTexts.forEach((errorText) => {
-        const fieldName = errorText.getAttribute('data-field');
-        if (errorDetail.field === fieldName) {
-          errorText.textContent = errorDetail.reason;
-          errorText.style.display = 'block';
-        }
-      })
-    })
+
+    showValidationResult(errorTexts, errorDetails);
   });
 };
+
+const showValidationResult = (errorTexts, errorDetails) => {
+  errorDetails.forEach((errorDetail) => {
+    errorTexts.forEach((errorText) => {
+      const fieldName = errorText.getAttribute('data-field');
+      if (errorDetail.field === fieldName) {
+        errorText.textContent = errorDetail.reason;
+        errorText.style.display = 'block';
+      }
+    })
+  })
+}
