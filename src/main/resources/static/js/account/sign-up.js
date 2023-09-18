@@ -2,17 +2,11 @@
 const form = document.getElementById('form');
 const errorTexts = document.querySelectorAll('.form-text.text-danger');
 
-const pageLoad = () => {
-  errorTextsHide();
-}
-
 const errorTextsHide = () => {
   errorTexts.forEach((errorText) => {
     errorText.style.display = 'none';
   });
 }
-
-window.onload = pageLoad;
 
 form.addEventListener('submit', (event) => {
   event.preventDefault(); // 기본 form submit 이벤트 중단
