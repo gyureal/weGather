@@ -1,6 +1,5 @@
 package com.example.wegather.auth;
 
-import static com.example.wegather.global.exception.ErrorCode.*;
 
 import com.example.wegather.auth.dto.SignInRequest;
 import com.example.wegather.global.vo.MemberType;
@@ -40,7 +39,7 @@ public class AuthService {
 
   public void signIn(SignInRequest request) {
     UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
-        request.getUsername(), request.getPassword());
+        request.getUsernameOrEmail(), request.getPassword());
     Authentication authenticate = authenticationManager.authenticate(token);
     SecurityContextHolder.getContext().setAuthentication(authenticate);
   }

@@ -17,7 +17,7 @@ public class MainController {
 
   @GetMapping("view/sign-in")
   public String signIn() {
-    return "sign-in";
+    return "account/sign-in";
   }
 
   @GetMapping("view/sign-up")

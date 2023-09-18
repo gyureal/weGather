@@ -47,7 +47,7 @@ public class AuthController {
    * @throws org.springframework.security.authentication.BadCredentialsException credential 이 일치하지 않는 경우
    */
   @PostMapping("/sign-in")
-  public ResponseEntity<Void> signIn(@RequestBody SignInRequest request) {
+  public ResponseEntity<Void> signIn(@RequestBody @Valid SignInRequest request) {
     authService.signIn(request);
     return ResponseEntity.ok().build();
   }
