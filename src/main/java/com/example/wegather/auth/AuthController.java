@@ -6,9 +6,12 @@ import com.example.wegather.member.dto.MemberDto;
 import java.net.URI;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -50,5 +53,13 @@ public class AuthController {
   public ResponseEntity<Void> signIn(@RequestBody @Valid SignInRequest request) {
     authService.signIn(request);
     return ResponseEntity.ok().build();
+  }
+
+  @GetMapping("/auth/me")
+  public ResponseEntity<String> getMyInfo(@AuthenticationPrincipal MemberDetails memberDetails) {
+    if (memberDetails != null) {
+      return ResponseEntity.ok(memberDetails.getUsername());
+    }
+    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
   }
 }
