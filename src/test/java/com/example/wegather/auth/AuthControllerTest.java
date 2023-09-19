@@ -7,7 +7,7 @@ import com.example.wegather.auth.dto.SignInRequest;
 import com.example.wegather.auth.dto.SignUpRequest;
 import com.example.wegather.IntegrationTest;
 import com.example.wegather.member.domain.MemberRepository;
-import com.example.wegather.member.dto.MemberDto;
+import com.example.wegather.member.domain.entity.Member;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.http.ContentType;
@@ -28,7 +28,6 @@ public class AuthControllerTest extends IntegrationTest {
       .username("test01")
       .password("password")
       .email("테스트유져")
-      .phoneNumber("010-1234-1234")
       .build();
 
   @Test
@@ -39,12 +38,11 @@ public class AuthControllerTest extends IntegrationTest {
 
     //then
     assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_CREATED);
-    MemberDto memberDto = response.body().as(MemberDto.class);
-    assertThat(memberDto)
-        .usingRecursiveComparison()
-        .ignoringFields("id", "profileImage", "address", "interests", "memberType")
-        .ignoringActualNullFields()
-        .isEqualTo(signUpRequest);
+    Member member = findByUsername(signUpRequest.getUsername());
+    assertThat(member.getUsername()).isEqualTo(signUpRequest.getUsername());
+    assertThat(member.getEmail()).isEqualTo(signUpRequest.getEmail());
+    assertThat(member.getEmailCheckToken()).isNotEmpty();
+    assertThat(member.getEmailCheckTokenGeneratedAt()).isNotNull();
   }
 
   @Test
@@ -91,7 +89,7 @@ public class AuthControllerTest extends IntegrationTest {
   }
 
   @Test
-  @DisplayName("password 가 로그인에 실패합니다.")
+  @DisplayName("password 가 달라서 로그인에 실패합니다.")
   void signIn_fail_because_password_invalid() {
     // given
     signUp(signUpRequest);
@@ -130,6 +128,11 @@ public class AuthControllerTest extends IntegrationTest {
         .when().post("/sign-in")
         .sessionId();
     return new RequestSpecBuilder().setSessionId(sessionId).build();
+  }
+
+  public Member findByUsername(String username) {
+    return memberRepository.findByUsername(username)
+        .orElseThrow(() -> new RuntimeException("member not found"));
   }
 
 }

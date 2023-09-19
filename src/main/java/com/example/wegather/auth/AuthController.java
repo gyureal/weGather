@@ -39,7 +39,7 @@ public class AuthController {
   @PostMapping("/sign-up")
   public ResponseEntity<MemberDto> signUp(@Valid @RequestBody SignUpRequest request) {
     // 회원가입
-    MemberDto memberDto = authService.signUp(request);
+    MemberDto memberDto = authService.processNewMember(request);
     // 로그인
     authService.signIn(request.getUsername(), request.getPassword());
     return ResponseEntity.created(URI.create("/members/" + memberDto.getId())).body(memberDto);

@@ -3,13 +3,14 @@ package com.example.wegather.member.domain.entity;
 import com.example.wegather.global.BaseTimeEntity;
 import com.example.wegather.global.vo.Address;
 import com.example.wegather.global.vo.Image;
-import com.example.wegather.global.vo.PhoneNumber;
 import com.example.wegather.global.vo.MemberType;
 import com.example.wegather.interest.domain.Interest;
 import com.example.wegather.interest.dto.InterestDto;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
@@ -40,9 +41,11 @@ public class Member extends BaseTimeEntity {
   private String username;
   private String password;
   private String email;
-  @Embedded
-  @AttributeOverride(name = "value", column = @Column(name = "phone_number"))
-  private PhoneNumber phoneNumber;
+
+  private boolean emailVerified;
+  private String emailCheckToken;
+  private LocalDateTime emailCheckTokenGeneratedAt;
+  private LocalDateTime joinedAt;
   @Embedded
   @AttributeOverrides({
       @AttributeOverride(name = "streetAddress", column = @Column(name = "street_address")),
@@ -59,14 +62,17 @@ public class Member extends BaseTimeEntity {
   private List<MemberInterest> memberInterests = new ArrayList<>();
 
   @Builder
-  public Member(String username, String password, String email, PhoneNumber phoneNumber,
-      Address address, MemberType memberType) {
+  public Member(String username, String password, String email, Address address, MemberType memberType) {
     this.username = username;
     this.password = password;
     this.email = email;
-    this.phoneNumber = phoneNumber;
     this.address = address;
     this.memberType = memberType;
+  }
+
+  public void generateEmailCheckToken() {
+    this.emailCheckToken = UUID.randomUUID().toString();
+    this.emailCheckTokenGeneratedAt = LocalDateTime.now();
   }
 
   public void changeProfileImage(String storeImagePath) {
