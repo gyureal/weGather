@@ -37,9 +37,9 @@ public class AuthService {
         .build()));
   }
 
-  public void signIn(SignInRequest request) {
+  public void signIn(String usernameOrEmail, String password) {
     UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
-        request.getUsernameOrEmail(), request.getPassword());
+        usernameOrEmail, password);
     Authentication authenticate = authenticationManager.authenticate(token);
     SecurityContextHolder.getContext().setAuthentication(authenticate);
   }

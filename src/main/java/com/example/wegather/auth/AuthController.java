@@ -32,12 +32,16 @@ public class AuthController {
 
   /**
    * 회원을 새로 추가합니다. (회원가입)
+   * 회원가입 후 로그인 됩니다.
    * @param request 회원가입시 입력되는 회원정보
    * @return 생성된 회원에 접근할 수 있는 endpoint
    */
   @PostMapping("/sign-up")
   public ResponseEntity<MemberDto> signUp(@Valid @RequestBody SignUpRequest request) {
+    // 회원가입
     MemberDto memberDto = authService.signUp(request);
+    // 로그인
+    authService.signIn(request.getUsername(), request.getPassword());
     return ResponseEntity.created(URI.create("/members/" + memberDto.getId())).body(memberDto);
   }
 
@@ -51,7 +55,7 @@ public class AuthController {
    */
   @PostMapping("/sign-in")
   public ResponseEntity<Void> signIn(@RequestBody @Valid SignInRequest request) {
-    authService.signIn(request);
+    authService.signIn(request.getUsernameOrEmail(), request.getPassword());
     return ResponseEntity.ok().build();
   }
 
