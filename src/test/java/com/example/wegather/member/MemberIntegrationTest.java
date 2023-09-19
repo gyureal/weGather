@@ -1,6 +1,5 @@
 package com.example.wegather.member;
 
-import static com.example.wegather.global.vo.MemberType.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.example.wegather.IntegrationTest;
@@ -8,7 +7,6 @@ import com.example.wegather.auth.AuthControllerTest;
 import com.example.wegather.interest.dto.CreateInterestRequest;
 import com.example.wegather.interest.dto.InterestDto;
 import com.example.wegather.member.domain.MemberRepository;
-import com.example.wegather.global.vo.MemberType;
 import com.example.wegather.auth.dto.SignUpRequest;
 import com.example.wegather.member.dto.MemberDto;
 import io.restassured.RestAssured;
@@ -222,7 +220,6 @@ class MemberIntegrationTest extends IntegrationTest {
         .username(username)
         .password(password)
         .email(email)
-        .phoneNumber("010-1234-1234")
         .build();
 
     return AuthControllerTest.signUp(request).as(MemberDto.class);

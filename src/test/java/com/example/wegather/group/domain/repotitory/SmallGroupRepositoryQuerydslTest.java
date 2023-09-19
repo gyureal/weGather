@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.*;
 import com.example.wegather.RepositoryTest;
 import com.example.wegather.global.vo.Address;
 import com.example.wegather.global.vo.MemberType;
-import com.example.wegather.global.vo.PhoneNumber;
 import com.example.wegather.group.domain.entity.SmallGroup;
 import com.example.wegather.group.dto.SmallGroupSearchCondition;
 import com.example.wegather.member.domain.entity.Member;
@@ -18,8 +17,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 
 class SmallGroupRepositoryQuerydslTest extends RepositoryTest {
@@ -147,7 +144,6 @@ class SmallGroupRepositoryQuerydslTest extends RepositoryTest {
             .password("1234")
             .memberType(MemberType.ROLE_USER)
             .address(Address.of("테스트주소", 123.21, 123.12))
-            .phoneNumber(PhoneNumber.of("010-2222-3333"))
         .build());
   }
 

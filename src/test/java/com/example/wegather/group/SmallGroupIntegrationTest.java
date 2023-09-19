@@ -326,7 +326,6 @@ class SmallGroupIntegrationTest extends IntegrationTest {
         .username(username)
         .password(password)
         .email(email)
-        .phoneNumber("010-1234-1234")
         .build();
 
     return AuthControllerTest.signUp(request).as(MemberDto.class);

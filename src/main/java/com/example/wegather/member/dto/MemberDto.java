@@ -29,7 +29,6 @@ public class MemberDto {
         .id(member.getId())
         .username(member.getUsername())
         .email(member.getEmail())
-        .phoneNumber(member.getPhoneNumber().getValue())
         .address(AddressDto.from(member.getAddress()))
         .memberType(member.getMemberType())
         .profileImage(member.getProfileImage())

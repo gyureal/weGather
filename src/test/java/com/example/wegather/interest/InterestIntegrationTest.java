@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.*;
 import com.example.wegather.IntegrationTest;
 import com.example.wegather.auth.dto.SignInRequest;
 import com.example.wegather.auth.dto.SignUpRequest;
-import com.example.wegather.global.vo.MemberType;
 import com.example.wegather.interest.dto.CreateInterestRequest;
 import com.example.wegather.interest.dto.InterestDto;
 import com.example.wegather.member.dto.MemberDto;
@@ -149,7 +148,6 @@ public class InterestIntegrationTest extends IntegrationTest {
         .username(username)
         .password(password)
         .email(email)
-        .phoneNumber("010-1234-1234")
         .build();
 
     return RestAssured.given().body(request).contentType(ContentType.JSON)
