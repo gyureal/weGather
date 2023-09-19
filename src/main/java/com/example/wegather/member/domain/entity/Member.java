@@ -104,6 +104,15 @@ public class Member extends BaseTimeEntity {
     return profileImage.getValue();
   }
 
+  public boolean isValidToken(String token) {
+    return emailCheckToken.equals(token);
+  }
+
+  public void completeSignUp() {
+    emailVerified = true;
+    joinedAt = LocalDateTime.now();
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {

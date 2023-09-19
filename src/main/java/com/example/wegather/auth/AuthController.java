@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
@@ -65,5 +66,11 @@ public class AuthController {
       return ResponseEntity.ok(memberDetails.getUsername());
     }
     return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+  }
+
+  @PostMapping("/check-email-token")
+  public ResponseEntity<Void> checkEmailToken(@RequestParam String email, @RequestParam String token) {
+    authService.checkEmailToken(email, token);
+    return ResponseEntity.ok().build();
   }
 }

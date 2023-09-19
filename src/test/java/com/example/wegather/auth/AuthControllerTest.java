@@ -27,7 +27,7 @@ public class AuthControllerTest extends IntegrationTest {
   SignUpRequest signUpRequest = SignUpRequest.builder()
       .username("test01")
       .password("password")
-      .email("테스트유져")
+      .email("test01@example.com")
       .build();
 
   @Test
@@ -103,6 +103,23 @@ public class AuthControllerTest extends IntegrationTest {
     assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_UNAUTHORIZED);
   }
 
+  @Test
+  @DisplayName("이메일 인증에 성공합니다.")
+  void email_token_check_success() {
+    signUp(signUpRequest);
+    Member member = findByUsername(signUpRequest.getUsername());
+
+    ExtractableResponse<Response> response = RestAssured.given().log().all()
+        .when().queryParam("email", member.getEmail()).queryParam("token", member.getEmailCheckToken())
+        .post("/check-email-token")
+        .then().log().all().extract();
+
+    assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_OK);
+    member = findByUsername(signUpRequest.getUsername());
+    assertThat(member.isEmailVerified()).isTrue();
+    assertThat(member.getJoinedAt()).isNotNull();
+  }
+
   public static ExtractableResponse<Response> signUp(SignUpRequest signUpRequest) {
     ExtractableResponse<Response> response = RestAssured.given().log().all()
         .body(signUpRequest).contentType(ContentType.JSON)
@@ -134,5 +151,4 @@ public class AuthControllerTest extends IntegrationTest {
     return memberRepository.findByUsername(username)
         .orElseThrow(() -> new RuntimeException("member not found"));
   }
-
 }

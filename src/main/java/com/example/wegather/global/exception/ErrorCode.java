@@ -30,6 +30,8 @@ public enum ErrorCode {
   USERNAME_RULE_VIOLATION("2002", "회원 아이디는 규칙에 위배됩니다."),
   PASSWORD_RULE_VIOLATION("2003", "회원 비밀번호 규칙에 위배됩니다."),
   USERNAME_DUPLICATED("2004", "중복된 회원 ID 입니다."),
+  EMAIL_NOT_FOUND("2005", "이메일을 찾을 수 없습니다."),
+  TOKEN_IS_NOT_VALID("2006", "토큰이 유효하지 않습니다."),
 
   /**
    * 관심사 파트 에러 메세지

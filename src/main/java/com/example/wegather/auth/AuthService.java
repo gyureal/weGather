@@ -1,6 +1,7 @@
 package com.example.wegather.auth;
 
 
+import com.example.wegather.global.exception.ErrorCode;
 import com.example.wegather.global.vo.MemberType;
 import com.example.wegather.member.domain.entity.Member;
 import com.example.wegather.member.domain.MemberRepository;
@@ -44,5 +45,15 @@ public class AuthService {
         usernameOrEmail, password);
     Authentication authenticate = authenticationManager.authenticate(token);
     SecurityContextHolder.getContext().setAuthentication(authenticate);
+  }
+
+  public void checkEmailToken(String email, String token) {
+    Member member = memberRepository.findByEmail(email)
+        .orElseThrow(
+            () -> new IllegalArgumentException(ErrorCode.EMAIL_NOT_FOUND.getDescription()));
+    if (!member.isValidToken(token)) {
+      throw new IllegalArgumentException(ErrorCode.TOKEN_IS_NOT_VALID.getDescription());
+    }
+    member.completeSignUp();
   }
 }

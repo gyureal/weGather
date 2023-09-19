@@ -23,7 +23,7 @@ public class WebSecurityConfig {
     http.authorizeRequests()
         .antMatchers("/css/**", "/js/**", "/images/**").permitAll()
         .antMatchers("/", "/view", "/view/sign-in", "/view/sign-up", "/auth/me").permitAll()
-        .antMatchers(HttpMethod.POST,"/sign-up", "/sign-in").permitAll()
+        .antMatchers(HttpMethod.POST,"/sign-up", "/sign-in", "/check-email-token").permitAll()
         .antMatchers("/health").permitAll()
         .anyRequest().authenticated();
 
