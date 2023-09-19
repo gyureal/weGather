@@ -22,7 +22,7 @@ public class WebSecurityConfig {
     http.csrf().disable();
     http.authorizeRequests()
         .antMatchers("/css/**", "/js/**", "/images/**").permitAll()
-        .antMatchers("/", "/view", "/view/sign-in", "/view/sign-up", "/auth/me").permitAll()
+        .antMatchers("/", "/view", "/view/sign-in", "/view/sign-up", "/auth/me", "/check-email-token").permitAll()
         .antMatchers(HttpMethod.POST,"/sign-up", "/sign-in", "/check-email-token").permitAll()
         .antMatchers("/health").permitAll()
         .anyRequest().authenticated();

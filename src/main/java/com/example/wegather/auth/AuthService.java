@@ -7,8 +7,9 @@ import com.example.wegather.member.domain.entity.Member;
 import com.example.wegather.member.domain.MemberRepository;
 import com.example.wegather.auth.dto.SignUpRequest;
 import com.example.wegather.member.dto.MemberDto;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -24,14 +25,26 @@ public class AuthService {
   private final AuthenticationManager authenticationManager;
   private final MemberRepository memberRepository;
   private final PasswordEncoder passwordEncoder;
+  private final JavaMailSender javaMailSender;
 
   public MemberDto processNewMember(SignUpRequest request) {
     Member newMember = saveNewMember(request);
     newMember.generateEmailCheckToken();
+
+    sendSignUpConfirmEmail(newMember);
     return MemberDto.from(newMember);
   }
 
-  public Member saveNewMember(SignUpRequest request) {
+  private void sendSignUpConfirmEmail(Member newMember) {
+    SimpleMailMessage mailMessage = new SimpleMailMessage();
+    mailMessage.setTo(newMember.getEmail());
+    mailMessage.setSubject("스터디올래, 회원 가입 인증");
+    mailMessage.setText("/check-email-token?token=" + newMember.getEmailCheckToken() +
+        "&email=" + newMember.getEmail());
+    javaMailSender.send(mailMessage);
+  }
+
+  private Member saveNewMember(SignUpRequest request) {
     return memberRepository.save(Member.builder()
         .username(request.getUsername())
         .password(passwordEncoder.encode(request.getPassword()))
@@ -47,7 +60,7 @@ public class AuthService {
     SecurityContextHolder.getContext().setAuthentication(authenticate);
   }
 
-  public void checkEmailToken(String email, String token) {
+  public Member verifyMember(String email, String token) {
     Member member = memberRepository.findByEmail(email)
         .orElseThrow(
             () -> new IllegalArgumentException(ErrorCode.EMAIL_NOT_FOUND.getDescription()));
@@ -55,5 +68,6 @@ public class AuthService {
       throw new IllegalArgumentException(ErrorCode.TOKEN_IS_NOT_VALID.getDescription());
     }
     member.completeSignUp();
+    return member;
   }
 }

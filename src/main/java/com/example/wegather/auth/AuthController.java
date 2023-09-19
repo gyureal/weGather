@@ -2,6 +2,7 @@ package com.example.wegather.auth;
 
 import com.example.wegather.auth.dto.SignInRequest;
 import com.example.wegather.auth.dto.SignUpRequest;
+import com.example.wegather.member.domain.entity.Member;
 import com.example.wegather.member.dto.MemberDto;
 import java.net.URI;
 import javax.validation.Valid;
@@ -69,8 +70,8 @@ public class AuthController {
   }
 
   @PostMapping("/check-email-token")
-  public ResponseEntity<Void> checkEmailToken(@RequestParam String email, @RequestParam String token) {
-    authService.checkEmailToken(email, token);
-    return ResponseEntity.ok().build();
+  public ResponseEntity<String> checkEmailToken(@RequestParam String email, @RequestParam String token) {
+    Member member = authService.verifyMember(email, token);
+    return ResponseEntity.ok(member.getUsername());
   }
 }
