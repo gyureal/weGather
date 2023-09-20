@@ -72,7 +72,12 @@
     const authenticatedComponent = document.querySelectorAll(".authenticated");
 
     document.addEventListener('DOMContentLoaded', () => {
-      getUserInfo();
+      getUserInfo((data) => {
+        showWhenAuth();
+        changeProfileUsername(data.username);
+      }, () => {
+        showWhenUnAuth();
+      });
     });
 
     const showWhenAuth =() => {
@@ -98,19 +103,18 @@
       profileUsername.textContent = username;
     }
 
-    const getUserInfo = () => {
+    const getUserInfo = (successCallback, failCallback) => {
       axios.request({
         url: '/auth/me',
         method: 'GET',
         withCredentials: true
       }).then((response) => {
         const data = response.data;
-        console.log('username:', data);
-        showWhenAuth();
-        changeProfileUsername(data);
+        successCallback(data);
+
       }).catch((error) => {
         console.log(error);
-        showWhenUnAuth();
+        failCallback();
       });
     };
   </script>

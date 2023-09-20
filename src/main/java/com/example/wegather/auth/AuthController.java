@@ -1,7 +1,11 @@
 package com.example.wegather.auth;
 
+import com.example.wegather.auth.dto.MemberInfo;
 import com.example.wegather.auth.dto.SignInRequest;
 import com.example.wegather.auth.dto.SignUpRequest;
+import com.example.wegather.global.exception.ErrorCode;
+import com.example.wegather.global.exception.customException.AuthenticationException;
+import com.example.wegather.member.domain.MemberRepository;
 import com.example.wegather.member.domain.entity.Member;
 import com.example.wegather.member.dto.MemberDto;
 import java.net.URI;
@@ -24,6 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
   private final AuthService authService;
+  private final MemberRepository memberRepository;
 
   private final SignUpRequestValidator signUpRequestValidator;
 
@@ -62,10 +67,14 @@ public class AuthController {
   }
 
   @GetMapping("/auth/me")
-  public ResponseEntity<String> getMyInfo(@AuthenticationPrincipal MemberDetails memberDetails) {
+  public ResponseEntity<MemberInfo> getMyInfo(@AuthenticationPrincipal MemberDetails memberDetails) {
     if (memberDetails != null) {
-      return ResponseEntity.ok(memberDetails.getUsername());
+      Member member = memberRepository.findByUsername(memberDetails.getUsername())
+          .orElseThrow(() -> new AuthenticationException(ErrorCode.MEMBER_NOT_FOUND.getDescription()));
+      return ResponseEntity.ok(MemberInfo.from(member));
     }
+
+
     return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
   }
 
