@@ -2,6 +2,7 @@ package com.example.wegather.auth;
 
 
 import com.example.wegather.global.exception.ErrorCode;
+import com.example.wegather.global.exception.customException.AuthenticationException;
 import com.example.wegather.global.vo.MemberType;
 import com.example.wegather.member.domain.entity.Member;
 import com.example.wegather.member.domain.MemberRepository;
@@ -69,5 +70,13 @@ public class AuthService {
     }
     member.completeSignUp();
     return member;
+  }
+
+  public void resendEmail(Long memberId) {
+    Member member = memberRepository.findById(memberId)
+        .orElseThrow(() -> new AuthenticationException(ErrorCode.MEMBER_NOT_FOUND.getDescription()));
+
+    member.generateEmailCheckToken();
+    sendSignUpConfirmEmail(member);
   }
 }

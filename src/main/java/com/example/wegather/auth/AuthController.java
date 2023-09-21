@@ -74,7 +74,6 @@ public class AuthController {
       return ResponseEntity.ok(MemberInfo.from(member));
     }
 
-
     return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
   }
 
@@ -82,5 +81,11 @@ public class AuthController {
   public ResponseEntity<String> checkEmailToken(@RequestParam String email, @RequestParam String token) {
     Member member = authService.verifyMember(email, token);
     return ResponseEntity.ok(member.getUsername());
+  }
+
+  @PostMapping("/resend-confirm-email")
+  public ResponseEntity<Void> resendConfirmEmail(@AuthenticationPrincipal MemberDetails memberDetails) {
+    authService.resendEmail(memberDetails.getMemberId());
+    return ResponseEntity.ok().build();
   }
 }
