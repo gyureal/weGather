@@ -33,4 +33,9 @@ public class MainController {
     model.addAttribute("token", token);
     return "account/check-email-token";
   }
+
+  @GetMapping("/resend-confirm-email")
+  public String resendConfirmEmailView() {
+    return "account/resend-email";
+  }
 }
