@@ -25,7 +25,7 @@ form.addEventListener('submit', (event) => {
 
 const signIn = (account) => {
   axios.request({
-    url: '/sign-in',
+    url: '/api/sign-in',
     method: 'POST',
     headers: {
       'Content-Type': 'application/json;charset=utf-8',

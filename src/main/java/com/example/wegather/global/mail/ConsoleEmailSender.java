@@ -1,4 +1,4 @@
-package com.example.wegather.mail;
+package com.example.wegather.global.mail;
 
 import java.io.InputStream;
 import javax.mail.internet.MimeMessage;

@@ -151,7 +151,7 @@ public class InterestIntegrationTest extends IntegrationTest {
         .build();
 
     return RestAssured.given().body(request).contentType(ContentType.JSON)
-        .when().post("/sign-up")
+        .when().post("/api/sign-up")
         .then().extract().as(MemberDto.class);
   }
 
@@ -160,7 +160,7 @@ public class InterestIntegrationTest extends IntegrationTest {
 
     String sessionId = RestAssured.given().log().all()
         .body(signInRequest).contentType(ContentType.JSON)
-        .when().post("/sign-in")
+        .when().post("/api/sign-in")
         .sessionId();
     return new RequestSpecBuilder().setSessionId(sessionId).build();
   }

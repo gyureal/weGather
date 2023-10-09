@@ -111,7 +111,7 @@ public class AuthControllerTest extends IntegrationTest {
 
     ExtractableResponse<Response> response = RestAssured.given().log().all()
         .when().queryParam("email", member.getEmail()).queryParam("token", member.getEmailCheckToken())
-        .post("/check-email-token")
+        .post("/api/check-email-token")
         .then().log().all().extract();
 
     assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_OK);
@@ -123,7 +123,7 @@ public class AuthControllerTest extends IntegrationTest {
   public static ExtractableResponse<Response> signUp(SignUpRequest signUpRequest) {
     ExtractableResponse<Response> response = RestAssured.given().log().all()
         .body(signUpRequest).contentType(ContentType.JSON)
-        .when().post("/sign-up")
+        .when().post("/api/sign-up")
         .then().log().all()
         .extract();
     return response;
@@ -132,7 +132,7 @@ public class AuthControllerTest extends IntegrationTest {
   private ExtractableResponse<Response> requestSignIn(SignInRequest signInRequest) {
     return RestAssured.given().log().all()
         .body(signInRequest).contentType(ContentType.JSON)
-        .when().post("/sign-in")
+        .when().post("/api/sign-in")
         .then().log().all()
         .extract();
   }
@@ -142,7 +142,7 @@ public class AuthControllerTest extends IntegrationTest {
 
     String sessionId = RestAssured.given().log().all()
         .body(signInRequest).contentType(ContentType.JSON)
-        .when().post("/sign-in")
+        .when().post("/api/sign-in")
         .sessionId();
     return new RequestSpecBuilder().setSessionId(sessionId).build();
   }

@@ -23,7 +23,7 @@ form.addEventListener('submit', (event) => {
 
 const signUp = (member) => {
   axios.request({
-    url: '/sign-up',
+    url: '/api/sign-up',
     method: 'POST',
     headers: {
       'Content-Type': 'application/json;charset=utf-8',
