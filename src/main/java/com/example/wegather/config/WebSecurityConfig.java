@@ -5,11 +5,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -24,11 +26,15 @@ public class WebSecurityConfig {
     log.info("-------securityFilterChain-------");
     http.csrf().disable();
     http.authorizeRequests()
-        .antMatchers("/css/**", "/js/**", "/images/**").permitAll()
-        .antMatchers("/", "/view", "/view/sign-in", "/view/sign-up", "/auth/me", "/check-email-token").permitAll()
-        .antMatchers("/api/sign-up", "/api/sign-in", "/api/check-email-token", "/api/current-user").permitAll()
-        .antMatchers("/health").permitAll()
-        .anyRequest().authenticated();
+          .antMatchers("/css/**", "/js/**", "/images/**").permitAll()
+          .antMatchers("/", "/view", "/view/sign-in", "/view/sign-up", "/auth/me", "/check-email-token").permitAll()
+          .antMatchers("/api/sign-up", "/api/sign-in", "/api/check-email-token", "/api/current-user", "/api/logout").permitAll()
+          .antMatchers("/health").permitAll()
+          .anyRequest().authenticated()
+        .and()
+            .logout()
+                .logoutUrl("/api/logout")
+                .logoutSuccessHandler((new HttpStatusReturningLogoutSuccessHandler(HttpStatus.OK)));
     http.cors().configurationSource(corsConfigurationSource());
     return http.build();
   }
