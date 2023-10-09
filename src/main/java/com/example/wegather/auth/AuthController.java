@@ -68,14 +68,13 @@ public class AuthController {
     return ResponseEntity.ok().build();
   }
 
-  @GetMapping("/check-login")
+  @GetMapping("/current-user")
   public ResponseEntity<MemberInfo> getMyInfo(@AuthenticationPrincipal MemberDetails memberDetails) {
     if (memberDetails != null) {
       Member member = memberRepository.findByUsername(memberDetails.getUsername())
           .orElseThrow(() -> new AuthenticationException(ErrorCode.MEMBER_NOT_FOUND.getDescription()));
       return ResponseEntity.ok(MemberInfo.from(member));
     }
-
     return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
   }
 

@@ -26,7 +26,7 @@ public class WebSecurityConfig {
     http.authorizeRequests()
         .antMatchers("/css/**", "/js/**", "/images/**").permitAll()
         .antMatchers("/", "/view", "/view/sign-in", "/view/sign-up", "/auth/me", "/check-email-token").permitAll()
-        .antMatchers("/api/sign-up", "/api/sign-in", "/api/check-email-token").permitAll()
+        .antMatchers("/api/sign-up", "/api/sign-in", "/api/check-email-token", "/api/current-user").permitAll()
         .antMatchers("/health").permitAll()
         .anyRequest().authenticated();
     http.cors().configurationSource(corsConfigurationSource());
@@ -39,7 +39,7 @@ public class WebSecurityConfig {
     configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
     configuration.addAllowedMethod("*");
     configuration.addAllowedHeader("*");
-    //configuration.setAllowCredentials(true);
+    configuration.setAllowCredentials(true);
     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
     source.registerCorsConfiguration("/**", configuration);
     return source;
