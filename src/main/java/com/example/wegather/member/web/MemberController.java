@@ -1,10 +1,12 @@
 package com.example.wegather.member.web;
 
 import com.example.wegather.auth.MemberDetails;
+import com.example.wegather.auth.dto.MemberProfileDto;
 import com.example.wegather.global.exception.customException.FileUploadException;
 import com.example.wegather.global.dto.AddressRequest;
 import com.example.wegather.interest.dto.InterestDto;
 import com.example.wegather.member.domain.MemberService;
+import com.example.wegather.member.dto.EditProfileForm;
 import com.example.wegather.member.dto.MemberDto;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -52,6 +54,23 @@ public class MemberController {
   @GetMapping("/{id}")
   public ResponseEntity<MemberDto> readMemberById(@PathVariable Long id) {
     return ResponseEntity.ok(memberService.getMemberDto(id));
+  }
+
+  /**
+   * 회원 아이디로 회원을 조회합니다.
+   * @param username
+   * @return
+   */
+  @GetMapping("/profile/{username}")
+  public ResponseEntity<MemberProfileDto> readMemberByUsername(@PathVariable String username) {
+    return ResponseEntity.ok(memberService.getMemberProfileByUsername(username));
+  }
+
+  @PostMapping("/profile")
+  public ResponseEntity<Void> editProfile(@AuthenticationPrincipal MemberDetails memberDetails, @RequestBody
+      EditProfileForm editProfileForm) {
+    memberService.editProfile(memberDetails.getId(),editProfileForm);
+    return ResponseEntity.ok().build();
   }
 
   /**

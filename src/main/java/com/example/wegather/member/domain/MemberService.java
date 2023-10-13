@@ -4,6 +4,7 @@ package com.example.wegather.member.domain;
 import static com.example.wegather.global.exception.ErrorCode.MEMBER_NOT_FOUND;
 
 import com.example.wegather.auth.MemberDetails;
+import com.example.wegather.auth.dto.MemberProfileDto;
 import com.example.wegather.global.exception.customException.AuthenticationException;
 import com.example.wegather.global.dto.AddressRequest;
 import com.example.wegather.global.upload.StoreFile;
@@ -12,6 +13,7 @@ import com.example.wegather.interest.domain.Interest;
 import com.example.wegather.interest.domain.InterestRepository;
 import com.example.wegather.interest.dto.InterestDto;
 import com.example.wegather.member.domain.entity.Member;
+import com.example.wegather.member.dto.EditProfileForm;
 import com.example.wegather.member.dto.MemberDto;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -36,10 +38,10 @@ public class MemberService {
   }
 
   public MemberDto getMemberDto(Long id) {
-    return MemberDto.from(getMember(id));
+    return MemberDto.from(getMemberById(id));
   }
 
-  public Member getMember(Long id) {
+  public Member getMemberById(Long id) {
     return memberRepository.findById(id)
         .orElseThrow(() -> new IllegalArgumentException(MEMBER_NOT_FOUND.getDescription()));
   }
@@ -51,7 +53,7 @@ public class MemberService {
 
   @Transactional
   public void updateProfileImage(MemberDetails principal,Long id, MultipartFile profileImage) {
-    Member member = getMember(id);
+    Member member = getMemberById(id);
     validateUpdatable(principal, member.getUsername());
 
     UploadFile uploadFile;
@@ -62,7 +64,7 @@ public class MemberService {
 
   @Transactional
   public void updateMemberAddress(MemberDetails principal,Long id, AddressRequest addressRequest) {
-    Member member = getMember(id);
+    Member member = getMemberById(id);
     validateUpdatable(principal, member.getUsername());
 
     member.changeAddress(addressRequest.convertAddressEntity());
@@ -70,7 +72,7 @@ public class MemberService {
 
   @Transactional
   public List<InterestDto> addInterest(MemberDetails principal,Long id, Long interestsId) {
-    Member member = getMember(id);
+    Member member = getMemberById(id);
     validateUpdatable(principal, member.getUsername());
 
     Interest interest = findInterest(interestsId);
@@ -86,7 +88,7 @@ public class MemberService {
 
   @Transactional
   public List<InterestDto> removeInterest(MemberDetails principal, Long id, Long interestsId) {
-    Member member = getMember(id);
+    Member member = getMemberById(id);
     validateUpdatable(principal, member.getUsername());
 
     Interest interest = findInterest(interestsId);
@@ -106,5 +108,16 @@ public class MemberService {
       return true;
     }
     return false;
+  }
+
+  public MemberProfileDto getMemberProfileByUsername(String username) {
+    return MemberProfileDto.from(memberRepository.findByUsername(username).orElseThrow(
+        () -> new IllegalArgumentException(MEMBER_NOT_FOUND.getDescription())));
+  }
+
+  @Transactional
+  public void editProfile(Long id, EditProfileForm form) {
+    Member member = getMemberById(id);
+    member.editProfile(form.getIntroductionText());
   }
 }

@@ -61,6 +61,8 @@ public class Member extends BaseTimeEntity {
   @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<MemberInterest> memberInterests = new ArrayList<>();
 
+  private String introductionText;
+
   @Builder
   public Member(String username, String password, String email, Address address, MemberType memberType) {
     this.username = username;
@@ -111,6 +113,11 @@ public class Member extends BaseTimeEntity {
   public void completeSignUp() {
     emailVerified = true;
     joinedAt = LocalDateTime.now();
+  }
+
+  // 프로필 수정
+  public void editProfile(String profile) {
+    this.introductionText = profile;
   }
 
   @Override
