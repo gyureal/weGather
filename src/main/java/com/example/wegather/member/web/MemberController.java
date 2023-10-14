@@ -1,6 +1,7 @@
 package com.example.wegather.member.web;
 
 import com.example.wegather.auth.MemberDetails;
+import com.example.wegather.member.dto.ChangePasswordForm;
 import com.example.wegather.member.dto.MemberProfileDto;
 import com.example.wegather.global.exception.customException.FileUploadException;
 import com.example.wegather.global.dto.AddressRequest;
@@ -8,14 +9,17 @@ import com.example.wegather.interest.dto.InterestDto;
 import com.example.wegather.member.domain.MemberService;
 import com.example.wegather.member.dto.EditProfileForm;
 import com.example.wegather.member.dto.MemberDto;
+import com.example.wegather.member.validator.ChangePasswordFormValidator;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -31,6 +35,13 @@ import org.springframework.web.multipart.MultipartFile;
 public class MemberController {
 
   private final MemberService memberService;
+
+  private final ChangePasswordFormValidator changePasswordFormValidator;
+
+  @InitBinder("changePasswordForm")
+  public void initBinder(WebDataBinder webDataBinder) {
+    webDataBinder.addValidators(changePasswordFormValidator);
+  }
 
   /**
    * 전체 회원을 조회합니다.
@@ -70,6 +81,13 @@ public class MemberController {
   public ResponseEntity<Void> editProfile(@AuthenticationPrincipal MemberDetails memberDetails, @RequestBody
       EditProfileForm editProfileForm) {
     memberService.editProfile(memberDetails.getId(),editProfileForm);
+    return ResponseEntity.ok().build();
+  }
+
+  @PostMapping("/profile/password")
+  public ResponseEntity<Void> changePassword(@AuthenticationPrincipal MemberDetails memberDetails,
+      @RequestBody ChangePasswordForm changePasswordForm) {
+    memberService.changePassword(memberDetails.getId(), changePasswordForm);
     return ResponseEntity.ok().build();
   }
 

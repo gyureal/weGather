@@ -2,8 +2,11 @@ package com.example.wegather.member.domain;
 
 
 import static com.example.wegather.global.exception.ErrorCode.MEMBER_NOT_FOUND;
+import static com.example.wegather.global.exception.ErrorCode.PASSWORD_NOT_MATCHED;
+import static com.example.wegather.global.exception.ErrorCode.PASSWORD_RULE_VIOLATION;
 
 import com.example.wegather.auth.MemberDetails;
+import com.example.wegather.member.dto.ChangePasswordForm;
 import com.example.wegather.member.dto.MemberProfileDto;
 import com.example.wegather.global.exception.customException.AuthenticationException;
 import com.example.wegather.global.dto.AddressRequest;
@@ -19,8 +22,10 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
@@ -31,6 +36,7 @@ public class MemberService {
   private final MemberRepository memberRepository;
   private final InterestRepository interestRepository;
   private final StoreFile storeFile;
+  private final PasswordEncoder passwordEncoder;
 
 
   public Page<Member> getAllMembers(Pageable pageable) {
@@ -119,5 +125,14 @@ public class MemberService {
   public void editProfile(Long id, EditProfileForm form) {
     Member member = getMemberById(id);
     member.editProfile(form.getIntroductionText());
+  }
+
+  @Transactional
+  public void changePassword(Long userId, ChangePasswordForm form) {
+    Member member = getMemberById(userId);
+    if (!passwordEncoder.matches(form.getOriginalPassword(), member.getPassword())) {
+      throw new IllegalArgumentException(PASSWORD_NOT_MATCHED.getDescription());
+    }
+    member.changePassword(passwordEncoder.encode(form.getNewPassword()));
   }
 }
