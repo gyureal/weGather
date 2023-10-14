@@ -1,7 +1,6 @@
-package com.example.wegather.auth.dto;
+package com.example.wegather.member.dto;
 
 import com.example.wegather.member.domain.entity.Member;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

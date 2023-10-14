@@ -1,7 +1,7 @@
 package com.example.wegather.member.web;
 
 import com.example.wegather.auth.MemberDetails;
-import com.example.wegather.auth.dto.MemberProfileDto;
+import com.example.wegather.member.dto.MemberProfileDto;
 import com.example.wegather.global.exception.customException.FileUploadException;
 import com.example.wegather.global.dto.AddressRequest;
 import com.example.wegather.interest.dto.InterestDto;

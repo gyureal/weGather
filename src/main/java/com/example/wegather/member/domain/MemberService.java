@@ -4,7 +4,7 @@ package com.example.wegather.member.domain;
 import static com.example.wegather.global.exception.ErrorCode.MEMBER_NOT_FOUND;
 
 import com.example.wegather.auth.MemberDetails;
-import com.example.wegather.auth.dto.MemberProfileDto;
+import com.example.wegather.member.dto.MemberProfileDto;
 import com.example.wegather.global.exception.customException.AuthenticationException;
 import com.example.wegather.global.dto.AddressRequest;
 import com.example.wegather.global.upload.StoreFile;
