@@ -46,6 +46,8 @@ public class Member extends BaseTimeEntity {
   private String emailCheckToken;
   private LocalDateTime emailCheckTokenGeneratedAt;
   private LocalDateTime joinedAt;
+  private String introductionText;
+
   @Embedded
   @AttributeOverrides({
       @AttributeOverride(name = "streetAddress", column = @Column(name = "street_address")),
@@ -60,8 +62,6 @@ public class Member extends BaseTimeEntity {
   private Image profileImage;
   @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<MemberInterest> memberInterests = new ArrayList<>();
-
-  private String introductionText;
 
   @Builder
   public Member(String username, String password, String email, Address address, MemberType memberType) {
@@ -120,6 +120,10 @@ public class Member extends BaseTimeEntity {
     this.introductionText = profile;
   }
 
+  public void changePassword(String newPassword) {
+    this.password = newPassword;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -135,10 +139,6 @@ public class Member extends BaseTimeEntity {
   @Override
   public int hashCode() {
     return Objects.hash(id);
-  }
-
-  public void changePassword(String newPassword) {
-    this.password = newPassword;
   }
 }
 
