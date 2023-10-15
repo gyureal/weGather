@@ -20,6 +20,7 @@ public enum ErrorCode {
   STREET_ADDRESS_MUST_NOT_EMPTY("1004", "도로명주소는 값이 비어있을 수 없습니다."),
   PHONE_NUMBER_RULE_VIOLATION("1003", "올바른 전화번호를 입력해주세요."),
   INVALID_INPUT_ERROR("1009","올바르지 않은 입력입니다."),
+  EMAIL_SEND_FAIL("1010", "메일 발송에 실패했습니다."),
 
   /**
    * 회원 파트 에러 메세지

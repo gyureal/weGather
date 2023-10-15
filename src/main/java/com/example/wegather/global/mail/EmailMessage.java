@@ -1,0 +1,16 @@
+package com.example.wegather.global.mail;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+
+@Getter
+@AllArgsConstructor
+@Builder
+public class EmailMessage {
+  private String to;
+
+  private String subject;
+
+  private String message;
+}
