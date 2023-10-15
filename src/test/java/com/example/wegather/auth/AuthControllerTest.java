@@ -46,7 +46,7 @@ public class AuthControllerTest extends IntegrationTest {
   }
 
   @Test
-  @DisplayName("username 이 이미 존재하는 경우 예외를 던집니다.")
+  @DisplayName("회원가입 시, username 이 이미 존재하는 경우 예외를 던집니다.")
   void signUp_fail_when_username_already_exists() {
     // given
     signUp(signUpRequest);
@@ -74,7 +74,7 @@ public class AuthControllerTest extends IntegrationTest {
   }
 
   @Test
-  @DisplayName("username 을 찾을 수 없어 로그인에 실패합니다.")
+  @DisplayName("로그인 시, username 이 존재하지 않는 경우 예외를 던집니다.")
   void signIn_fail_because_username_not_found() {
     // given
     signUp(signUpRequest);

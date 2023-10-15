@@ -28,7 +28,13 @@ public class AuthService {
   private final PasswordEncoder passwordEncoder;
   private final JavaMailSender javaMailSender;
 
-  public MemberDto processNewMember(SignUpRequest request) {
+  /**
+   * 회원가입을 실시합니다.
+   *    - 가입한 이메일로 회원 확인 이메일을 전송합니다.
+   * @param request
+   * @return
+   */
+  public MemberDto signUp(SignUpRequest request) {
     Member newMember = saveNewMember(request);
     newMember.generateEmailCheckToken();
 
@@ -54,6 +60,11 @@ public class AuthService {
         .build());
   }
 
+  /**
+   * 로그인을 합니다.
+   * @param usernameOrEmail
+   * @param password
+   */
   public void signIn(String usernameOrEmail, String password) {
     UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
         usernameOrEmail, password);
@@ -61,6 +72,12 @@ public class AuthService {
     SecurityContextHolder.getContext().setAuthentication(authenticate);
   }
 
+  /**
+   * 입력받은 이메일과 토큰으로 회원을 검증합니다.
+   * @param email
+   * @param token
+   * @return
+   */
   public Member verifyMember(String email, String token) {
     Member member = memberRepository.findByEmail(email)
         .orElseThrow(
@@ -72,6 +89,10 @@ public class AuthService {
     return member;
   }
 
+  /**
+   * 메일을 재전송합니다.
+   * @param memberId
+   */
   public void resendEmail(Long memberId) {
     Member member = memberRepository.findById(memberId)
         .orElseThrow(() -> new AuthenticationException(ErrorCode.MEMBER_NOT_FOUND.getDescription()));

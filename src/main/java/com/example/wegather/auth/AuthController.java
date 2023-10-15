@@ -48,7 +48,7 @@ public class AuthController {
   @PostMapping("/sign-up")
   public ResponseEntity<MemberDto> signUp(@Valid @RequestBody SignUpRequest request) {
     // 회원가입
-    MemberDto memberDto = authService.processNewMember(request);
+    MemberDto memberDto = authService.signUp(request);
     // 로그인
     authService.signIn(request.getUsername(), request.getPassword());
     return ResponseEntity.created(URI.create("/members/" + memberDto.getId())).body(memberDto);
@@ -68,6 +68,11 @@ public class AuthController {
     return ResponseEntity.ok().build();
   }
 
+  /**
+   * 현재 로그인한 회원의 정보를 반환합니다.
+   * @param memberDetails
+   * @return
+   */
   @GetMapping("/current-user")
   public ResponseEntity<MemberInfo> getMyInfo(@AuthenticationPrincipal MemberDetails memberDetails) {
     if (memberDetails != null) {
@@ -78,12 +83,23 @@ public class AuthController {
     return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
   }
 
+  /**
+   * 이메일과 토큰 정보로 회원을 검증합니다.
+   * @param email
+   * @param token
+   * @return
+   */
   @PostMapping("/check-email-token")
   public ResponseEntity<String> checkEmailToken(@RequestParam String email, @RequestParam String token) {
     Member member = authService.verifyMember(email, token);
     return ResponseEntity.ok(member.getUsername());
   }
 
+  /**
+   * 인증 메일을 재발송합니다.
+   * @param memberDetails
+   * @return
+   */
   @PostMapping("/resend-confirm-email")
   public ResponseEntity<Void> resendConfirmEmail(@AuthenticationPrincipal MemberDetails memberDetails) {
     authService.resendEmail(memberDetails.getMemberId());
