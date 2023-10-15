@@ -26,10 +26,7 @@ public class WebSecurityConfig {
     log.info("-------securityFilterChain-------");
     http.csrf().disable();
     http.authorizeRequests()
-          .antMatchers("/css/**", "/js/**", "/images/**").permitAll()
-          .antMatchers("/", "/view", "/view/sign-in", "/view/sign-up", "/auth/me", "/check-email-token").permitAll()
           .antMatchers("/api/sign-up", "/api/sign-in", "/api/check-email-token", "/api/current-user", "/api/logout").permitAll()
-          .antMatchers("/health").permitAll()
           .anyRequest().authenticated()
         .and()
             .logout()
