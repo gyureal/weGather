@@ -24,6 +24,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -62,6 +63,9 @@ public class Member extends BaseTimeEntity {
   private Image profileImage;
   @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<MemberInterest> memberInterests = new ArrayList<>();
+
+  @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+  MemberAlarmSetting memberAlarmSetting;
 
   @Builder
   public Member(String username, String password, String email, Address address, MemberType memberType) {
@@ -122,6 +126,16 @@ public class Member extends BaseTimeEntity {
 
   public void changePassword(String newPassword) {
     this.password = newPassword;
+  }
+
+  public void changeMemberAlarmSetting(MemberAlarmSetting memberAlarmSetting) {
+    if (this.memberAlarmSetting == null) {
+      memberAlarmSetting.changeMember(this);
+      this.memberAlarmSetting = memberAlarmSetting;
+      return;
+    }
+
+    this.memberAlarmSetting.changeSettings(memberAlarmSetting);
   }
 
   @Override

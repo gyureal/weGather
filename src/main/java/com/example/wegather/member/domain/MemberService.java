@@ -6,6 +6,7 @@ import static com.example.wegather.global.exception.ErrorCode.PASSWORD_NOT_MATCH
 import static com.example.wegather.global.exception.ErrorCode.PASSWORD_RULE_VIOLATION;
 
 import com.example.wegather.auth.MemberDetails;
+import com.example.wegather.member.dto.ChangeAlarmSettingsForm;
 import com.example.wegather.member.dto.ChangePasswordForm;
 import com.example.wegather.member.dto.MemberProfileDto;
 import com.example.wegather.global.exception.customException.AuthenticationException;
@@ -117,22 +118,28 @@ public class MemberService {
   }
 
   public MemberProfileDto getMemberProfileByUsername(String username) {
-    return MemberProfileDto.from(memberRepository.findByUsername(username).orElseThrow(
+    return MemberProfileDto.from(memberRepository.findWithAlarmSettingByUsername(username).orElseThrow(
         () -> new IllegalArgumentException(MEMBER_NOT_FOUND.getDescription())));
   }
 
   @Transactional
-  public void editProfile(Long id, EditProfileForm form) {
-    Member member = getMemberById(id);
+  public void editProfile(Long memberId, EditProfileForm form) {
+    Member member = getMemberById(memberId);
     member.editProfile(form.getIntroductionText());
   }
 
   @Transactional
-  public void changePassword(Long userId, ChangePasswordForm form) {
-    Member member = getMemberById(userId);
+  public void changePassword(Long memberId, ChangePasswordForm form) {
+    Member member = getMemberById(memberId);
     if (!passwordEncoder.matches(form.getOriginalPassword(), member.getPassword())) {
       throw new IllegalArgumentException(PASSWORD_NOT_MATCHED.getDescription());
     }
     member.changePassword(passwordEncoder.encode(form.getNewPassword()));
+  }
+
+  @Transactional
+  public void changeProfileAlarmSettings(Long memberId, ChangeAlarmSettingsForm changeAlarmSettingsForm) {
+    Member member = getMemberById(memberId);
+    member.changeMemberAlarmSetting(changeAlarmSettingsForm.toEntity());
   }
 }

@@ -9,6 +9,7 @@ import com.example.wegather.global.vo.MemberType;
 import com.example.wegather.member.domain.entity.Member;
 import com.example.wegather.member.domain.MemberRepository;
 import com.example.wegather.auth.dto.SignUpRequest;
+import com.example.wegather.member.domain.entity.MemberAlarmSetting;
 import com.example.wegather.member.dto.MemberDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -54,12 +55,15 @@ public class AuthService {
   }
 
   private Member saveNewMember(SignUpRequest request) {
-    return memberRepository.save(Member.builder()
+    Member newMember = memberRepository.save(Member.builder()
         .username(request.getUsername())
         .password(passwordEncoder.encode(request.getPassword()))
         .email(request.getEmail())
         .memberType(MemberType.ROLE_USER)
         .build());
+
+    newMember.changeMemberAlarmSetting(new MemberAlarmSetting());
+    return newMember;
   }
 
   /**

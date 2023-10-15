@@ -1,6 +1,7 @@
 package com.example.wegather.member.web;
 
 import com.example.wegather.auth.MemberDetails;
+import com.example.wegather.member.dto.ChangeAlarmSettingsForm;
 import com.example.wegather.member.dto.ChangePasswordForm;
 import com.example.wegather.member.dto.MemberProfileDto;
 import com.example.wegather.global.exception.customException.FileUploadException;
@@ -88,6 +89,13 @@ public class MemberController {
   public ResponseEntity<Void> changePassword(@AuthenticationPrincipal MemberDetails memberDetails,
       @RequestBody ChangePasswordForm changePasswordForm) {
     memberService.changePassword(memberDetails.getId(), changePasswordForm);
+    return ResponseEntity.ok().build();
+  }
+
+  @PostMapping("/profile/alarmSettings")
+  public ResponseEntity<Void> changeProfileAlarmSettings(@AuthenticationPrincipal MemberDetails memberDetails,
+      @RequestBody ChangeAlarmSettingsForm changeAlarmSettingsForm) {
+    memberService.changeProfileAlarmSettings(memberDetails.getId(), changeAlarmSettingsForm);
     return ResponseEntity.ok().build();
   }
 

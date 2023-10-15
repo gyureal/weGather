@@ -76,7 +76,7 @@ public class AuthController {
   @GetMapping("/current-user")
   public ResponseEntity<MemberInfo> getMyInfo(@AuthenticationPrincipal MemberDetails memberDetails) {
     if (memberDetails != null) {
-      Member member = memberRepository.findByUsername(memberDetails.getUsername())
+      Member member = memberRepository.findWithAlarmSettingByUsername(memberDetails.getUsername())
           .orElseThrow(() -> new AuthenticationException(ErrorCode.MEMBER_NOT_FOUND.getDescription()));
       return ResponseEntity.ok(MemberInfo.from(member));
     }
