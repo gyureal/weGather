@@ -3,14 +3,14 @@ package com.example.wegather.auth;
 
 import com.example.wegather.global.exception.ErrorCode;
 import com.example.wegather.global.exception.customException.AuthenticationException;
+import com.example.wegather.global.mail.EmailMessage;
+import com.example.wegather.global.mail.EmailService;
 import com.example.wegather.global.vo.MemberType;
 import com.example.wegather.member.domain.entity.Member;
 import com.example.wegather.member.domain.MemberRepository;
 import com.example.wegather.auth.dto.SignUpRequest;
 import com.example.wegather.member.dto.MemberDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -26,7 +26,7 @@ public class AuthService {
   private final AuthenticationManager authenticationManager;
   private final MemberRepository memberRepository;
   private final PasswordEncoder passwordEncoder;
-  private final JavaMailSender javaMailSender;
+  private final EmailService emailService;
 
   /**
    * 회원가입을 실시합니다.
@@ -43,12 +43,14 @@ public class AuthService {
   }
 
   private void sendSignUpConfirmEmail(Member newMember) {
-    SimpleMailMessage mailMessage = new SimpleMailMessage();
-    mailMessage.setTo(newMember.getEmail());
-    mailMessage.setSubject("스터디올래, 회원 가입 인증");
-    mailMessage.setText("/check-email-token?token=" + newMember.getEmailCheckToken() +
-        "&email=" + newMember.getEmail());
-    javaMailSender.send(mailMessage);
+    EmailMessage emailMessage = EmailMessage.builder()
+        .to("WeGather, 회원 가입 인증")
+        .subject("WeGather, 회원 가입 인증")
+        .message("/check-email-token?token=" + newMember.getEmailCheckToken() +
+            "&email=" + newMember.getEmail())
+        .build();
+
+    emailService.sendEmail(emailMessage);
   }
 
   private Member saveNewMember(SignUpRequest request) {

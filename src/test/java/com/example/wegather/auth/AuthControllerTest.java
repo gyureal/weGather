@@ -2,10 +2,13 @@ package com.example.wegather.auth;
 
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 
 import com.example.wegather.auth.dto.SignInRequest;
 import com.example.wegather.auth.dto.SignUpRequest;
 import com.example.wegather.IntegrationTest;
+import com.example.wegather.global.mail.EmailMessage;
+import com.example.wegather.global.mail.EmailService;
 import com.example.wegather.member.domain.MemberRepository;
 import com.example.wegather.member.domain.entity.Member;
 import io.restassured.RestAssured;
@@ -17,12 +20,16 @@ import io.restassured.specification.RequestSpecification;
 import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 public class AuthControllerTest extends IntegrationTest {
 
   @Autowired
   MemberRepository memberRepository;
+  @MockBean
+  EmailService emailService;
 
   SignUpRequest signUpRequest = SignUpRequest.builder()
       .username("test01")
@@ -43,6 +50,7 @@ public class AuthControllerTest extends IntegrationTest {
     assertThat(member.getEmail()).isEqualTo(signUpRequest.getEmail());
     assertThat(member.getEmailCheckToken()).isNotEmpty();
     assertThat(member.getEmailCheckTokenGeneratedAt()).isNotNull();
+    BDDMockito.then(emailService).should().sendEmail(any(EmailMessage.class));
   }
 
   @Test
