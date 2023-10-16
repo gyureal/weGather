@@ -99,6 +99,20 @@ public class MemberController {
     return ResponseEntity.ok().build();
   }
 
+  @PostMapping("/profile/interests")
+  public ResponseEntity<Void> addInterestInProfile(@AuthenticationPrincipal MemberDetails memberDetails,
+      @RequestParam String interestName) {
+    memberService.addInterestByName(memberDetails.getId(), interestName);
+    return ResponseEntity.ok().build();
+  }
+
+  @DeleteMapping("/profile/interests")
+  public ResponseEntity<Void> removeInterestInProfile(@AuthenticationPrincipal MemberDetails memberDetails,
+      @RequestParam String interestName) {
+    memberService.removeInterestByName(memberDetails.getId(), interestName);
+    return ResponseEntity.ok().build();
+  }
+
   /**
    * id로 회원을 삭제합니다.
    * @param id

@@ -30,6 +30,16 @@ public class InterestService {
   }
 
   /**
+   * 관심사를 찾고, 관심사가 존재하지 않으면 추가 후 반환합니다.
+   * @param name
+   * @return
+   */
+  public Interest findOrAddInterestByName(String name) {
+    return interestRepository.findByName(name)
+        .orElseGet(() -> interestRepository.save(Interest.of(name)));
+  }
+
+  /**
    * 전체 관심사를 조회합니다.
    * @return
    */
@@ -43,7 +53,7 @@ public class InterestService {
    * @return
    * @throws IllegalArgumentException id에 해당하는 관심사가 없는 경우 예외를 던집니다.
    */
-  public Interest getInterest(Long id) {
+  public Interest findInterestById(Long id) {
     return interestRepository.findById(id)
         .orElseThrow(() -> new IllegalArgumentException(INTEREST_NOT_FOUND.getDescription()));
   }

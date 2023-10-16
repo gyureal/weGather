@@ -1,11 +1,13 @@
 package com.example.wegather.member.domain;
 
 
+import static com.example.wegather.global.exception.ErrorCode.INTEREST_NOT_FOUND;
 import static com.example.wegather.global.exception.ErrorCode.MEMBER_NOT_FOUND;
 import static com.example.wegather.global.exception.ErrorCode.PASSWORD_NOT_MATCHED;
 import static com.example.wegather.global.exception.ErrorCode.PASSWORD_RULE_VIOLATION;
 
 import com.example.wegather.auth.MemberDetails;
+import com.example.wegather.interest.domain.InterestService;
 import com.example.wegather.member.dto.ChangeAlarmSettingsForm;
 import com.example.wegather.member.dto.ChangePasswordForm;
 import com.example.wegather.member.dto.MemberProfileDto;
@@ -36,6 +38,7 @@ public class MemberService {
   private static final String DON_NOT_HAVE_AUTH_TO_UPDATE_MEMBER = "회원을 수정할 권한이 없습니다.";
   private final MemberRepository memberRepository;
   private final InterestRepository interestRepository;
+  private final InterestService interestService;
   private final StoreFile storeFile;
   private final PasswordEncoder passwordEncoder;
 
@@ -141,5 +144,25 @@ public class MemberService {
   public void changeProfileAlarmSettings(Long memberId, ChangeAlarmSettingsForm changeAlarmSettingsForm) {
     Member member = getMemberById(memberId);
     member.changeMemberAlarmSetting(changeAlarmSettingsForm.toEntity());
+  }
+
+  /**
+   * 관심사 명으로 관심사를 추가합니다.
+   * @param memberId
+   * @param interestsName
+   */
+  @Transactional
+  public void addInterestByName(Long memberId, String interestsName) {
+    Member member = getMemberById(memberId);
+    Interest interest = interestService.findOrAddInterestByName(interestsName);
+    member.addInterest(interest);
+  }
+
+  @Transactional
+  public void removeInterestByName(Long memberId, String interestName) {
+    Member member = getMemberById(memberId);
+    Interest interest = interestRepository.findByName(interestName)
+            .orElseThrow(() -> new IllegalArgumentException(INTEREST_NOT_FOUND.getDescription()));
+    member.removeInterest(interest);
   }
 }

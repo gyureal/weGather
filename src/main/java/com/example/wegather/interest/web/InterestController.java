@@ -54,7 +54,7 @@ public class InterestController {
    */
   @GetMapping("/{id}")
   public ResponseEntity<InterestDto> readInterestById(@PathVariable Long id) {
-    return ResponseEntity.ok(InterestDto.from(interestService.getInterest(id)));
+    return ResponseEntity.ok(InterestDto.from(interestService.findInterestById(id)));
   }
 
   /**
