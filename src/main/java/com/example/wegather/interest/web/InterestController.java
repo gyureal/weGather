@@ -1,5 +1,6 @@
 package com.example.wegather.interest.web;
 
+import com.example.wegather.interest.domain.Interest;
 import com.example.wegather.interest.domain.InterestService;
 import com.example.wegather.interest.dto.CreateInterestRequest;
 import com.example.wegather.interest.dto.InterestDto;
@@ -42,8 +43,20 @@ public class InterestController {
    */
   @GetMapping
   public ResponseEntity<List<InterestDto>> readAllInterests() {
-    return ResponseEntity.ok(interestService.getAllInterests()
-        .stream().map(InterestDto::from).collect(Collectors.toList()));
+    List<InterestDto> collect = interestService.getAllInterests()
+        .stream().map(InterestDto::from).collect(Collectors.toList());
+    return ResponseEntity.ok(collect);
+  }
+
+  /**
+   * 관심사 화이트 리스트를 조회합니다.
+   * @return 전체 관심사 목록
+   */
+  @GetMapping("/whitelist")
+  public ResponseEntity<List<String>> readWhitelist() {
+    return ResponseEntity.ok(
+        interestService.getAllInterests().stream()
+            .map(Interest::getName).collect(Collectors.toList()));
   }
 
   /**
