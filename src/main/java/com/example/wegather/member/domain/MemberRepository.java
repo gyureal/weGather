@@ -17,6 +17,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
   Optional<Member> findByEmail(String email);
 
-  @EntityGraph(attributePaths = {"memberInterests", "memberAlarmSetting"})
+  @EntityGraph(attributePaths = {"memberInterests", "memberInterests.interest", "memberAlarmSetting"})
   Optional<Member> findWithInterestsAndAlarmById(Long memberId);
 }

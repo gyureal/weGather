@@ -20,6 +20,7 @@ import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -62,7 +63,7 @@ public class Member extends BaseTimeEntity {
   @Embedded
   @AttributeOverride(name = "value", column = @Column(name = "profile_image"))
   private Image profileImage;
-  @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
   private Set<MemberInterest> memberInterests = new HashSet<>();
 
   @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)

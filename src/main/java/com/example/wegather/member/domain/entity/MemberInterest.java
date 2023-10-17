@@ -3,14 +3,12 @@ package com.example.wegather.member.domain.entity;
 import com.example.wegather.global.BaseTimeEntity;
 import com.example.wegather.interest.domain.Interest;
 import com.example.wegather.interest.dto.InterestDto;
-import java.util.Objects;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedAttributeNode;
-import javax.persistence.NamedEntityGraph;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -18,19 +16,13 @@ import lombok.NoArgsConstructor;
 
 @Getter @EqualsAndHashCode(of = {"member", "interest"})
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@NamedEntityGraph(
-    attributeNodes = {
-        @NamedAttributeNode("member"),
-        @NamedAttributeNode("interest")
-    }
-)
 @Entity
 public class MemberInterest extends BaseTimeEntity {
   @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   private Member member;
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   private Interest interest;
 
   public MemberInterest(Member member, Interest interest) {
