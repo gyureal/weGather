@@ -7,9 +7,9 @@ import com.example.wegather.global.vo.MemberType;
 import com.example.wegather.interest.domain.Interest;
 import com.example.wegather.interest.dto.InterestDto;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import javax.persistence.AttributeOverride;
@@ -27,11 +27,12 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
 
-@Getter
+@Getter @EqualsAndHashCode(of = {"id"})
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicInsert
 @Entity
@@ -62,7 +63,7 @@ public class Member extends BaseTimeEntity {
   @AttributeOverride(name = "value", column = @Column(name = "profile_image"))
   private Image profileImage;
   @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<MemberInterest> memberInterests = new ArrayList<>();
+  private Set<MemberInterest> memberInterests = new HashSet<>();
 
   @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
   MemberAlarmSetting memberAlarmSetting;
@@ -103,6 +104,12 @@ public class Member extends BaseTimeEntity {
         .collect(Collectors.toList());
   }
 
+  public List<String> getInterestsName() {
+    return memberInterests.stream()
+        .map(MemberInterest::getInterestName)
+        .collect(Collectors.toList());
+  }
+
   public String getProfileImage() {
     if (profileImage == null) {
       return "";
@@ -136,23 +143,6 @@ public class Member extends BaseTimeEntity {
     }
 
     this.memberAlarmSetting.changeSettings(memberAlarmSetting);
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    Member member = (Member) o;
-    return Objects.equals(id, member.id);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(id);
   }
 }
 

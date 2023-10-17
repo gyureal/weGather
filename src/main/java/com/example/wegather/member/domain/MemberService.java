@@ -4,7 +4,6 @@ package com.example.wegather.member.domain;
 import static com.example.wegather.global.exception.ErrorCode.INTEREST_NOT_FOUND;
 import static com.example.wegather.global.exception.ErrorCode.MEMBER_NOT_FOUND;
 import static com.example.wegather.global.exception.ErrorCode.PASSWORD_NOT_MATCHED;
-import static com.example.wegather.global.exception.ErrorCode.PASSWORD_RULE_VIOLATION;
 
 import com.example.wegather.auth.MemberDetails;
 import com.example.wegather.interest.domain.InterestService;
@@ -28,7 +27,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
@@ -51,10 +49,7 @@ public class MemberService {
     return MemberDto.from(getMemberById(id));
   }
 
-  public Member getMemberById(Long id) {
-    return memberRepository.findById(id)
-        .orElseThrow(() -> new IllegalArgumentException(MEMBER_NOT_FOUND.getDescription()));
-  }
+
 
   @Transactional
   public void deleteMember(Long id) {
@@ -164,5 +159,20 @@ public class MemberService {
     Interest interest = interestRepository.findByName(interestName)
             .orElseThrow(() -> new IllegalArgumentException(INTEREST_NOT_FOUND.getDescription()));
     member.removeInterest(interest);
+  }
+
+  public List<String> getMyInterests(Long memberId) {
+    Member member = getWithInterestsAndAlarmById(memberId);
+    return member.getInterestsName();
+  }
+
+  private Member getWithInterestsAndAlarmById(Long memberId) {
+    return memberRepository.findWithInterestsAndAlarmById(memberId)
+        .orElseThrow(() -> new IllegalArgumentException(MEMBER_NOT_FOUND.getDescription()));
+  }
+
+  private Member getMemberById(Long id) {
+    return memberRepository.findById(id)
+        .orElseThrow(() -> new IllegalArgumentException(MEMBER_NOT_FOUND.getDescription()));
   }
 }

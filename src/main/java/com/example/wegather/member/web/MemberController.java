@@ -113,6 +113,12 @@ public class MemberController {
     return ResponseEntity.ok().build();
   }
 
+  @GetMapping("/profile/interests")
+  public ResponseEntity<List<String>> getInterestsInProfile(@AuthenticationPrincipal MemberDetails memberDetails) {
+    List<String> myInterests = memberService.getMyInterests(memberDetails.getId());
+    return ResponseEntity.ok(myInterests);
+  }
+
   /**
    * id로 회원을 삭제합니다.
    * @param id

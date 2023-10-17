@@ -9,12 +9,21 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedAttributeNode;
+import javax.persistence.NamedEntityGraph;
 import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Getter
+@Getter @EqualsAndHashCode(of = {"member", "interest"})
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NamedEntityGraph(
+    attributeNodes = {
+        @NamedAttributeNode("member"),
+        @NamedAttributeNode("interest")
+    }
+)
 @Entity
 public class MemberInterest extends BaseTimeEntity {
   @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,25 +42,11 @@ public class MemberInterest extends BaseTimeEntity {
     return new MemberInterest(member, interest);
   }
 
+  public String getInterestName() {
+    return interest.getName();
+  }
+
   public InterestDto getInterestDto() {
     return InterestDto.from(interest);
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    MemberInterest that = (MemberInterest) o;
-    return Objects.equals(member, that.member) && Objects.equals(interest,
-        that.interest);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(member, interest);
   }
 }
