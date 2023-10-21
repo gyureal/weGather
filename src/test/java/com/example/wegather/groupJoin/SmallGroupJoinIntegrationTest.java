@@ -194,10 +194,8 @@ class SmallGroupJoinIntegrationTest extends IntegrationTest {
   private SmallGroupDto insertSmallGroup(String groupName, Long maxMemberCount, MemberDto loginMember) {
     RequestSpecification spec = AuthControllerTest.signIn(loginMember.getUsername(), memberPassword);
     CreateSmallGroupRequest request = CreateSmallGroupRequest.builder()
-        .groupName(groupName)
+        .name(groupName)
         .shortDescription("테스트입니다.")
-        .streetAddress("서울특별시 중구 세종대로 125")
-        .maxMemberCount(maxMemberCount)
         .build();
 
     return RestAssured.given().log().all()

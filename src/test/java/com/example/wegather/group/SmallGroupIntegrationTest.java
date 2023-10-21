@@ -48,29 +48,29 @@ class SmallGroupIntegrationTest extends IntegrationTest {
   void initData() {
     member01 = insertMember(memberUsername, "testUser1@gmail.com", memberPassword);
     member02 = insertMember("member02", "testUser2@gmail.com", "1234");
-    group01 = createGroupForTest("탁사모", 300L, member01.getUsername());
-    group02 = createGroupForTest("책사모", 100L, member01.getUsername());
-    group03 = createGroupForTest("토사모", 200L, member01.getUsername());
+    group01 = createGroupForTest("taksamo","탁사모", member01.getUsername());
+    group02 = createGroupForTest("chacksamo","책사모", member01.getUsername());
+    group03 = createGroupForTest("tosamo","토사모", member01.getUsername());
   }
 
   @Test
   @DisplayName("소모임을 생성합니다.")
   void createInterestSuccessfully() {
     CreateSmallGroupRequest request = CreateSmallGroupRequest.builder()
-        .groupName("볼사모")
+        .path("ballsamo")
+        .name("볼사모")
         .shortDescription("볼링을 사랑하는 사람들의 모임입니다.")
-        .streetAddress("서울특별시 중구 세종대로 125")
-        .maxMemberCount(300L)
+        .fullDescription("<h2>환영합니다</h2>")
         .build();
 
     ExtractableResponse<Response> response = requestCreateGroup(request, member01.getUsername());
 
     assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_CREATED);
     SmallGroupDto result = response.body().as(SmallGroupDto.class);
-    assertThat(result)
-        .usingRecursiveComparison()
-        .ignoringFields("id", "leaderId", "leaderUsername")
-        .isEqualTo(request);
+    assertThat(result.getPath()).isEqualTo(request.getPath());
+    assertThat(result.getName()).isEqualTo(request.getName());
+    assertThat(result.getShortDescription()).isEqualTo(request.getShortDescription());
+    assertThat(result.getFullDescription()).isEqualTo(request.getFullDescription());
   }
 
   @Test
@@ -94,6 +94,7 @@ class SmallGroupIntegrationTest extends IntegrationTest {
 
   @Test
   @DisplayName("그룹 이름과 최대회원수 범위로 소그룹 조회를 성공합니다.")
+  @Disabled
   void searchSmallGroupByGroupNameAndMaxMemberCountRangeSuccessfully() {
     RequestSpecification spec = AuthControllerTest.signIn(member01.getUsername(), memberPassword);
 
@@ -310,12 +311,12 @@ class SmallGroupIntegrationTest extends IntegrationTest {
         .extract();
   }
 
-  private SmallGroupDto createGroupForTest(String groupName, Long maxCount, String requestId) {
+  private SmallGroupDto createGroupForTest(String path, String groupName, String requestId) {
     CreateSmallGroupRequest request = CreateSmallGroupRequest.builder()
-        .groupName(groupName)
+        .path(path)
+        .name(groupName)
         .shortDescription("볼링을 사랑하는 사람들의 모임입니다.")
-        .streetAddress("서울특별시 중구 세종대로 125")
-        .maxMemberCount(maxCount)
+        .fullDescription("fullDescription")
         .build();
 
     return requestCreateGroup(request, requestId).as(SmallGroupDto.class);

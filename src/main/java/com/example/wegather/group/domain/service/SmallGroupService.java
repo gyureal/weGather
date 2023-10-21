@@ -29,19 +29,17 @@ public class SmallGroupService {
   private final InterestRepository interestRepository;
 
   @Transactional
-  public SmallGroup addSmallGroup(CreateSmallGroupRequest request, String username) {
+  public SmallGroup addSmallGroup(CreateSmallGroupRequest request, Long memberId) {
 
-    Member member = memberRepository.findByUsername(username)
+    Member member = memberRepository.findById(memberId)
         .orElseThrow(() -> new IllegalStateException(MEMBER_NOT_FOUND.getDescription()));
 
     return smallGroupRepository.save(SmallGroup.builder()
-            .name(request.getGroupName())
+            .path(request.getPath())
+            .name(request.getName())
             .shortDescription(request.getShortDescription())
             .fullDescription(request.getFullDescription())
             .leader(member)
-            .address(Address.of(request.getStreetAddress(), request.getLongitude(),
-                request.getLatitude()))
-            .maxMemberCount(request.getMaxMemberCount())
         .build());
   }
 

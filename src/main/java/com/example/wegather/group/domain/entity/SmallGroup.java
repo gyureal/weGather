@@ -4,6 +4,7 @@ import com.example.wegather.global.BaseTimeEntity;
 import com.example.wegather.global.vo.Address;
 import com.example.wegather.interest.domain.Interest;
 import com.example.wegather.member.domain.entity.Member;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -36,6 +37,7 @@ import org.hibernate.annotations.DynamicInsert;
 public class SmallGroup extends BaseTimeEntity {
   @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
+  private String path;
   @ManyToOne(fetch = FetchType.LAZY)
   private Member leader;
   @OneToMany(mappedBy = "smallGroup")
@@ -50,6 +52,7 @@ public class SmallGroup extends BaseTimeEntity {
   @Basic(fetch = FetchType.EAGER)
   private String fullDescription;
   private String image;
+  private String banner;
 
   @Embedded
   @AttributeOverrides({
@@ -59,10 +62,18 @@ public class SmallGroup extends BaseTimeEntity {
   })
   private Address address;
   private Long maxMemberCount;
+  private LocalDateTime recruitingUpdatedDateTime;
+  private LocalDateTime publishedDateTime;
+  private LocalDateTime closedDateTime;
+  private boolean recruiting = false;
+  private boolean published = false;
+  private boolean closed = false;
+  private boolean useBanner = false;
 
   @Builder
-  public SmallGroup(String name, String shortDescription, String fullDescription ,Member leader, Address address,
+  public SmallGroup(String path, String name, String shortDescription, String fullDescription ,Member leader, Address address,
       Long maxMemberCount) {
+    this.path = path;
     this.name = name;
     this.shortDescription = shortDescription;
     this.fullDescription = fullDescription;

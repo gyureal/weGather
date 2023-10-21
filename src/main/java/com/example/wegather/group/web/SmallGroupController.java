@@ -36,15 +36,15 @@ public class SmallGroupController {
   /**
    * 소모임을 생성합니다.
    * @param createSmallGroupRequest 소모임 생성 정보 dto
-   * @param principal 로그인한 회원의 정보
+   * @param memberDetails 로그인한 회원 정보
    * @return 생성된 소모임
    */
   @PostMapping
   public ResponseEntity<SmallGroupDto> createGroup(
       @Valid @RequestBody CreateSmallGroupRequest createSmallGroupRequest,
-      Principal principal) {
+      @AuthenticationPrincipal MemberDetails memberDetails) {
     SmallGroupDto smallGroupDto = SmallGroupDto.from(
-        smallGroupService.addSmallGroup(createSmallGroupRequest, principal.getName()));
+        smallGroupService.addSmallGroup(createSmallGroupRequest, memberDetails.getId()));
     return ResponseEntity.created(URI.create("/smallGroups/" + smallGroupDto.getId()))
         .body(smallGroupDto);
   }

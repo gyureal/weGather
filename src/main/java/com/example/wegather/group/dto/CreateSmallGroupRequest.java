@@ -1,5 +1,6 @@
 package com.example.wegather.group.dto;
 
+import com.example.wegather.group.domain.entity.SmallGroup;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -12,14 +13,9 @@ import lombok.Getter;
 @Builder
 public class CreateSmallGroupRequest {
   @NotEmpty
-  private String groupName;
+  private String path;
+  @NotEmpty
+  private String name;
   private String shortDescription;
   private String fullDescription;
-  @NotEmpty
-  private String streetAddress;
-  private Double longitude;
-  private Double latitude;
-  @NotNull
-  @Min(0)
-  private Long maxMemberCount;
 }
