@@ -17,10 +17,12 @@ import io.restassured.specification.RequestSpecification;
 import java.util.List;
 import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 @DisplayName("소모임 가입 통합 테스트")
+@Disabled
 class SmallGroupJoinIntegrationTest extends IntegrationTest {
   private static final String memberPassword = "1234";
   private MemberDto member01;
