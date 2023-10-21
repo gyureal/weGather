@@ -34,10 +34,18 @@ import org.hibernate.annotations.DynamicInsert;
 public class SmallGroup extends BaseTimeEntity {
   @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
-  private String name;
-  private String shortDescription;
   @ManyToOne(fetch = FetchType.LAZY)
   private Member leader;
+  @OneToMany(mappedBy = "smallGroup")
+  private Set<SmallGroupManager> managers = new HashSet<>();
+  @OneToMany(mappedBy = "smallGroup")
+  private Set<SmallGroupMember> members = new HashSet<>();
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "smallGroup", cascade = CascadeType.ALL, orphanRemoval = true)
+  private Set<SmallGroupInterest> smallGroupInterests = new HashSet<>();
+
+  private String name;
+  private String shortDescription;
+
   @Embedded
   @AttributeOverrides({
       @AttributeOverride(name = "streetAddress", column = @Column(name = "street_address")),
@@ -46,9 +54,6 @@ public class SmallGroup extends BaseTimeEntity {
   })
   private Address address;
   private Long maxMemberCount;
-
-  @OneToMany(fetch = FetchType.LAZY, mappedBy = "smallGroup", cascade = CascadeType.ALL, orphanRemoval = true)
-  private Set<SmallGroupInterest> smallGroupInterests = new HashSet<>();
 
   @Builder
   public SmallGroup(String name, String shortDescription, Member leader, Address address,
