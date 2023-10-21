@@ -3,7 +3,6 @@ package com.example.wegather.groupJoin;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.example.wegather.auth.AuthControllerTest;
-import com.example.wegather.global.vo.MemberType;
 import com.example.wegather.group.dto.CreateSmallGroupRequest;
 import com.example.wegather.groupJoin.dto.GroupJoinRequestDto;
 import com.example.wegather.group.dto.SmallGroupDto;
@@ -196,7 +195,7 @@ class SmallGroupJoinIntegrationTest extends IntegrationTest {
     RequestSpecification spec = AuthControllerTest.signIn(loginMember.getUsername(), memberPassword);
     CreateSmallGroupRequest request = CreateSmallGroupRequest.builder()
         .groupName(groupName)
-        .description("테스트입니다.")
+        .shortDescription("테스트입니다.")
         .streetAddress("서울특별시 중구 세종대로 125")
         .maxMemberCount(maxMemberCount)
         .build();

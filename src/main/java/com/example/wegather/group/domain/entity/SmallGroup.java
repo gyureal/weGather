@@ -35,7 +35,7 @@ public class SmallGroup extends BaseTimeEntity {
   @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
   private String name;
-  private String description;
+  private String shortDescription;
   @ManyToOne(fetch = FetchType.LAZY)
   private Member leader;
   @Embedded
@@ -51,10 +51,10 @@ public class SmallGroup extends BaseTimeEntity {
   private Set<SmallGroupInterest> smallGroupInterests = new HashSet<>();
 
   @Builder
-  public SmallGroup(String name, String description, Member leader, Address address,
+  public SmallGroup(String name, String shortDescription, Member leader, Address address,
       Long maxMemberCount) {
     this.name = name;
-    this.description = description;
+    this.shortDescription = shortDescription;
     this.leader = leader;
     this.address = address;
     this.maxMemberCount = maxMemberCount;
@@ -62,7 +62,7 @@ public class SmallGroup extends BaseTimeEntity {
 
   public void updateSmallGroupInfo(String name, String description, Address address, Long maxMemberCount) {
     this.name = name;
-    this.description = description;
+    this.shortDescription = description;
     this.address = address;
     this.maxMemberCount = maxMemberCount;
   }

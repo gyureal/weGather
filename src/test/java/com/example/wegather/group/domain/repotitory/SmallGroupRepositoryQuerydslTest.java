@@ -150,7 +150,7 @@ class SmallGroupRepositoryQuerydslTest extends RepositoryTest {
   SmallGroup insertGroup(String groupName, String description, String streetAddress, Member leader, Long maxMemberCount) {
     return em.persistAndFlush(SmallGroup.builder()
             .name(groupName)
-            .description(description)
+            .shortDescription(description)
             .address(Address.of(streetAddress, 123.12, 134.12))
             .leader(leader)
             .maxMemberCount(maxMemberCount)

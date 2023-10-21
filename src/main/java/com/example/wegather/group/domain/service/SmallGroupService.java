@@ -36,7 +36,7 @@ public class SmallGroupService {
 
     return smallGroupRepository.save(SmallGroup.builder()
             .name(request.getGroupName())
-            .description(request.getDescription())
+            .shortDescription(request.getShortDescription())
             .leader(member)
             .address(Address.of(request.getStreetAddress(), request.getLongitude(),
                 request.getLatitude()))

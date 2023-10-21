@@ -58,7 +58,7 @@ class SmallGroupIntegrationTest extends IntegrationTest {
   void createInterestSuccessfully() {
     CreateSmallGroupRequest request = CreateSmallGroupRequest.builder()
         .groupName("볼사모")
-        .description("볼링을 사랑하는 사람들의 모임입니다.")
+        .shortDescription("볼링을 사랑하는 사람들의 모임입니다.")
         .streetAddress("서울특별시 중구 세종대로 125")
         .maxMemberCount(300L)
         .build();
@@ -182,7 +182,7 @@ class SmallGroupIntegrationTest extends IntegrationTest {
     SmallGroup updated = smallGroupRepository.findById(group01.getId())
         .orElseThrow(() -> new AssertionFailure("group ID를 찾을 수 없습니다."));
     assertThat(updated.getName()).isEqualTo(request.getGroupName());
-    assertThat(updated.getDescription()).isEqualTo(request.getDescription());
+    assertThat(updated.getShortDescription()).isEqualTo(request.getDescription());
     assertThat(updated.getAddress().getStreetAddress()).isEqualTo(request.getStreetAddress());
     assertThat(updated.getMaxMemberCount()).isEqualTo(request.getMaxMemberCount());
   }
@@ -313,7 +313,7 @@ class SmallGroupIntegrationTest extends IntegrationTest {
   private SmallGroupDto createGroupForTest(String groupName, Long maxCount, String requestId) {
     CreateSmallGroupRequest request = CreateSmallGroupRequest.builder()
         .groupName(groupName)
-        .description("볼링을 사랑하는 사람들의 모임입니다.")
+        .shortDescription("볼링을 사랑하는 사람들의 모임입니다.")
         .streetAddress("서울특별시 중구 세종대로 125")
         .maxMemberCount(maxCount)
         .build();

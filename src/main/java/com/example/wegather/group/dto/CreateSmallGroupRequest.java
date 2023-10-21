@@ -1,7 +1,5 @@
 package com.example.wegather.group.dto;
 
-import java.util.ArrayList;
-import java.util.List;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -16,7 +14,7 @@ public class CreateSmallGroupRequest {
   @NotEmpty
   private String groupName;
   @NotEmpty
-  private String description;
+  private String shortDescription;
   @NotEmpty
   private String streetAddress;
   private Double longitude;
