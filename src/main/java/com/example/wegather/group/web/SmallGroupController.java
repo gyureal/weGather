@@ -6,9 +6,9 @@ import com.example.wegather.group.dto.CreateSmallGroupRequest;
 import com.example.wegather.group.dto.SmallGroupDto;
 import com.example.wegather.group.dto.SmallGroupSearchCondition;
 import com.example.wegather.group.dto.UpdateSmallGroupRequest;
+import com.example.wegather.group.validator.CreateSmallGroupValidator;
 import com.example.wegather.interest.dto.InterestDto;
 import java.net.URI;
-import java.security.Principal;
 import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -16,8 +16,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -32,6 +34,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class SmallGroupController {
   private final SmallGroupService smallGroupService;
+
+  private final CreateSmallGroupValidator createSmallGroupValidator;
+
+  @InitBinder("createSmallGroupRequest")
+  public void initBinder(WebDataBinder webDataBinder) {
+    webDataBinder.addValidators(createSmallGroupValidator);
+  }
+
 
   /**
    * 소모임을 생성합니다.

@@ -42,8 +42,6 @@ class SmallGroupIntegrationTest extends IntegrationTest {
   private SmallGroupDto group02;
   private SmallGroupDto group03;
 
-
-
   @BeforeEach
   void initData() {
     member01 = insertMember(memberUsername, "testUser1@gmail.com", memberPassword);
@@ -71,6 +69,23 @@ class SmallGroupIntegrationTest extends IntegrationTest {
     assertThat(result.getName()).isEqualTo(request.getName());
     assertThat(result.getShortDescription()).isEqualTo(request.getShortDescription());
     assertThat(result.getFullDescription()).isEqualTo(request.getFullDescription());
+  }
+
+  @Test
+  @DisplayName("소모임 생성 시, path가 중복되어 생성에 실패합니다.")
+  void createSmallGroupFail_path_duplicated() {
+    // given
+    CreateSmallGroupRequest request = CreateSmallGroupRequest.builder()
+        .path("ballsamo")
+        .name("볼사모").build();
+    // 생성
+    requestCreateGroup(request, member01.getUsername());
+
+    // when
+    ExtractableResponse<Response> response = requestCreateGroup(request, member01.getUsername());
+
+    // then
+    assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_BAD_REQUEST);
   }
 
   @Test
