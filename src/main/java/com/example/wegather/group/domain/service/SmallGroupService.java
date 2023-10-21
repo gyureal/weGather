@@ -37,6 +37,7 @@ public class SmallGroupService {
     return smallGroupRepository.save(SmallGroup.builder()
             .name(request.getGroupName())
             .shortDescription(request.getShortDescription())
+            .fullDescription(request.getFullDescription())
             .leader(member)
             .address(Address.of(request.getStreetAddress(), request.getLongitude(),
                 request.getLatitude()))
@@ -61,7 +62,8 @@ public class SmallGroupService {
 
     smallGroup.updateSmallGroupInfo(
         request.getGroupName(),
-        request.getDescription(),
+        request.getShortDescription(),
+        request.getFullDescription(),
         Address.of(request.getStreetAddress(), request.getLongitude(), request.getLatitude()),
         request.getMaxMemberCount());
   }

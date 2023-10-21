@@ -12,6 +12,7 @@ public class SmallGroupDto {
   private Long id;
   private String groupName;
   private String shortDescription;
+  private String fullDescription;
   private Long leaderId;
   private String leaderUsername;
   private String streetAddress;
@@ -24,6 +25,7 @@ public class SmallGroupDto {
         .id(smallGroup.getId())
         .groupName(smallGroup.getName())
         .shortDescription(smallGroup.getShortDescription())
+        .fullDescription(smallGroup.getFullDescription())
         .leaderId(smallGroup.getLeader().getId())
         .leaderUsername(smallGroup.getLeader().getUsername())
         .streetAddress(smallGroup.getAddress().getStreetAddress())

@@ -9,6 +9,7 @@ import java.util.Objects;
 import java.util.Set;
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
+import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
@@ -17,6 +18,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -38,13 +40,16 @@ public class SmallGroup extends BaseTimeEntity {
   private Member leader;
   @OneToMany(mappedBy = "smallGroup")
   private Set<SmallGroupManager> managers = new HashSet<>();
-  @OneToMany(mappedBy = "smallGroup")
-  private Set<SmallGroupMember> members = new HashSet<>();
+
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "smallGroup", cascade = CascadeType.ALL, orphanRemoval = true)
   private Set<SmallGroupInterest> smallGroupInterests = new HashSet<>();
 
   private String name;
   private String shortDescription;
+  @Lob
+  @Basic(fetch = FetchType.EAGER)
+  private String fullDescription;
+  private String image;
 
   @Embedded
   @AttributeOverrides({
@@ -56,18 +61,20 @@ public class SmallGroup extends BaseTimeEntity {
   private Long maxMemberCount;
 
   @Builder
-  public SmallGroup(String name, String shortDescription, Member leader, Address address,
+  public SmallGroup(String name, String shortDescription, String fullDescription ,Member leader, Address address,
       Long maxMemberCount) {
     this.name = name;
     this.shortDescription = shortDescription;
+    this.fullDescription = fullDescription;
     this.leader = leader;
     this.address = address;
     this.maxMemberCount = maxMemberCount;
   }
 
-  public void updateSmallGroupInfo(String name, String description, Address address, Long maxMemberCount) {
+  public void updateSmallGroupInfo(String name, String shortDescription, String fullDescription ,Address address, Long maxMemberCount) {
     this.name = name;
-    this.shortDescription = description;
+    this.shortDescription = shortDescription;
+    this.fullDescription = fullDescription;
     this.address = address;
     this.maxMemberCount = maxMemberCount;
   }

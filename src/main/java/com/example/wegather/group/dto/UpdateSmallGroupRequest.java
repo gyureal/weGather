@@ -13,8 +13,8 @@ import lombok.Getter;
 public class UpdateSmallGroupRequest {
   @NotEmpty
   private String groupName;
-  @NotEmpty
-  private String description;
+  private String shortDescription;
+  private String fullDescription;
   @NotEmpty
   private String streetAddress;
   private Double longitude;

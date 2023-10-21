@@ -14,7 +14,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Getter @EqualsAndHashCode(of = {"member", "interest"})
+@Getter @EqualsAndHashCode(of = {"member", "interest"}, callSuper = false)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class MemberInterest extends BaseTimeEntity {
