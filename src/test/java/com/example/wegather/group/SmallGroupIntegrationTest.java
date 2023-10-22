@@ -46,9 +46,9 @@ class SmallGroupIntegrationTest extends IntegrationTest {
   void initData() {
     member01 = insertMember(memberUsername, "testUser1@gmail.com", memberPassword);
     member02 = insertMember("member02", "testUser2@gmail.com", "1234");
-    group01 = createGroupForTest("taksamo","탁사모", member01.getUsername());
-    group02 = createGroupForTest("chacksamo","책사모", member01.getUsername());
-    group03 = createGroupForTest("tosamo","토사모", member01.getUsername());
+    group01 = createGroupForTest("taksamo","탁사모", 300L, member01.getUsername());
+    group02 = createGroupForTest("chacksamo","책사모", 100L,member01.getUsername());
+    group03 = createGroupForTest("tosamo","토사모", 200L, member01.getUsername());
   }
 
   @Test
@@ -59,6 +59,7 @@ class SmallGroupIntegrationTest extends IntegrationTest {
         .name("볼사모")
         .shortDescription("볼링을 사랑하는 사람들의 모임입니다.")
         .fullDescription("<h2>환영합니다</h2>")
+        .maxMemberCount(30L)
         .build();
 
     ExtractableResponse<Response> response = requestCreateGroup(request, member01.getUsername());
@@ -326,12 +327,13 @@ class SmallGroupIntegrationTest extends IntegrationTest {
         .extract();
   }
 
-  private SmallGroupDto createGroupForTest(String path, String groupName, String requestId) {
+  private SmallGroupDto createGroupForTest(String path, String groupName, Long maxMemberCount, String requestId) {
     CreateSmallGroupRequest request = CreateSmallGroupRequest.builder()
         .path(path)
         .name(groupName)
         .shortDescription("볼링을 사랑하는 사람들의 모임입니다.")
         .fullDescription("fullDescription")
+        .maxMemberCount(maxMemberCount)
         .build();
 
     return requestCreateGroup(request, requestId).as(SmallGroupDto.class);

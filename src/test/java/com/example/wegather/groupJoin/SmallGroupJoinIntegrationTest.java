@@ -22,7 +22,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 @DisplayName("소모임 가입 통합 테스트")
-@Disabled
 class SmallGroupJoinIntegrationTest extends IntegrationTest {
   private static final String memberPassword = "1234";
   private MemberDto member01;
@@ -35,7 +34,7 @@ class SmallGroupJoinIntegrationTest extends IntegrationTest {
     member01 = insertMember("member01","testUser1@gmail.com" ,memberPassword);
     member02 = insertMember("member02","testUser2@gmail.com", memberPassword);
     member03 = insertMember("member03","testUser3@gmail.com", memberPassword);
-    group01 = insertSmallGroup("group01", 100L, member01);
+    group01 = insertSmallGroup("group-01" ,"group01", 100L, member01);
   }
 
   @Test
@@ -65,7 +64,7 @@ class SmallGroupJoinIntegrationTest extends IntegrationTest {
   @DisplayName("최대 회원수를 초과하여 소모임 가입 요청에 실패합니다.")
   void smallGroupJoinRequest_fail_because_exceed_max_member_count() {
     // given
-    SmallGroupDto smallGroup = insertSmallGroup("group01", 1L, member01);
+    SmallGroupDto smallGroup = insertSmallGroup("group1","group01", 1L, member01);
     MemberDto joinMember1 = member02;
     Long newRequestId = requestSmallGroupJoinRequest(smallGroup, joinMember1).as(
         Long.class); // 1명 가입 요청
@@ -193,11 +192,13 @@ class SmallGroupJoinIntegrationTest extends IntegrationTest {
     return response;
   }
 
-  private SmallGroupDto insertSmallGroup(String groupName, Long maxMemberCount, MemberDto loginMember) {
+  private SmallGroupDto insertSmallGroup(String path, String groupName, Long maxMemberCount, MemberDto loginMember) {
     RequestSpecification spec = AuthControllerTest.signIn(loginMember.getUsername(), memberPassword);
     CreateSmallGroupRequest request = CreateSmallGroupRequest.builder()
+        .path(path)
         .name(groupName)
         .shortDescription("테스트입니다.")
+        .maxMemberCount(maxMemberCount)
         .build();
 
     return RestAssured.given().log().all()

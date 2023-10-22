@@ -18,4 +18,6 @@ public class CreateSmallGroupRequest {
   private String name;
   private String shortDescription;
   private String fullDescription;
+  @Min(0)
+  private Long maxMemberCount;
 }

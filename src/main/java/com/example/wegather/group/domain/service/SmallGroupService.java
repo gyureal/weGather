@@ -39,6 +39,7 @@ public class SmallGroupService {
             .name(request.getName())
             .shortDescription(request.getShortDescription())
             .fullDescription(request.getFullDescription())
+            .maxMemberCount(request.getMaxMemberCount())
             .leader(member)
         .build());
   }
