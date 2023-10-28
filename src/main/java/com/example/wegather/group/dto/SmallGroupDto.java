@@ -17,9 +17,15 @@ public class SmallGroupDto {
   private Long leaderId;
   private String leaderUsername;
   private Long maxMemberCount;
+  private boolean useBanner;
+  private String banner;
+  private String image;
+  private boolean recruiting;
+  private boolean published;
+  private boolean closed;
 
   public static SmallGroupDto from(SmallGroup smallGroup) {
-    return SmallGroupDto.builder()
+    SmallGroupDtoBuilder builder = SmallGroupDto.builder()
         .id(smallGroup.getId())
         .path(smallGroup.getPath())
         .name(smallGroup.getName())
@@ -28,6 +34,15 @@ public class SmallGroupDto {
         .leaderId(smallGroup.getLeader().getId())
         .leaderUsername(smallGroup.getLeader().getUsername())
         .maxMemberCount(smallGroup.getMaxMemberCount())
-        .build();
+        .useBanner(smallGroup.isUseBanner())
+        .recruiting(smallGroup.isRecruiting())
+        .published(smallGroup.isPublished())
+        .closed(smallGroup.isClosed());
+
+    if (smallGroup.isUseBanner()) {
+      builder.banner(smallGroup.getBanner());
+    }
+
+    return builder.build();
   }
 }

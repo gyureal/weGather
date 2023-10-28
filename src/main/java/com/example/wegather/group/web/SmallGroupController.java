@@ -60,13 +60,13 @@ public class SmallGroupController {
   }
 
   /**
-   * 소모임을 조회합니다.
-   * @param id
+   * path 로 소모임을 조회합니다.
+   * @param path
    * @return
    */
-  @GetMapping("/{id}")
-  public ResponseEntity<SmallGroupDto> readGroup(@PathVariable Long id) {
-    return ResponseEntity.ok(SmallGroupDto.from(smallGroupService.getSmallGroup(id)));
+  @GetMapping("/{path}")
+  public ResponseEntity<SmallGroupDto> readGroup(@PathVariable String path) {
+    return ResponseEntity.ok(SmallGroupDto.from(smallGroupService.getSmallGroupByPath(path)));
   }
 
   /**

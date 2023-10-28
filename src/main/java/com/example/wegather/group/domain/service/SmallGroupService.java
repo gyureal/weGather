@@ -49,6 +49,11 @@ public class SmallGroupService {
         .orElseThrow(() -> new IllegalArgumentException(SMALL_GROUP_NOT_FOUND.getDescription()));
   }
 
+  public SmallGroup getSmallGroupByPath(String path) {
+    return smallGroupRepository.findByPath(path)
+        .orElseThrow(() -> new IllegalArgumentException(SMALL_GROUP_NOT_FOUND.getDescription()));
+  }
+
   public Page<SmallGroup> searchSmallGroups(SmallGroupSearchCondition cond, Pageable pageable) {
     return smallGroupRepository.search(cond, pageable);
   }

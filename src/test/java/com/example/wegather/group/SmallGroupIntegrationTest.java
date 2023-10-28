@@ -90,15 +90,15 @@ class SmallGroupIntegrationTest extends IntegrationTest {
   }
 
   @Test
-  @DisplayName("id로 소그룹 조회를 성공합니다.")
+  @DisplayName("path 로 소그룹 조회를 성공합니다.")
   void getSmallGroupSuccessfully() {
     RequestSpecification spec = AuthControllerTest.signIn(member01.getUsername(), memberPassword);
-    Long groupId = group01.getId();
+    String path = group01.getPath();
 
     ExtractableResponse<Response> response = RestAssured.given().log().all().spec(spec)
-        .pathParam("id", groupId)
+        .pathParam("path", path)
         .contentType(ContentType.JSON)
-        .when().get("/smallGroups/{id}")
+        .when().get("/smallGroups/{path}")
         .then().log().all()
         .extract();
 
