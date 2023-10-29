@@ -103,9 +103,11 @@ class SmallGroupIntegrationTest extends IntegrationTest {
         .extract();
 
     SmallGroupDto result = response.body().as(SmallGroupDto.class);
+
     assertThat(result)
         .usingRecursiveComparison()
         .isEqualTo(group01);
+    assertThat(result.isJoinable()).isFalse();
   }
 
   @Test

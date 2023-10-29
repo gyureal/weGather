@@ -65,8 +65,9 @@ public class SmallGroupController {
    * @return
    */
   @GetMapping("/{path}")
-  public ResponseEntity<SmallGroupDto> readGroup(@PathVariable String path) {
-    return ResponseEntity.ok(SmallGroupDto.from(smallGroupService.getSmallGroupByPath(path)));
+  public ResponseEntity<SmallGroupDto> readGroup(@PathVariable String path,
+      @AuthenticationPrincipal MemberDetails memberDetails) {
+    return ResponseEntity.ok(smallGroupService.getSmallGroupByPath(path, memberDetails));
   }
 
   /**

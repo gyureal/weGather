@@ -2,8 +2,10 @@ package com.example.wegather.group.domain.entity;
 
 import com.example.wegather.global.BaseTimeEntity;
 import com.example.wegather.global.vo.Address;
+import com.example.wegather.groupJoin.domain.entity.SmallGroupMember;
 import com.example.wegather.interest.domain.Interest;
 import com.example.wegather.member.domain.entity.Member;
+import com.example.wegather.member.domain.entity.MemberInterest;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Objects;
@@ -42,6 +44,9 @@ public class SmallGroup extends BaseTimeEntity {
   private Member leader;
   @OneToMany(mappedBy = "smallGroup")
   private Set<SmallGroupManager> managers = new HashSet<>();
+
+  @OneToMany(mappedBy = "smallGroup")
+  private Set<SmallGroupMember> members = new HashSet<>();
 
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "smallGroup", cascade = CascadeType.ALL, orphanRemoval = true)
   private Set<SmallGroupInterest> smallGroupInterests = new HashSet<>();
@@ -104,6 +109,21 @@ public class SmallGroup extends BaseTimeEntity {
 
   public boolean isExceedMaxMember(Long nowCount) {
     return maxMemberCount <= nowCount;
+  }
+
+  public boolean isJoinable(Long memberId) {
+    return isPublished() && isRecruiting() &&
+        (!containsInManager(memberId) && !containsInMember(memberId));
+  }
+
+  private boolean containsInManager(Long memberId) {
+    return managers.stream().map(SmallGroupManager::getMemberId)
+        .anyMatch(memberId::equals);
+  }
+
+  private boolean containsInMember(Long memberId) {
+    return members.stream().map(SmallGroupMember::getMemberId)
+        .anyMatch(memberId::equals);
   }
 
   @Override

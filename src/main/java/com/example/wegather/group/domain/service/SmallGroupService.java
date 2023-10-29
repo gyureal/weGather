@@ -8,6 +8,7 @@ import com.example.wegather.global.vo.Address;
 import com.example.wegather.group.domain.entity.SmallGroup;
 import com.example.wegather.group.domain.repotitory.SmallGroupRepository;
 import com.example.wegather.group.dto.CreateSmallGroupRequest;
+import com.example.wegather.group.dto.SmallGroupDto;
 import com.example.wegather.group.dto.SmallGroupSearchCondition;
 import com.example.wegather.group.dto.UpdateSmallGroupRequest;
 import com.example.wegather.interest.domain.Interest;
@@ -49,9 +50,15 @@ public class SmallGroupService {
         .orElseThrow(() -> new IllegalArgumentException(SMALL_GROUP_NOT_FOUND.getDescription()));
   }
 
-  public SmallGroup getSmallGroupByPath(String path) {
-    return smallGroupRepository.findByPath(path)
+  public SmallGroupDto getSmallGroupByPath(String path, MemberDetails memberDetails) {
+    SmallGroup smallGroup = smallGroupRepository.findByPath(path)
         .orElseThrow(() -> new IllegalArgumentException(SMALL_GROUP_NOT_FOUND.getDescription()));
+
+    SmallGroupDto smallGroupDto = SmallGroupDto.from(smallGroup);
+    boolean isJoinalble = smallGroup.isJoinable(memberDetails.getMemberId());
+    smallGroupDto.changeJoinable(isJoinalble);
+
+    return smallGroupDto;
   }
 
   public Page<SmallGroup> searchSmallGroups(SmallGroupSearchCondition cond, Pageable pageable) {

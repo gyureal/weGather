@@ -11,8 +11,10 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+@Getter
 @Entity @EqualsAndHashCode(of = {"id"}, callSuper = false)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
@@ -24,4 +26,8 @@ public class SmallGroupManager extends BaseTimeEntity {
   SmallGroup smallGroup;
   @ManyToOne
   Member member;
+
+  public Long getMemberId() {
+    return member.getId();
+  }
 }

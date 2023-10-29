@@ -38,4 +38,8 @@ public class SmallGroupMember extends BaseTimeEntity {
   public static SmallGroupMember of(SmallGroup smallGroup, Member member) {
     return new SmallGroupMember(smallGroup, member);
   }
+
+  public Long getMemberId() {
+    return member.getId();
+  }
 }

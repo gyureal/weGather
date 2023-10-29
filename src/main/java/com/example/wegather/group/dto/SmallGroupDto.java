@@ -23,6 +23,7 @@ public class SmallGroupDto {
   private boolean recruiting;
   private boolean published;
   private boolean closed;
+  private boolean joinable;
 
   public static SmallGroupDto from(SmallGroup smallGroup) {
     SmallGroupDtoBuilder builder = SmallGroupDto.builder()
@@ -44,5 +45,9 @@ public class SmallGroupDto {
     }
 
     return builder.build();
+  }
+
+  public void changeJoinable(boolean joinable) {
+    this.joinable = joinable;
   }
 }
