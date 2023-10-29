@@ -5,7 +5,6 @@ import com.example.wegather.global.vo.Address;
 import com.example.wegather.groupJoin.domain.entity.SmallGroupMember;
 import com.example.wegather.interest.domain.Interest;
 import com.example.wegather.member.domain.entity.Member;
-import com.example.wegather.member.domain.entity.MemberInterest;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Objects;
@@ -111,9 +110,12 @@ public class SmallGroup extends BaseTimeEntity {
     return maxMemberCount <= nowCount;
   }
 
-  public boolean isJoinable(Long memberId) {
-    return isPublished() && isRecruiting() &&
-        (!containsInManager(memberId) && !containsInMember(memberId));
+  public boolean isManagerOrMember(Long memberId) {
+    return containsInManager(memberId) || containsInMember(memberId);
+  }
+
+  public boolean isJoinable(Long memberId, boolean isManagerOrMember) {
+    return isPublished() && isRecruiting() && !isManagerOrMember;
   }
 
   private boolean containsInManager(Long memberId) {

@@ -108,6 +108,7 @@ class SmallGroupIntegrationTest extends IntegrationTest {
         .usingRecursiveComparison()
         .isEqualTo(group01);
     assertThat(result.isJoinable()).isFalse();
+    assertThat(result.isManagerOrMember()).isFalse();
   }
 
   @Test

@@ -55,7 +55,10 @@ public class SmallGroupService {
         .orElseThrow(() -> new IllegalArgumentException(SMALL_GROUP_NOT_FOUND.getDescription()));
 
     SmallGroupDto smallGroupDto = SmallGroupDto.from(smallGroup);
-    boolean isJoinalble = smallGroup.isJoinable(memberDetails.getMemberId());
+
+    boolean isManagerOrMember = smallGroup.isManagerOrMember(memberDetails.getMemberId());
+    boolean isJoinalble = smallGroup.isJoinable(memberDetails.getMemberId(), isManagerOrMember);
+    smallGroupDto.changeMemberOrManager(isManagerOrMember);
     smallGroupDto.changeJoinable(isJoinalble);
 
     return smallGroupDto;
