@@ -65,14 +65,10 @@ class SmallGroupJoinIntegrationTest extends IntegrationTest {
   void smallGroupJoinRequest_fail_because_exceed_max_member_count() {
     // given
     SmallGroupDto smallGroup = insertSmallGroup("group1","group01", 1L, member01);
-    MemberDto joinMember1 = member02;
-    Long newRequestId = requestSmallGroupJoinRequest(smallGroup, joinMember1).as(
-        Long.class); // 1명 가입 요청
-    requestApproveSmallGroupJoin(smallGroup, newRequestId, member01); // 승인 -> 1명 가입
 
-    MemberDto joinMember2 = member03;
+    MemberDto joinMember1 = member03;
     // when
-    ExtractableResponse<Response> response = requestSmallGroupJoinRequest(smallGroup, joinMember2);
+    ExtractableResponse<Response> response = requestSmallGroupJoinRequest(smallGroup, joinMember1);
     // then
     assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_BAD_REQUEST);
   }
