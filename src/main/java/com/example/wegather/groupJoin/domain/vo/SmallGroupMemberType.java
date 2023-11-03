@@ -1,6 +1,6 @@
 package com.example.wegather.groupJoin.domain.vo;
 
 
-public enum MemberType {
+public enum SmallGroupMemberType {
   GENERAL, MANAGER
 }

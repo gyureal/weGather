@@ -1,6 +1,6 @@
 package com.example.wegather.group.dto;
 
-import com.example.wegather.member.domain.entity.Member;
+import com.example.wegather.groupJoin.domain.entity.SmallGroupMember;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,14 +11,14 @@ public class ManagerAndMemberDto {
   private String name;
   private String introduction;
   private String image;
-  private boolean isAdmin;
+  private String memberType;
 
-  public static ManagerAndMemberDto from(Member member, boolean isAdmin) {
+  public static ManagerAndMemberDto from(SmallGroupMember groupMember) {
     return ManagerAndMemberDto.builder()
-        .name(member.getUsername())
-        .introduction(member.getIntroductionText())
-        .image(member.getProfileImage())
-        .isAdmin(isAdmin)
+        .name(groupMember.getMember().getUsername())
+        .introduction(groupMember.getMember().getIntroductionText())
+        .image(groupMember.getMember().getProfileImage())
+        .memberType(groupMember.getSmallGroupMemberType().name())
         .build();
   }
 }

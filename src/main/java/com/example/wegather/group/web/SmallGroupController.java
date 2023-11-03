@@ -3,6 +3,7 @@ package com.example.wegather.group.web;
 import com.example.wegather.auth.MemberDetails;
 import com.example.wegather.group.domain.service.SmallGroupService;
 import com.example.wegather.group.dto.CreateSmallGroupRequest;
+import com.example.wegather.group.dto.ManagerAndMemberDto;
 import com.example.wegather.group.dto.SmallGroupDto;
 import com.example.wegather.group.dto.SmallGroupSearchCondition;
 import com.example.wegather.group.dto.UpdateSmallGroupRequest;
@@ -68,6 +69,11 @@ public class SmallGroupController {
   public ResponseEntity<SmallGroupDto> readGroup(@PathVariable String path,
       @AuthenticationPrincipal MemberDetails memberDetails) {
     return ResponseEntity.ok(smallGroupService.getSmallGroupByPath(path, memberDetails));
+  }
+
+  @GetMapping("/{path}/managers-and-members")
+  public ResponseEntity<List<ManagerAndMemberDto>> readGroupManagersAndMembers(@PathVariable String path) {
+    return ResponseEntity.ok(smallGroupService.getSmallGroupManagersAndMembers(path));
   }
 
   /**

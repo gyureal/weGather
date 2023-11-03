@@ -13,6 +13,7 @@ import com.example.wegather.group.dto.SmallGroupDto;
 import com.example.wegather.group.dto.SmallGroupSearchCondition;
 import com.example.wegather.group.dto.UpdateSmallGroupRequest;
 import com.example.wegather.groupJoin.domain.entity.SmallGroupMember;
+import com.example.wegather.groupJoin.domain.repository.SmallGroupMemberRepository;
 import com.example.wegather.interest.domain.Interest;
 import com.example.wegather.interest.domain.InterestRepository;
 import com.example.wegather.member.domain.entity.Member;
@@ -32,6 +33,7 @@ public class SmallGroupService {
   private final SmallGroupRepository smallGroupRepository;
   private final MemberRepository memberRepository;
   private final InterestRepository interestRepository;
+  private final SmallGroupMemberRepository smallGroupMemberRepository;
 
   @Transactional
   public SmallGroup addSmallGroup(CreateSmallGroupRequest request, Long memberId) {
@@ -132,5 +134,11 @@ public class SmallGroupService {
   private Interest findInterestById(Long interestId) {
     return interestRepository.findById(interestId)
         .orElseThrow(() -> new IllegalArgumentException(INTEREST_NOT_FOUND.getDescription()));
+  }
+
+  public List<ManagerAndMemberDto> getSmallGroupManagersAndMembers(String path) {
+    SmallGroup smallGroup = findSmallGroupByPath(path);
+    return smallGroupMemberRepository.findBySmallGroupOrderbyType(smallGroup).stream()
+        .map(ManagerAndMemberDto::from).collect(Collectors.toList());
   }
 }

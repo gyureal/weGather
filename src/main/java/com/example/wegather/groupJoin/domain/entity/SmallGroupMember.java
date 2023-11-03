@@ -2,7 +2,7 @@ package com.example.wegather.groupJoin.domain.entity;
 
 import com.example.wegather.global.BaseTimeEntity;
 import com.example.wegather.group.domain.entity.SmallGroup;
-import com.example.wegather.groupJoin.domain.vo.MemberType;
+import com.example.wegather.groupJoin.domain.vo.SmallGroupMemberType;
 import com.example.wegather.member.domain.entity.Member;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -34,12 +34,12 @@ public class SmallGroupMember extends BaseTimeEntity {
   private Member member;
 
   @Enumerated(value = EnumType.STRING)
-  private MemberType memberType;
+  private SmallGroupMemberType smallGroupMemberType;
 
   private SmallGroupMember(SmallGroup smallGroup, Member member) {
     this.smallGroup = smallGroup;
     this.member = member;
-    this.memberType = MemberType.GENERAL;
+    this.smallGroupMemberType = SmallGroupMemberType.GENERAL;
   }
   
   public static SmallGroupMember of(SmallGroup smallGroup, Member member) {
@@ -51,6 +51,6 @@ public class SmallGroupMember extends BaseTimeEntity {
   }
 
   public void changeTypeManager() {
-    this.memberType = MemberType.MANAGER;
+    this.smallGroupMemberType = SmallGroupMemberType.MANAGER;
   }
 }
