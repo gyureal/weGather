@@ -8,13 +8,17 @@ import com.example.wegather.global.vo.Address;
 import com.example.wegather.group.domain.entity.SmallGroup;
 import com.example.wegather.group.domain.repotitory.SmallGroupRepository;
 import com.example.wegather.group.dto.CreateSmallGroupRequest;
+import com.example.wegather.group.dto.ManagerAndMemberDto;
 import com.example.wegather.group.dto.SmallGroupDto;
 import com.example.wegather.group.dto.SmallGroupSearchCondition;
 import com.example.wegather.group.dto.UpdateSmallGroupRequest;
+import com.example.wegather.groupJoin.domain.entity.SmallGroupMember;
 import com.example.wegather.interest.domain.Interest;
 import com.example.wegather.interest.domain.InterestRepository;
 import com.example.wegather.member.domain.entity.Member;
 import com.example.wegather.member.domain.MemberRepository;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -51,17 +55,21 @@ public class SmallGroupService {
   }
 
   public SmallGroupDto getSmallGroupByPath(String path, MemberDetails memberDetails) {
-    SmallGroup smallGroup = smallGroupRepository.findByPath(path)
-        .orElseThrow(() -> new IllegalArgumentException(SMALL_GROUP_NOT_FOUND.getDescription()));
+    SmallGroup smallGroup = findSmallGroupByPath(path);
 
     SmallGroupDto smallGroupDto = SmallGroupDto.from(smallGroup);
 
-    boolean isManagerOrMember = smallGroup.isManagerOrMember(memberDetails.getMemberId());
-    boolean isJoinalble = smallGroup.isJoinable(memberDetails.getMemberId(), isManagerOrMember);
-    smallGroupDto.changeMemberOrManager(isManagerOrMember);
+    boolean isMember = smallGroup.isMember(memberDetails.getMemberId());
+    boolean isJoinalble = smallGroup.isJoinable(memberDetails.getMemberId(), isMember);
+    smallGroupDto.changeMemberOrManager(isMember);
     smallGroupDto.changeJoinable(isJoinalble);
 
     return smallGroupDto;
+  }
+
+  private SmallGroup findSmallGroupByPath(String path) {
+    return smallGroupRepository.findByPath(path)
+        .orElseThrow(() -> new IllegalArgumentException(SMALL_GROUP_NOT_FOUND.getDescription()));
   }
 
   public Page<SmallGroup> searchSmallGroups(SmallGroupSearchCondition cond, Pageable pageable) {

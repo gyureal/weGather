@@ -41,8 +41,6 @@ public class SmallGroup extends BaseTimeEntity {
   private String path;
   @ManyToOne(fetch = FetchType.LAZY)
   private Member leader;
-  @OneToMany(mappedBy = "smallGroup")
-  private Set<SmallGroupManager> managers = new HashSet<>();
 
   @OneToMany(mappedBy = "smallGroup")
   private Set<SmallGroupMember> members = new HashSet<>();
@@ -110,17 +108,12 @@ public class SmallGroup extends BaseTimeEntity {
     return maxMemberCount <= nowCount;
   }
 
-  public boolean isManagerOrMember(Long memberId) {
-    return containsInManager(memberId) || containsInMember(memberId);
+  public boolean isMember(Long memberId) {
+    return containsInMember(memberId);
   }
 
   public boolean isJoinable(Long memberId, boolean isManagerOrMember) {
     return isPublished() && isRecruiting() && !isManagerOrMember;
-  }
-
-  private boolean containsInManager(Long memberId) {
-    return managers.stream().map(SmallGroupManager::getMemberId)
-        .anyMatch(memberId::equals);
   }
 
   private boolean containsInMember(Long memberId) {
