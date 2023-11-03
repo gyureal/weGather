@@ -8,7 +8,7 @@ TRUNCATE TABLE small_group;
 TRUNCATE TABLE small_group_interest;
 TRUNCATE TABLE small_group_join;
 TRUNCATE TABLE small_group_member;
-TRUNCATE TABLE small_group_manager;
+
 
 
 
