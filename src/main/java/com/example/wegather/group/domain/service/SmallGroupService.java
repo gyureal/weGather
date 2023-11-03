@@ -41,14 +41,28 @@ public class SmallGroupService {
     Member member = memberRepository.findById(memberId)
         .orElseThrow(() -> new IllegalStateException(MEMBER_NOT_FOUND.getDescription()));
 
-    return smallGroupRepository.save(SmallGroup.builder()
-            .path(request.getPath())
-            .name(request.getName())
-            .shortDescription(request.getShortDescription())
-            .fullDescription(request.getFullDescription())
-            .maxMemberCount(request.getMaxMemberCount())
-            .leader(member)
+    SmallGroup savedGroup = smallGroupRepository.save(SmallGroup.builder()
+        .path(request.getPath())
+        .name(request.getName())
+        .shortDescription(request.getShortDescription())
+        .fullDescription(request.getFullDescription())
+        .maxMemberCount(request.getMaxMemberCount())
+        .leader(member)
         .build());
+
+    saveLeaderAsManager(member, savedGroup);
+    return savedGroup;
+  }
+
+  /**
+   * 소모임 리더(생성자)를 소모임의 관리자로 추가합니다.
+   * @param leader 소모임 생성자
+   * @param savedGroup 생성된 소모임
+   */
+  private void saveLeaderAsManager(Member leader, SmallGroup savedGroup) {
+    SmallGroupMember smallGroupMember = SmallGroupMember.of(savedGroup, leader);
+    smallGroupMember.changeTypeManager();
+    smallGroupMemberRepository.save(smallGroupMember);
   }
 
   public SmallGroup getSmallGroup(Long id) {

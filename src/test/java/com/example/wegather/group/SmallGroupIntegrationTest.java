@@ -10,6 +10,9 @@ import com.example.wegather.group.dto.SmallGroupDto;
 import com.example.wegather.group.dto.SmallGroupSearchCondition;
 import com.example.wegather.group.dto.UpdateSmallGroupRequest;
 import com.example.wegather.IntegrationTest;
+import com.example.wegather.groupJoin.domain.entity.SmallGroupMember;
+import com.example.wegather.groupJoin.domain.repository.SmallGroupMemberRepository;
+import com.example.wegather.groupJoin.domain.vo.SmallGroupMemberType;
 import com.example.wegather.interest.InterestIntegrationTest;
 import com.example.wegather.interest.dto.InterestDto;
 import com.example.wegather.auth.dto.SignUpRequest;
@@ -33,6 +36,8 @@ class SmallGroupIntegrationTest extends IntegrationTest {
 
   @Autowired
   private SmallGroupRepository smallGroupRepository;
+  @Autowired
+  private SmallGroupMemberRepository smallGroupMemberRepository;
 
   private static final String memberUsername = "member01";
   private static final String memberPassword = "1234";
@@ -54,6 +59,7 @@ class SmallGroupIntegrationTest extends IntegrationTest {
   @Test
   @DisplayName("소모임을 생성합니다.")
   void createInterestSuccessfully() {
+    // given
     CreateSmallGroupRequest request = CreateSmallGroupRequest.builder()
         .path("ballsamo")
         .name("볼사모")
@@ -62,14 +68,21 @@ class SmallGroupIntegrationTest extends IntegrationTest {
         .maxMemberCount(30L)
         .build();
 
+    // when
     ExtractableResponse<Response> response = requestCreateGroup(request, member01.getUsername());
 
+    // then
     assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_CREATED);
     SmallGroupDto result = response.body().as(SmallGroupDto.class);
     assertThat(result.getPath()).isEqualTo(request.getPath());
     assertThat(result.getName()).isEqualTo(request.getName());
     assertThat(result.getShortDescription()).isEqualTo(request.getShortDescription());
     assertThat(result.getFullDescription()).isEqualTo(request.getFullDescription());
+    // 소모임 생성한 사람이 소모임의 관리자로 저장되어 있는지 확인합니다.
+    SmallGroupMember smallGroupMember = smallGroupMemberRepository.findBySmallGroup_IdAndMember_Id(
+            result.getId(), member01.getId())
+        .orElseThrow(() -> new RuntimeException("소모임 회원을 찾을 수 없습니다."));
+    assertThat(smallGroupMember.getSmallGroupMemberType()).isEqualTo(SmallGroupMemberType.MANAGER);
   }
 
   @Test
