@@ -9,6 +9,7 @@ import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.example.wegather.global.exception.ErrorCode;
 import com.example.wegather.global.exception.customException.FileUploadException;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import lombok.RequiredArgsConstructor;
@@ -38,8 +39,6 @@ public class StoreFileToAWS implements StoreFile {
 
   @Override
   public UploadFile storeFile(MultipartFile multipartFile) {
-    log.info("### bucketName : " + bucketName);
-
     String storeFileName = createStoreFileName(multipartFile.getOriginalFilename());
     ObjectMetadata objectMetadata = new ObjectMetadata();
     objectMetadata.setContentType(multipartFile.getContentType());
@@ -51,6 +50,21 @@ public class StoreFileToAWS implements StoreFile {
     }
 
     return UploadFile.of(multipartFile.getOriginalFilename(), storeFileName);
+  }
+
+  @Override
+  public UploadFile storeFile(byte[] imageBytes, String originalName) {
+    String storeFileName = createStoreFileName(originalName);
+    ObjectMetadata objectMetadata = new ObjectMetadata();
+    objectMetadata.setContentLength(imageBytes.length);
+
+    try (InputStream inputStream = new ByteArrayInputStream(imageBytes)) {
+      s3Client.putObject(new PutObjectRequest(bucketName, storeFileName, inputStream, objectMetadata));
+    } catch (IOException e) {
+      throw new FileUploadException(FAIL_TO_UPLOAD_FILE.getDescription());
+    }
+
+    return UploadFile.of(originalName, storeFileName);
   }
 
   @Override

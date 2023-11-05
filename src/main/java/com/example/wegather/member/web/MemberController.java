@@ -3,6 +3,7 @@ package com.example.wegather.member.web;
 import com.example.wegather.auth.MemberDetails;
 import com.example.wegather.member.dto.ChangeAlarmSettingsForm;
 import com.example.wegather.member.dto.ChangePasswordForm;
+import com.example.wegather.member.dto.EditProfileImageForm;
 import com.example.wegather.member.dto.MemberProfileDto;
 import com.example.wegather.global.exception.customException.FileUploadException;
 import com.example.wegather.global.dto.AddressRequest;
@@ -85,6 +86,13 @@ public class MemberController {
     return ResponseEntity.ok().build();
   }
 
+  @PostMapping("/profile/image")
+  public ResponseEntity<Void> editProfileImage(@AuthenticationPrincipal MemberDetails memberDetails, @RequestBody
+  EditProfileImageForm editProfileImageForm) {
+    memberService.updateProfileImage(memberDetails.getId(), editProfileImageForm);
+    return ResponseEntity.ok().build();
+  }
+
   @PostMapping("/profile/password")
   public ResponseEntity<Void> changePassword(@AuthenticationPrincipal MemberDetails memberDetails,
       @RequestBody ChangePasswordForm changePasswordForm) {
@@ -127,22 +135,6 @@ public class MemberController {
   public ResponseEntity<Void> deleteMemberById(@PathVariable Long id) {
     memberService.deleteMember(id);
     return ResponseEntity.noContent().build();
-  }
-
-  /**
-   * 회원의 프로필 사진을 업데이트 합니다.
-   * @param id
-   * @param profileImage
-   * @throws IllegalArgumentException 회원이 존재하지 않은 경우
-   * @throws FileUploadException
-   *     이미지 업로드에 실패할 경우
-   * @return
-   */
-  @PutMapping("/{id}/image")
-  public ResponseEntity<Void> updateProfileImage(@AuthenticationPrincipal MemberDetails principal,
-      @PathVariable Long id, @RequestParam MultipartFile profileImage) {
-    memberService.updateProfileImage(principal, id, profileImage);
-    return ResponseEntity.ok().build();
   }
 
   /**

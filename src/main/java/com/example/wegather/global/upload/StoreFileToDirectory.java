@@ -75,6 +75,11 @@ public class StoreFileToDirectory implements StoreFile {
     return new UploadFile(originalFilename, storeFileName);
   }
 
+  @Override
+  public UploadFile storeFile(byte[] bytes, String originalName) {
+    return null;
+  }
+
   /**
    * 파일을 삭제합니다.
    * @param filename

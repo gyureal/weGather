@@ -21,6 +21,14 @@ public interface StoreFile {
   UploadFile storeFile(MultipartFile multipartFile);
 
   /**
+   * byte[] 의 이미지를 업로드 합니다.
+   * @param bytes 이미지의 byte 배열
+   * @param originalName 이미지의 원래 이름
+   * @return
+   */
+  UploadFile storeFile(byte[] bytes, String originalName);
+
+  /**
    * 파일을 삭제합니다.
    * @param filename
    */
@@ -28,6 +36,7 @@ public interface StoreFile {
 
   /**
    * 저장할 파일 이름을 생성합니다.
+   * Unique 한 이름을 생성하여 반환합니다.
    * UUID 에 기존 파일의 확장자를 붙혀서 만듭니다.
    * @param originalFilename
    * @return
