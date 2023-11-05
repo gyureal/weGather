@@ -11,6 +11,7 @@ public class MemberInfo {
   private Long id;
   private String username;
   private String email;
+  private String profileImage;
   private boolean isEmailVerified;
 
   public static MemberInfo from(Member member) {
@@ -18,6 +19,7 @@ public class MemberInfo {
         .id(member.getId())
         .username(member.getUsername())
         .email(member.getEmail())
+        .profileImage(member.getProfileImage())
         .isEmailVerified(member.isEmailVerified())
         .build();
   }

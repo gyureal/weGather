@@ -14,6 +14,7 @@ public class MemberProfileDto {
   private LocalDateTime joinedAt;
   private Boolean emailVerified;
   private String introductionText;
+  private String profileImage;
   private boolean groupCreatedByEmail;
   private boolean groupCreatedByWeb;
   private boolean joinResultByEmail;
@@ -28,6 +29,7 @@ public class MemberProfileDto {
         .joinedAt(member.getJoinedAt())
         .emailVerified(member.isEmailVerified())
         .introductionText(member.getIntroductionText())
+        .profileImage(member.getProfileImage())
         .groupCreatedByEmail(member.getMemberAlarmSetting().isGroupCreatedByEmail())
         .groupCreatedByWeb(member.getMemberAlarmSetting().isGroupCreatedByWeb())
         .joinResultByEmail(member.getMemberAlarmSetting().isJoinResultByEmail())
