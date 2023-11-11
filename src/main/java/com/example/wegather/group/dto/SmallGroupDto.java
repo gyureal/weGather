@@ -27,7 +27,7 @@ public class SmallGroupDto {
   private boolean managerOrMember;
 
   public static SmallGroupDto from(SmallGroup smallGroup) {
-    SmallGroupDtoBuilder builder = SmallGroupDto.builder()
+    return SmallGroupDto.builder()
         .id(smallGroup.getId())
         .path(smallGroup.getPath())
         .name(smallGroup.getName())
@@ -36,16 +36,12 @@ public class SmallGroupDto {
         .leaderId(smallGroup.getLeader().getId())
         .leaderUsername(smallGroup.getLeader().getUsername())
         .maxMemberCount(smallGroup.getMaxMemberCount())
+        .banner(smallGroup.getBanner())
         .useBanner(smallGroup.isUseBanner())
         .recruiting(smallGroup.isRecruiting())
         .published(smallGroup.isPublished())
-        .closed(smallGroup.isClosed());
-
-    if (smallGroup.isUseBanner()) {
-      builder.banner(smallGroup.getBanner());
-    }
-
-    return builder.build();
+        .closed(smallGroup.isClosed())
+        .build();
   }
 
   public void changeJoinable(boolean joinable) {
