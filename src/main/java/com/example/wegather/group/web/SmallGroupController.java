@@ -6,6 +6,7 @@ import com.example.wegather.group.dto.CreateSmallGroupRequest;
 import com.example.wegather.group.dto.ManagerAndMemberDto;
 import com.example.wegather.group.dto.SmallGroupDto;
 import com.example.wegather.group.dto.SmallGroupSearchCondition;
+import com.example.wegather.group.dto.UpdateBannerRequest;
 import com.example.wegather.group.dto.UpdateSmallGroupRequest;
 import com.example.wegather.group.validator.CreateSmallGroupValidator;
 import com.example.wegather.interest.dto.InterestDto;
@@ -74,6 +75,18 @@ public class SmallGroupController {
   @GetMapping("/{path}/managers-and-members")
   public ResponseEntity<List<ManagerAndMemberDto>> readGroupManagersAndMembers(@PathVariable String path) {
     return ResponseEntity.ok(smallGroupService.getSmallGroupManagersAndMembers(path));
+  }
+
+  /**
+   * 소모임 배너 수정
+   * 소모임의 관리자만 수정 가능합니다.
+   * @return
+   */
+  @PostMapping("/{path}/banner")
+  public ResponseEntity<Void> updateSmagllGroupBanner(@AuthenticationPrincipal MemberDetails memberDetails,
+      @PathVariable String path, @RequestBody @Valid UpdateBannerRequest request) {
+    smallGroupService.updateBanner(memberDetails, path ,request);
+    return ResponseEntity.ok().build();
   }
 
   /**

@@ -34,6 +34,7 @@ public enum ErrorCode {
   EMAIL_NOT_FOUND("2005", "이메일을 찾을 수 없습니다."),
   TOKEN_IS_NOT_VALID("2006", "토큰이 유효하지 않습니다."),
   PASSWORD_NOT_MATCHED("2007", "패스워드가 일치하지 않습니다."),
+  PERMISSION_DENIED("2008", "권한이 없습니다."),
 
   /**
    * 관심사 파트 에러 메세지

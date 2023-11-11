@@ -116,6 +116,10 @@ public class SmallGroup extends BaseTimeEntity {
     return isPublished() && isRecruiting() && !isManagerOrMember;
   }
 
+  public void updateBanner(String banner) {
+    this.banner = banner;
+  }
+
   private boolean containsInMember(Long memberId) {
     return members.stream().map(SmallGroupMember::getMemberId)
         .anyMatch(memberId::equals);

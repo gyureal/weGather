@@ -4,6 +4,9 @@ import static com.example.wegather.global.exception.ErrorCode.*;
 
 import com.example.wegather.auth.MemberDetails;
 import com.example.wegather.global.exception.customException.AuthenticationException;
+import com.example.wegather.global.exception.customException.NoPermissionException;
+import com.example.wegather.global.upload.StoreFile;
+import com.example.wegather.global.upload.UploadFile;
 import com.example.wegather.global.vo.Address;
 import com.example.wegather.group.domain.entity.SmallGroup;
 import com.example.wegather.group.domain.repotitory.SmallGroupRepository;
@@ -11,6 +14,7 @@ import com.example.wegather.group.dto.CreateSmallGroupRequest;
 import com.example.wegather.group.dto.ManagerAndMemberDto;
 import com.example.wegather.group.dto.SmallGroupDto;
 import com.example.wegather.group.dto.SmallGroupSearchCondition;
+import com.example.wegather.group.dto.UpdateBannerRequest;
 import com.example.wegather.group.dto.UpdateSmallGroupRequest;
 import com.example.wegather.groupJoin.domain.entity.SmallGroupMember;
 import com.example.wegather.groupJoin.domain.repository.SmallGroupMemberRepository;
@@ -19,8 +23,10 @@ import com.example.wegather.interest.domain.InterestRepository;
 import com.example.wegather.member.domain.entity.Member;
 import com.example.wegather.member.domain.MemberRepository;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.codec.binary.Base64;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -34,6 +40,7 @@ public class SmallGroupService {
   private final MemberRepository memberRepository;
   private final InterestRepository interestRepository;
   private final SmallGroupMemberRepository smallGroupMemberRepository;
+  private final StoreFile storeFile;
 
   @Transactional
   public SmallGroup addSmallGroup(CreateSmallGroupRequest request, Long memberId) {
@@ -154,5 +161,36 @@ public class SmallGroupService {
     SmallGroup smallGroup = findSmallGroupByPath(path);
     return smallGroupMemberRepository.findBySmallGroupOrderbyType(smallGroup).stream()
         .map(ManagerAndMemberDto::from).collect(Collectors.toList());
+  }
+
+  @Transactional
+  public void updateBanner(MemberDetails memberDetails, String path,
+      UpdateBannerRequest request) {
+
+    SmallGroup smallGroup = findSmallGroupByPath(path);
+    List<SmallGroupMember> managers = smallGroupMemberRepository.findManagerBySmallGroupId(
+        smallGroup.getId());
+
+    boolean exists = false;
+    for(SmallGroupMember manager : managers) {
+      if (Objects.equals(manager.getMember().getId(), memberDetails.getMemberId())) {
+        exists = true;
+        break;
+      }
+    }
+
+    if(!exists) {
+      throw new NoPermissionException(PERMISSION_DENIED.getDescription());
+    }
+
+    // 이미지 업로드
+    String encodedImage = parseOnlyImage(request.getImage());
+    byte[] imageBytes = Base64.decodeBase64(encodedImage);
+    UploadFile uploadFile = storeFile.storeFile(imageBytes, request.getOriginalImageName());
+
+    smallGroup.updateBanner(uploadFile.getStoreFileName());
+  }
+  private String parseOnlyImage(String profileImage) {
+    return profileImage.split(",")[1];
   }
 }

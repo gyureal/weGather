@@ -19,4 +19,10 @@ public interface SmallGroupMemberRepository extends JpaRepository<SmallGroupMemb
   List<SmallGroupMember> findBySmallGroupOrderbyType(SmallGroup smallGroup);
 
   Optional<SmallGroupMember> findBySmallGroup_IdAndMember_Id(Long smallGroupId, Long memberId);
+
+  @Query("select sgm from SmallGroupMember sgm "
+      + "where sgm.smallGroup.id = :smallGroupId "
+      + "and sgm.smallGroupMemberType = com.example.wegather.groupJoin.domain.vo.SmallGroupMemberType.MANAGER"
+  )
+  List<SmallGroupMember> findManagerBySmallGroupId(Long smallGroupId);
 }
