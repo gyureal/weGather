@@ -123,11 +123,11 @@ class SmallGroupIntegrationTest extends IntegrationTest {
     RequestSpecification spec = AuthControllerTest.signIn(member01.getUsername(), memberPassword);
     String path = group01.getPath();
 
-    ExtractableResponse<Response> response = RestAssured.given().log().all().spec(spec)
+    ExtractableResponse<Response> response = RestAssured.given().log().ifValidationFails().spec(spec)
         .pathParam("path", path)
         .contentType(ContentType.JSON)
         .when().get("/smallGroups/{path}")
-        .then().log().all()
+        .then().log().ifValidationFails()
         .extract();
 
     SmallGroupDto result = response.body().as(SmallGroupDto.class);
@@ -148,7 +148,7 @@ class SmallGroupIntegrationTest extends IntegrationTest {
     String path = group01.getPath();
 
     // when
-    ExtractableResponse<Response> response = RestAssured.given().log().all().spec(spec)
+    ExtractableResponse<Response> response = RestAssured.given().log().ifValidationFails().spec(spec)
         .pathParam("path", path)
         .when().get("/smallGroups/{path}/managers-and-members")
         .then().log().ifValidationFails()
@@ -185,7 +185,7 @@ class SmallGroupIntegrationTest extends IntegrationTest {
     given(storeFile.storeFile(any(), any())).willReturn(UploadFile.of("", storeFileName));
 
     // when
-    ExtractableResponse<Response> response = RestAssured.given().log().all().spec(spec)
+    ExtractableResponse<Response> response = RestAssured.given().log().ifValidationFails().spec(spec)
         .pathParam("path", path)
         .contentType(ContentType.JSON)
         .body(request)
@@ -217,12 +217,12 @@ class SmallGroupIntegrationTest extends IntegrationTest {
     int size = 2;
     int page = 0;
 
-    ExtractableResponse<Response> response = RestAssured.given().log().all()
+    ExtractableResponse<Response> response = RestAssured.given().log().ifValidationFails()
         .spec(spec)
         .body(smallGroupSearchCondition).contentType(ContentType.JSON)
         .queryParam("size", size, "page", page)
         .when().get("/smallGroups")
-        .then().log().all()
+        .then().log().ifValidationFails()
         .extract();
 
     assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_OK);
@@ -248,13 +248,13 @@ class SmallGroupIntegrationTest extends IntegrationTest {
     int size = 5;
     int page = 0;
 
-    ExtractableResponse<Response> response = RestAssured.given().log().all()
+    ExtractableResponse<Response> response = RestAssured.given().log().ifValidationFails()
         .spec(spec)
         .body(smallGroupSearchCondition)
         .queryParam("size", size, "page", page)
         .contentType(ContentType.JSON)
         .when().get("/smallGroups")
-        .then().log().all()
+        .then().log().ifValidationFails()
         .extract();
 
     assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_OK);
@@ -281,7 +281,7 @@ class SmallGroupIntegrationTest extends IntegrationTest {
         .build();
 
     ExtractableResponse<Response> response = RestAssured
-        .given().log().all()
+        .given().log().ifValidationFails()
         .spec(spec)
         .pathParam("id", group01.getId())
         .body(request)
@@ -311,7 +311,7 @@ class SmallGroupIntegrationTest extends IntegrationTest {
         .build();
 
     RestAssured
-        .given().log().all()
+        .given().log().ifValidationFails()
         .spec(spec)
         .pathParam("id", group01.getId())
         .body(request)
@@ -328,7 +328,7 @@ class SmallGroupIntegrationTest extends IntegrationTest {
     Long id = group01.getId();
 
     RestAssured
-        .given().log().all()
+        .given().log().ifValidationFails()
         .spec(spec)
         .pathParam("id", id)
         .contentType(ContentType.JSON)
@@ -345,7 +345,7 @@ class SmallGroupIntegrationTest extends IntegrationTest {
     Long id = group01.getId();
 
     RestAssured
-        .given().log().all()
+        .given().log().ifValidationFails()
         .spec(spec)
         .pathParam("id", id)
         .contentType(ContentType.JSON)
@@ -415,7 +415,7 @@ class SmallGroupIntegrationTest extends IntegrationTest {
   private ExtractableResponse<Response> requestCreateGroup(CreateSmallGroupRequest request, String requesterId) {
     RequestSpecification spec = AuthControllerTest.signIn(requesterId, memberPassword);
 
-    return RestAssured.given().log().all().spec(spec)
+    return RestAssured.given().log().ifValidationFails().spec(spec)
         .body(request).contentType(ContentType.JSON)
         .when().post("/smallGroups")
         .then().log().ifStatusCodeIsEqualTo(HttpStatus.SC_CREATED)
@@ -447,26 +447,26 @@ class SmallGroupIntegrationTest extends IntegrationTest {
   private ExtractableResponse<Response> requestAddInterest(Long smallGroupId, Long interestId, MemberDto loginMember) {
     RequestSpecification spec = AuthControllerTest.signIn(loginMember.getUsername(), memberPassword);
 
-    return RestAssured.given().log().all()
+    return RestAssured.given().log().ifValidationFails()
         .spec(spec)
         .pathParam("id", smallGroupId)
         .queryParam("interestId", interestId)
         .contentType(ContentType.JSON)
         .when().post("/smallGroups/{id}/interest")
-        .then().log().all()
+        .then().log().ifValidationFails()
         .extract();
   }
 
   private ExtractableResponse<Response> requestRemoveInterest(Long smallGroupId, Long interestId, MemberDto loginMember) {
     RequestSpecification spec = AuthControllerTest.signIn(loginMember.getUsername(), memberPassword);
 
-    return RestAssured.given().log().all()
+    return RestAssured.given().log().ifValidationFails()
         .spec(spec)
         .pathParam("id", smallGroupId)
         .queryParam("interestId", interestId)
         .contentType(ContentType.JSON)
         .when().delete("/smallGroups/{id}/interest")
-        .then().log().all()
+        .then().log().ifValidationFails()
         .extract();
   }
 }

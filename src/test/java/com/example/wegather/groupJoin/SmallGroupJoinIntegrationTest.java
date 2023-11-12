@@ -143,12 +143,12 @@ class SmallGroupJoinIntegrationTest extends IntegrationTest {
     Long requestId = requestSmallGroupJoinRequest(smallGroup, joinMember).as(Long.class);// 가입 요청
     RequestSpecification spec = AuthControllerTest.signIn(member01.getUsername(), memberPassword);
 
-    ExtractableResponse<Response> response = RestAssured.given().log().all()
+    ExtractableResponse<Response> response = RestAssured.given().log().ifValidationFails()
         .spec(spec)
         .pathParam("id", smallGroup.getId())
         .pathParam("requestId", requestId)
         .when().post("smallGroups/{id}/join/requests/{requestId}/reject")
-        .then().log().all().extract();
+        .then().log().ifValidationFails().extract();
 
     assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_OK);
   }
@@ -156,35 +156,35 @@ class SmallGroupJoinIntegrationTest extends IntegrationTest {
   private ExtractableResponse<Response> requestApproveSmallGroupJoin(SmallGroupDto smallGroup,
       Long requestId, MemberDto loginMember) {
     RequestSpecification spec = AuthControllerTest.signIn(loginMember.getUsername(), memberPassword);
-    ExtractableResponse<Response> response = RestAssured.given().log().all()
+    ExtractableResponse<Response> response = RestAssured.given().log().ifValidationFails()
         .spec(spec)
         .pathParam("id", smallGroup.getId())
         .pathParam("requestId", requestId)
         .when().post("smallGroups/{id}/join/requests/{requestId}/approve")
-        .then().log().all().extract();
+        .then().log().ifValidationFails().extract();
     return response;
   }
 
   private ExtractableResponse<Response> requestReadAllJoinRequests(SmallGroupDto smallGroup,
       int page, MemberDto loginMember) {
     RequestSpecification spec = AuthControllerTest.signIn(loginMember.getUsername(), memberPassword);
-    ExtractableResponse<Response> response = RestAssured.given().log().all()
+    ExtractableResponse<Response> response = RestAssured.given().log().ifValidationFails()
         .spec(spec)
         .pathParam("id", smallGroup.getId())
         .queryParam("page", page)
         .when().get("smallGroups/{id}/join/requests")
-        .then().log().all().extract();
+        .then().log().ifValidationFails().extract();
     return response;
   }
 
   private static ExtractableResponse<Response> requestSmallGroupJoinRequest(
       SmallGroupDto smallGroup, MemberDto loginMember) {
     RequestSpecification spec = AuthControllerTest.signIn(loginMember.getUsername(), memberPassword);
-    ExtractableResponse<Response> response = RestAssured.given().log().all()
+    ExtractableResponse<Response> response = RestAssured.given().log().ifValidationFails()
         .spec(spec)
         .pathParam("id", smallGroup.getId())
         .when().post("smallGroups/{id}/join/requests")
-        .then().log().all().extract();
+        .then().log().ifValidationFails().extract();
     return response;
   }
 
@@ -197,7 +197,7 @@ class SmallGroupJoinIntegrationTest extends IntegrationTest {
         .maxMemberCount(maxMemberCount)
         .build();
 
-    return RestAssured.given().log().all()
+    return RestAssured.given().log().ifValidationFails()
         .spec(spec)
         .body(request)
         .contentType(ContentType.JSON)

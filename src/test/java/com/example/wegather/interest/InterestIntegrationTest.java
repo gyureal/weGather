@@ -40,10 +40,10 @@ public class InterestIntegrationTest extends IntegrationTest {
         .build();
 
     ExtractableResponse<Response> response =
-        RestAssured.given().log().all().spec(spec)
+        RestAssured.given().log().ifValidationFails().spec(spec)
         .body(request).contentType(ContentType.JSON)
         .when().post("/interests")
-        .then().log().all()
+        .then().log().ifValidationFails()
         .extract();
 
     assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_CREATED);
@@ -64,10 +64,10 @@ public class InterestIntegrationTest extends IntegrationTest {
         .build();
 
     // when
-    ExtractableResponse<Response> response = RestAssured.given().log().all().spec(spec)
+    ExtractableResponse<Response> response = RestAssured.given().log().ifValidationFails().spec(spec)
         .body(request).contentType(ContentType.JSON)
         .when().post("/interests")
-        .then().log().all()
+        .then().log().ifValidationFails()
         .extract();
 
     assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_BAD_REQUEST);
@@ -83,10 +83,10 @@ public class InterestIntegrationTest extends IntegrationTest {
 
     // when
     ExtractableResponse<Response> response =
-      RestAssured.given().log().all()
+      RestAssured.given().log().ifValidationFails()
         .spec(spec)
         .when().get("/interests")
-        .then().log().all()
+        .then().log().ifValidationFails()
         .extract();
 
     //then
@@ -103,9 +103,9 @@ public class InterestIntegrationTest extends IntegrationTest {
     InterestDto swimming = insertInterest("수영", member01.getUsername());
 
     ExtractableResponse<Response> response =
-        RestAssured.given().log().all().spec(spec)
+        RestAssured.given().log().ifValidationFails().spec(spec)
         .when().get("/interests/{id}", swimming.getId())
-        .then().log().all()
+        .then().log().ifValidationFails()
         .extract();
 
     assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_OK);
@@ -120,10 +120,10 @@ public class InterestIntegrationTest extends IntegrationTest {
     InterestDto swimming = insertInterest("수영", member01.getUsername());
 
     ExtractableResponse<Response> response =
-      RestAssured.given().log().all().spec(spec)
+      RestAssured.given().log().ifValidationFails().spec(spec)
         .contentType(ContentType.JSON)
         .when().delete("/interests/{id}", swimming.getId())
-        .then().log().all()
+        .then().log().ifValidationFails()
         .extract();
 
     assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_NO_CONTENT);
@@ -136,10 +136,10 @@ public class InterestIntegrationTest extends IntegrationTest {
         .interestName(interestName)
         .build();
 
-    return RestAssured.given().log().all().spec(spec)
+    return RestAssured.given().log().ifValidationFails().spec(spec)
         .body(request).contentType(ContentType.JSON)
         .when().post("/interests")
-        .then().log().all()
+        .then().log().ifValidationFails()
         .extract().as(InterestDto.class);
   }
 
@@ -158,7 +158,7 @@ public class InterestIntegrationTest extends IntegrationTest {
   private static RequestSpecification sigIn(String username, String password) {
     SignInRequest signInRequest = SignInRequest.of(username, password);
 
-    String sessionId = RestAssured.given().log().all()
+    String sessionId = RestAssured.given().log().ifValidationFails()
         .body(signInRequest).contentType(ContentType.JSON)
         .when().post("/api/sign-in")
         .sessionId();

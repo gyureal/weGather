@@ -117,10 +117,10 @@ public class AuthControllerTest extends IntegrationTest {
     signUp(signUpRequest);
     Member member = findByUsername(signUpRequest.getUsername());
 
-    ExtractableResponse<Response> response = RestAssured.given().log().all()
+    ExtractableResponse<Response> response = RestAssured.given().log().ifValidationFails()
         .when().queryParam("email", member.getEmail()).queryParam("token", member.getEmailCheckToken())
         .post("/api/check-email-token")
-        .then().log().all().extract();
+        .then().log().ifValidationFails().extract();
 
     assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_OK);
     member = findByUsername(signUpRequest.getUsername());
@@ -129,26 +129,26 @@ public class AuthControllerTest extends IntegrationTest {
   }
 
   public static ExtractableResponse<Response> signUp(SignUpRequest signUpRequest) {
-    ExtractableResponse<Response> response = RestAssured.given().log().all()
+    ExtractableResponse<Response> response = RestAssured.given().log().ifValidationFails()
         .body(signUpRequest).contentType(ContentType.JSON)
         .when().post("/api/sign-up")
-        .then().log().all()
+        .then().log().ifValidationFails()
         .extract();
     return response;
   }
 
   private ExtractableResponse<Response> requestSignIn(SignInRequest signInRequest) {
-    return RestAssured.given().log().all()
+    return RestAssured.given().log().ifValidationFails()
         .body(signInRequest).contentType(ContentType.JSON)
         .when().post("/api/sign-in")
-        .then().log().all()
+        .then().log().ifValidationFails()
         .extract();
   }
 
   public static RequestSpecification signIn(String username, String password) {
     SignInRequest signInRequest = SignInRequest.of(username, password);
 
-    String sessionId = RestAssured.given().log().all()
+    String sessionId = RestAssured.given().log().ifValidationFails()
         .body(signInRequest).contentType(ContentType.JSON)
         .when().post("/api/sign-in")
         .sessionId();

@@ -49,11 +49,11 @@ class MemberIntegrationTest extends IntegrationTest {
 
     // when
     ExtractableResponse<Response> response =
-    RestAssured.given().log().all().spec(spec)
+    RestAssured.given().log().ifValidationFails().spec(spec)
         .queryParam("size", size, "page", page)
         .contentType(ContentType.JSON)
         .when().get("/members")
-        .then().log().all()
+        .then().log().ifValidationFails()
         .extract();
 
     //then
@@ -77,10 +77,10 @@ class MemberIntegrationTest extends IntegrationTest {
     RequestSpecification spec = AuthControllerTest.signIn(member01.getUsername(), memberPassword);
     // when
     ExtractableResponse<Response> response =
-        RestAssured.given().log().all().spec(spec)
+        RestAssured.given().log().ifValidationFails().spec(spec)
         .contentType(ContentType.JSON)
         .when().get("/members/{id}", member01.getId())
-        .then().log().all()
+        .then().log().ifValidationFails()
         .extract();
 
     // then
@@ -96,10 +96,10 @@ class MemberIntegrationTest extends IntegrationTest {
     RequestSpecification spec = AuthControllerTest.signIn(member01.getUsername(), memberPassword);
     // when
     ExtractableResponse<Response> response =
-        RestAssured.given().log().all().spec(spec)
+        RestAssured.given().log().ifValidationFails().spec(spec)
         .contentType(ContentType.JSON)
         .when().delete("/members/{id}", member01.getId())
-        .then().log().all()
+        .then().log().ifValidationFails()
         .extract();
 
     // then
@@ -165,11 +165,11 @@ class MemberIntegrationTest extends IntegrationTest {
   private ExtractableResponse<Response> requestAddMemberInterest(InterestDto interest1, MemberDto loginMember) {
     RequestSpecification spec = AuthControllerTest.signIn(loginMember.getUsername(), memberPassword);
     ExtractableResponse<Response> response =
-        RestAssured.given().log().all().spec(spec)
+        RestAssured.given().log().ifValidationFails().spec(spec)
             .queryParam("interestId", interest1.getId())
             .contentType(ContentType.JSON)
             .when().post("/members/{id}/interests", member01.getId())
-            .then().log().all()
+            .then().log().ifValidationFails()
             .extract();
     return response;
   }
@@ -184,12 +184,12 @@ class MemberIntegrationTest extends IntegrationTest {
 
     // when
     ExtractableResponse<Response> response =
-        RestAssured.given().log().all()
+        RestAssured.given().log().ifValidationFails()
             .spec(spec)
             .queryParam("interestId", interest1.getId())
             .contentType(ContentType.JSON)
             .when().delete("/members/{id}/interests", member01.getId())
-            .then().log().all()
+            .then().log().ifValidationFails()
             .extract();
 
     // then
