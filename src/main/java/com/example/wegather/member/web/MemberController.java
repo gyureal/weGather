@@ -3,9 +3,8 @@ package com.example.wegather.member.web;
 import com.example.wegather.auth.MemberDetails;
 import com.example.wegather.member.dto.ChangeAlarmSettingsForm;
 import com.example.wegather.member.dto.ChangePasswordForm;
-import com.example.wegather.member.dto.EditProfileImageForm;
+import com.example.wegather.member.dto.EditProfileImageRequest;
 import com.example.wegather.member.dto.MemberProfileDto;
-import com.example.wegather.global.exception.customException.FileUploadException;
 import com.example.wegather.global.dto.AddressRequest;
 import com.example.wegather.interest.dto.InterestDto;
 import com.example.wegather.member.domain.MemberService;
@@ -29,7 +28,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/members")
@@ -88,8 +86,8 @@ public class MemberController {
 
   @PostMapping("/profile/image")
   public ResponseEntity<Void> editProfileImage(@AuthenticationPrincipal MemberDetails memberDetails, @RequestBody
-  EditProfileImageForm editProfileImageForm) {
-    memberService.updateProfileImage(memberDetails.getId(), editProfileImageForm);
+  EditProfileImageRequest editProfileImageRequest) {
+    memberService.updateProfileImage(memberDetails.getId(), editProfileImageRequest);
     return ResponseEntity.ok().build();
   }
 

@@ -1,13 +1,20 @@
 package com.example.wegather.member;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
 
 import com.example.wegather.IntegrationTest;
 import com.example.wegather.auth.AuthControllerTest;
+import com.example.wegather.global.upload.StoreFile;
+import com.example.wegather.global.upload.UploadFile;
 import com.example.wegather.interest.dto.CreateInterestRequest;
 import com.example.wegather.interest.dto.InterestDto;
 import com.example.wegather.member.domain.MemberRepository;
 import com.example.wegather.auth.dto.SignUpRequest;
+import com.example.wegather.member.domain.entity.Member;
+import com.example.wegather.member.dto.EditProfileImageRequest;
 import com.example.wegather.member.dto.MemberDto;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -20,6 +27,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 @DisplayName("회원 통합테스트")
 class MemberIntegrationTest extends IntegrationTest {
@@ -30,6 +38,8 @@ class MemberIntegrationTest extends IntegrationTest {
   MemberDto member01;
   MemberDto member02;
   MemberDto member03;
+  @MockBean
+  StoreFile storeFile;
 
 
   @BeforeEach
@@ -108,42 +118,34 @@ class MemberIntegrationTest extends IntegrationTest {
 
   @Test
   @DisplayName("회원 프로필 이미지를 수정합니다.")
-  void updateProfileImageSuccessfully() {
-//    String controlName = "profileImage";
-//    String fileName = "image.jpg";
-//    String mediaType = MediaType.TEXT_PLAIN_VALUE;
-//    byte[] bytes = "111,222".getBytes();
-//
-//    // given
-//    MultiPartSpecification file = new MultiPartSpecBuilder("111,222".getBytes())
-//        .mimeType(MediaType.TEXT_PLAIN_VALUE)
-//        .controlName("profileImage")
-//        .fileName("image.jpg")
-//        .build();
-//
-//    Long id = member01.getId();
-//
-//    // when
-//    ExtractableResponse<MockMvcResponse> response =
-//        given().log().all()
-//        .multiPart(controlName, fileName, bytes, mediaType)
-//        .when().put("/members/{id}/image", id)
-//        .then().log().all()
-//        .extract();
-//
-//    // then
-//    assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_OK);
-//    Member findMember = memberRepository.findById(id)
-//        .orElseThrow(() -> new RuntimeException("회원이 없습니다."));
-//    String storedImage = findMember.getProfileImage().getValue();
-//    System.out.println("storedImage : " + storedImage);
-//    assertThat(storedImage).isNotEqualTo(DEFAULT_IMAGE_NAME);
-//
-//    // 이미지 삭제
-//
-//    given().log().all()
-//        .when().delete("/images/{filename}", storedImage)
-//        .then().log().all();
+  void editProfileImageSuccessfully() {
+    // given
+    RequestSpecification spec = AuthControllerTest.signIn(member01.getUsername(), memberPassword);
+    EditProfileImageRequest request = EditProfileImageRequest.builder()
+        .image("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIA")
+        .originalImageName("test.jpg")
+        .build();
+
+    // 이미지 저장 mock
+    String storeFileName = "storeFileName";
+    given(storeFile.storeFile(any(), any())).willReturn(UploadFile.of("", storeFileName));
+
+    // when
+    ExtractableResponse<Response> response = RestAssured.given().log().ifValidationFails().spec(spec)
+        .contentType(ContentType.JSON)
+        .body(request)
+        .when().post("/members/profile/image")
+        .then().log().ifValidationFails()
+        .extract();
+
+    // then
+    assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_OK);
+    // 호출 검증
+    then(storeFile).should().storeFile(any(), any());
+
+    Member member = memberRepository.findById(member01.getId())
+        .orElseThrow(() -> new RuntimeException("test fail"));
+    assertThat(member.getProfileImage()).isEqualTo(storeFileName);
   }
 
   @Test
