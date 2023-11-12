@@ -12,14 +12,14 @@ public class ManagerAndMemberDto {
   private String name;
   private String introduction;
   private String image;
-  private boolean isManager;
+  private boolean manager;
 
   public static ManagerAndMemberDto from(SmallGroupMember groupMember) {
     return ManagerAndMemberDto.builder()
         .name(groupMember.getMember().getUsername())
         .introduction(groupMember.getMember().getIntroductionText())
         .image(groupMember.getMember().getProfileImage())
-        .isManager(groupMember.getSmallGroupMemberType() == SmallGroupMemberType.MANAGER)
+        .manager(groupMember.getSmallGroupMemberType() == SmallGroupMemberType.MANAGER)
         .build();
   }
 }

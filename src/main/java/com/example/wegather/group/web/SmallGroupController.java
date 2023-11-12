@@ -63,7 +63,7 @@ public class SmallGroupController {
 
   /**
    * path 로 소모임을 조회합니다.
-   * @param path
+   * @param path 소모임 경로
    * @return
    */
   @GetMapping("/{path}")
@@ -72,6 +72,11 @@ public class SmallGroupController {
     return ResponseEntity.ok(smallGroupService.getSmallGroupByPath(path, memberDetails));
   }
 
+  /**
+   * 소모임의 관리자와 회원 목록을 같이 조회합니다.
+   * @param path 소모임 경로
+   * @return
+   */
   @GetMapping("/{path}/managers-and-members")
   public ResponseEntity<List<ManagerAndMemberDto>> readGroupManagersAndMembers(@PathVariable String path) {
     return ResponseEntity.ok(smallGroupService.getSmallGroupManagersAndMembers(path));

@@ -6,6 +6,7 @@ import com.example.wegather.auth.AuthControllerTest;
 import com.example.wegather.group.domain.entity.SmallGroup;
 import com.example.wegather.group.domain.repotitory.SmallGroupRepository;
 import com.example.wegather.group.dto.CreateSmallGroupRequest;
+import com.example.wegather.group.dto.ManagerAndMemberDto;
 import com.example.wegather.group.dto.SmallGroupDto;
 import com.example.wegather.group.dto.SmallGroupSearchCondition;
 import com.example.wegather.group.dto.UpdateSmallGroupRequest;
@@ -16,9 +17,12 @@ import com.example.wegather.groupJoin.domain.vo.SmallGroupMemberType;
 import com.example.wegather.interest.InterestIntegrationTest;
 import com.example.wegather.interest.dto.InterestDto;
 import com.example.wegather.auth.dto.SignUpRequest;
+import com.example.wegather.member.domain.MemberRepository;
+import com.example.wegather.member.domain.entity.Member;
 import com.example.wegather.member.dto.MemberDto;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import io.restassured.path.json.JsonPath;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
@@ -38,6 +42,9 @@ class SmallGroupIntegrationTest extends IntegrationTest {
   private SmallGroupRepository smallGroupRepository;
   @Autowired
   private SmallGroupMemberRepository smallGroupMemberRepository;
+
+  @Autowired
+  private MemberRepository memberRepository;
 
   private static final String memberUsername = "member01";
   private static final String memberPassword = "1234";
@@ -123,6 +130,36 @@ class SmallGroupIntegrationTest extends IntegrationTest {
         .isEqualTo(group01);
     assertThat(result.isJoinable()).isFalse();
     assertThat(result.isManagerOrMember()).isTrue();
+  }
+
+  @Test
+  @DisplayName("소모임의 관리자와 회원 목록을 조회합니다.")
+  void readGroupManagersAndMembersSuccessfully() {
+    // given
+    RequestSpecification spec = AuthControllerTest.signIn(member01.getUsername(), memberPassword);
+    String path = group01.getPath();
+
+    // when
+    ExtractableResponse<Response> response = RestAssured.given().log().all().spec(spec)
+        .pathParam("path", path)
+        .when().get("/smallGroups/{path}/managers-and-members")
+        .then().log().ifValidationFails()
+        .extract();
+
+    // then
+    assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_OK);
+
+    JsonPath jsonPath = response.body().jsonPath();
+
+    List<ManagerAndMemberDto> managerAndMemberDtos = response.body().jsonPath().getList(".",ManagerAndMemberDto.class);
+    assertThat(managerAndMemberDtos).hasSize(1);
+    // 리더는 자동으로 관리자로 추가된다.
+    Member leader = memberRepository.findById(group01.getLeaderId())
+        .orElseThrow(() -> new RuntimeException("test failed"));
+    assertThat(managerAndMemberDtos.get(0).getName()).isEqualTo(leader.getUsername());
+    assertThat(managerAndMemberDtos.get(0).getIntroduction()).isEqualTo(leader.getIntroductionText());
+    assertThat(managerAndMemberDtos.get(0).getImage()).isEqualTo(leader.getProfileImage());
+    assertThat(managerAndMemberDtos.get(0).isManager()).isTrue();
   }
 
   @Test
