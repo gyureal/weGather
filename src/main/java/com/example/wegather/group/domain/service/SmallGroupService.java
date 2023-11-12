@@ -184,13 +184,9 @@ public class SmallGroupService {
     }
 
     // 이미지 업로드
-    String encodedImage = parseOnlyImage(request.getImage());
-    byte[] imageBytes = Base64.decodeBase64(encodedImage);
+    byte[] imageBytes = storeFile.decodeBase64Image(request.getImage());
     UploadFile uploadFile = storeFile.storeFile(imageBytes, request.getOriginalImageName());
 
     smallGroup.updateBanner(uploadFile.getStoreFileName());
-  }
-  private String parseOnlyImage(String profileImage) {
-    return profileImage.split(",")[1];
   }
 }

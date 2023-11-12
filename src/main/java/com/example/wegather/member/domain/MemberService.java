@@ -9,7 +9,7 @@ import com.example.wegather.auth.MemberDetails;
 import com.example.wegather.interest.domain.InterestService;
 import com.example.wegather.member.dto.ChangeAlarmSettingsForm;
 import com.example.wegather.member.dto.ChangePasswordForm;
-import com.example.wegather.member.dto.EditProfileImageForm;
+import com.example.wegather.member.dto.EditProfileImageRequest;
 import com.example.wegather.member.dto.MemberProfileDto;
 import com.example.wegather.global.exception.customException.AuthenticationException;
 import com.example.wegather.global.dto.AddressRequest;
@@ -23,7 +23,6 @@ import com.example.wegather.member.dto.EditProfileForm;
 import com.example.wegather.member.dto.MemberDto;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.codec.binary.Base64;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -58,18 +57,13 @@ public class MemberService {
   }
 
   @Transactional
-  public void updateProfileImage(Long memberId, EditProfileImageForm form) {
+  public void updateProfileImage(Long memberId, EditProfileImageRequest request) {
     Member member = getMemberById(memberId);
 
-    String encodedImage = parseOnlyImage(form.getImage());
-    byte[] imageBytes = Base64.decodeBase64(encodedImage);
-    UploadFile uploadFile = storeFile.storeFile(imageBytes, form.getOriginalImageName());
+    byte[] imageBytes = storeFile.decodeBase64Image(request.getImage());
+    UploadFile uploadFile = storeFile.storeFile(imageBytes, request.getOriginalImageName());
 
     member.changeProfileImage(uploadFile.getStoreFileName());
-  }
-
-  private String parseOnlyImage(String profileImage) {
-    return profileImage.split(",")[1];
   }
 
   @Transactional

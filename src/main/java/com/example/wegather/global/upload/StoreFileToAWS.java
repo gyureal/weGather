@@ -37,6 +37,11 @@ public class StoreFileToAWS implements StoreFile {
     return new InputStreamResource(inputStream);
   }
 
+  /**
+   * MultipartFile 이미지를 입력받아 AWS S3 에 업로드 합니다.
+   * @param multipartFile MultiPartFile 형태의 이미지
+   * @return
+   */
   @Override
   public UploadFile storeFile(MultipartFile multipartFile) {
     String storeFileName = createStoreFileName(multipartFile.getOriginalFilename());
@@ -52,6 +57,13 @@ public class StoreFileToAWS implements StoreFile {
     return UploadFile.of(multipartFile.getOriginalFilename(), storeFileName);
   }
 
+  /**
+   * 이미지 형태의 Byte 배열을 입력받아 AWS S3 에 업로드 합니다.
+   * originalFileName 은 "확장자"를 포합해야합니다.
+   * @param imageBytes 이미지의 byte 배열
+   * @param originalName 이미지의 원래 이름
+   * @return
+   */
   @Override
   public UploadFile storeFile(byte[] imageBytes, String originalName) {
     String storeFileName = createStoreFileName(originalName);
