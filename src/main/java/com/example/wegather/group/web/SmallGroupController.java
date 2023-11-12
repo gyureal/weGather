@@ -88,7 +88,7 @@ public class SmallGroupController {
    * @return
    */
   @PostMapping("/{path}/banner")
-  public ResponseEntity<Void> updateSmagllGroupBanner(@AuthenticationPrincipal MemberDetails memberDetails,
+  public ResponseEntity<Void> updateSmallGroupBanner(@AuthenticationPrincipal MemberDetails memberDetails,
       @PathVariable String path, @RequestBody @Valid UpdateBannerRequest request) {
     smallGroupService.updateBanner(memberDetails, path ,request);
     return ResponseEntity.ok().build();

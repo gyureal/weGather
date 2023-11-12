@@ -1,14 +1,18 @@
 package com.example.wegather.group;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.BDDMockito.*;
 
 import com.example.wegather.auth.AuthControllerTest;
+import com.example.wegather.global.upload.StoreFile;
+import com.example.wegather.global.upload.UploadFile;
 import com.example.wegather.group.domain.entity.SmallGroup;
 import com.example.wegather.group.domain.repotitory.SmallGroupRepository;
 import com.example.wegather.group.dto.CreateSmallGroupRequest;
 import com.example.wegather.group.dto.ManagerAndMemberDto;
 import com.example.wegather.group.dto.SmallGroupDto;
 import com.example.wegather.group.dto.SmallGroupSearchCondition;
+import com.example.wegather.group.dto.UpdateBannerRequest;
 import com.example.wegather.group.dto.UpdateSmallGroupRequest;
 import com.example.wegather.IntegrationTest;
 import com.example.wegather.groupJoin.domain.entity.SmallGroupMember;
@@ -33,7 +37,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.BDDMockito;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 @DisplayName("소모임 통합 테스트")
 class SmallGroupIntegrationTest extends IntegrationTest {
@@ -42,9 +49,10 @@ class SmallGroupIntegrationTest extends IntegrationTest {
   private SmallGroupRepository smallGroupRepository;
   @Autowired
   private SmallGroupMemberRepository smallGroupMemberRepository;
-
   @Autowired
   private MemberRepository memberRepository;
+  @MockBean
+  StoreFile storeFile;
 
   private static final String memberUsername = "member01";
   private static final String memberPassword = "1234";
@@ -160,6 +168,39 @@ class SmallGroupIntegrationTest extends IntegrationTest {
     assertThat(managerAndMemberDtos.get(0).getIntroduction()).isEqualTo(leader.getIntroductionText());
     assertThat(managerAndMemberDtos.get(0).getImage()).isEqualTo(leader.getProfileImage());
     assertThat(managerAndMemberDtos.get(0).isManager()).isTrue();
+  }
+
+  @Test
+  @DisplayName("소모임의 배너 이미지를 수정합니다.")
+  void updateSmallGroupBannerSuccessfully() {
+    // given
+    RequestSpecification spec = AuthControllerTest.signIn(member01.getUsername(), memberPassword);
+    String path = group01.getPath();
+    UpdateBannerRequest request = UpdateBannerRequest.builder()
+        .image("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIA")
+        .originalImageName("test.jpg")
+        .build();
+    // 이미지 저장 mock
+    String storeFileName = "storeFileName";
+    given(storeFile.storeFile(any(), any())).willReturn(UploadFile.of("", storeFileName));
+
+    // when
+    ExtractableResponse<Response> response = RestAssured.given().log().all().spec(spec)
+        .pathParam("path", path)
+        .contentType(ContentType.JSON)
+        .body(request)
+        .when().post("/smallGroups/{path}/banner")
+        .then().log().ifValidationFails()
+        .extract();
+
+    // then
+    assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_OK);
+    // 호출 검증
+    then(storeFile).should().storeFile(any(), any());
+
+    SmallGroup smallGroup = smallGroupRepository.findByPath(path)
+        .orElseThrow(() -> new RuntimeException("test fail"));
+    assertThat(smallGroup.getBanner()).isEqualTo(storeFileName);
   }
 
   @Test
