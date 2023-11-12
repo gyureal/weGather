@@ -28,6 +28,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 @Service
 @RequiredArgsConstructor
@@ -60,10 +61,17 @@ public class MemberService {
   public void updateProfileImage(Long memberId, EditProfileImageRequest request) {
     Member member = getMemberById(memberId);
 
+    // 이미지 업로드
     byte[] imageBytes = storeFile.decodeBase64Image(request.getImage());
     UploadFile uploadFile = storeFile.storeFile(imageBytes, request.getOriginalImageName());
 
+    String originalImage = member.getProfileImage();
     member.changeProfileImage(uploadFile.getStoreFileName());
+
+    // 기존 이미지 삭제
+    if(StringUtils.hasText(originalImage)) {
+      storeFile.deleteFile(originalImage);
+    }
   }
 
   @Transactional

@@ -31,6 +31,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 @Service
 @RequiredArgsConstructor
@@ -187,6 +188,12 @@ public class SmallGroupService {
     byte[] imageBytes = storeFile.decodeBase64Image(request.getImage());
     UploadFile uploadFile = storeFile.storeFile(imageBytes, request.getOriginalImageName());
 
+    String originalImage = smallGroup.getBanner();
     smallGroup.updateBanner(uploadFile.getStoreFileName());
+
+    // 기존 이미지 삭제
+    if (StringUtils.hasText(originalImage)) {
+      storeFile.deleteFile(originalImage);
+    }
   }
 }
