@@ -318,7 +318,7 @@ class SmallGroupIntegrationTest extends IntegrationTest {
         .contentType(ContentType.JSON)
         .when().put("/smallGroups/{id}")
         .then().log().ifValidationFails()
-        .statusCode(HttpStatus.SC_UNAUTHORIZED);
+        .statusCode(HttpStatus.SC_FORBIDDEN);
   }
 
   @Test
@@ -351,7 +351,7 @@ class SmallGroupIntegrationTest extends IntegrationTest {
         .contentType(ContentType.JSON)
         .when().delete("/smallGroups/{id}")
         .then().log().ifValidationFails()
-        .statusCode(HttpStatus.SC_UNAUTHORIZED);
+        .statusCode(HttpStatus.SC_FORBIDDEN);
   }
 
   @Test
@@ -361,8 +361,8 @@ class SmallGroupIntegrationTest extends IntegrationTest {
     InterestDto interestDto = InterestIntegrationTest.insertInterest("축구", member01.getUsername());
 
     // when
-    ExtractableResponse<Response> response = requestAddInterest(group01.getId(),
-        interestDto.getId(), member01);
+    ExtractableResponse<Response> response = requestAddInterest(group01.getPath(),
+        interestDto.getName(), member01);
 
     // then
     assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_OK);
@@ -375,11 +375,11 @@ class SmallGroupIntegrationTest extends IntegrationTest {
     InterestDto interestDto = InterestIntegrationTest.insertInterest("축구", member01.getUsername());
 
     // when
-    ExtractableResponse<Response> response = requestAddInterest(group01.getId(),
-        interestDto.getId(), member02);
+    ExtractableResponse<Response> response = requestAddInterest(group01.getPath(),
+        interestDto.getName(), member02);
 
     // then
-    assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_UNAUTHORIZED);
+    assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_FORBIDDEN);
   }
 
   @Test
@@ -387,11 +387,11 @@ class SmallGroupIntegrationTest extends IntegrationTest {
   void removeInterestToSmallGroup() {
     // given
     InterestDto interestDto = InterestIntegrationTest.insertInterest("축구", member01.getUsername());
-    requestAddInterest(group01.getId(), interestDto.getId(), member01);
+    requestAddInterest(group01.getPath(), interestDto.getName(), member01);
 
     // when
-    ExtractableResponse<Response> response = requestRemoveInterest(group01.getId(),
-        interestDto.getId(), member01);
+    ExtractableResponse<Response> response = requestRemoveInterest(group01.getPath(),
+        interestDto.getName(), member01);
 
     // then
     assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_OK);
@@ -402,14 +402,14 @@ class SmallGroupIntegrationTest extends IntegrationTest {
   void removeInterestToSmallGroup_fail_because_not_leader() {
     // given
     InterestDto interestDto = InterestIntegrationTest.insertInterest("축구", member01.getUsername());
-    requestAddInterest(group01.getId(), interestDto.getId(), member01);
+    requestAddInterest(group01.getPath(), interestDto.getName(), member01);
 
     // when
-    ExtractableResponse<Response> response = requestRemoveInterest(group01.getId(),
-        interestDto.getId(), member02);
+    ExtractableResponse<Response> response = requestRemoveInterest(group01.getPath(),
+        interestDto.getName(), member02);
 
     // then
-    assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_UNAUTHORIZED);
+    assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_FORBIDDEN);
   }
 
   private ExtractableResponse<Response> requestCreateGroup(CreateSmallGroupRequest request, String requesterId) {
@@ -444,28 +444,28 @@ class SmallGroupIntegrationTest extends IntegrationTest {
     return AuthControllerTest.signUp(request).as(MemberDto.class);
   }
 
-  private ExtractableResponse<Response> requestAddInterest(Long smallGroupId, Long interestId, MemberDto loginMember) {
+  private ExtractableResponse<Response> requestAddInterest(String smallGroupPath, String interestName, MemberDto loginMember) {
     RequestSpecification spec = AuthControllerTest.signIn(loginMember.getUsername(), memberPassword);
 
     return RestAssured.given().log().ifValidationFails()
         .spec(spec)
-        .pathParam("id", smallGroupId)
-        .queryParam("interestId", interestId)
+        .pathParam("path", smallGroupPath)
+        .queryParam("interestName", interestName)
         .contentType(ContentType.JSON)
-        .when().post("/smallGroups/{id}/interest")
+        .when().post("/smallGroups/{path}/interest")
         .then().log().ifValidationFails()
         .extract();
   }
 
-  private ExtractableResponse<Response> requestRemoveInterest(Long smallGroupId, Long interestId, MemberDto loginMember) {
+  private ExtractableResponse<Response> requestRemoveInterest(String smallGroupPath, String interestName, MemberDto loginMember) {
     RequestSpecification spec = AuthControllerTest.signIn(loginMember.getUsername(), memberPassword);
 
     return RestAssured.given().log().ifValidationFails()
         .spec(spec)
-        .pathParam("id", smallGroupId)
-        .queryParam("interestId", interestId)
+        .pathParam("path", smallGroupPath)
+        .queryParam("interestName", interestName)
         .contentType(ContentType.JSON)
-        .when().delete("/smallGroups/{id}/interest")
+        .when().delete("/smallGroups/{path}/interest")
         .then().log().ifValidationFails()
         .extract();
   }

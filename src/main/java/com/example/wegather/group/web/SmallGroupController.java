@@ -136,29 +136,29 @@ public class SmallGroupController {
 
   /**
    * 소모임에 관심사를 추가합니다.
-   * @param id
-   * @param interestId
+   * @param path
+   * @param interestName
    * @return
    */
-  @PostMapping("/{id}/interest")
+  @PostMapping("/{path}/interest")
   public ResponseEntity<Void> addInterest(
       @AuthenticationPrincipal MemberDetails principal,
-      @PathVariable Long id, @RequestParam Long interestId) {
-    smallGroupService.addSmallGroupInterest(principal, id, interestId);
+      @PathVariable String path, @RequestParam String interestName) {
+    smallGroupService.addSmallGroupInterest(principal, path, interestName);
     return ResponseEntity.ok().build();
   }
 
   /**
    * 소모임에 관심사를 삭제합니다.
-   * @param id
-   * @param interestId
+   * @param path
+   * @param interestName
    * @return
    */
-  @DeleteMapping("/{id}/interest")
+  @DeleteMapping("/{path}/interest")
   public ResponseEntity<List<InterestDto>> removeInterest(
       @AuthenticationPrincipal MemberDetails principal,
-      @PathVariable Long id, @RequestParam Long interestId) {
-    smallGroupService.removeSmallGroupInterest(principal, id, interestId);
+      @PathVariable String path, @RequestParam String interestName) {
+    smallGroupService.removeSmallGroupInterest(principal, path, interestName);
     return ResponseEntity.ok().build();
   }
 }

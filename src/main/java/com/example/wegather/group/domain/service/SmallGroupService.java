@@ -20,6 +20,7 @@ import com.example.wegather.groupJoin.domain.entity.SmallGroupMember;
 import com.example.wegather.groupJoin.domain.repository.SmallGroupMemberRepository;
 import com.example.wegather.interest.domain.Interest;
 import com.example.wegather.interest.domain.InterestRepository;
+import com.example.wegather.interest.domain.InterestService;
 import com.example.wegather.member.domain.entity.Member;
 import com.example.wegather.member.domain.MemberRepository;
 import java.util.List;
@@ -40,6 +41,7 @@ public class SmallGroupService {
   private final SmallGroupRepository smallGroupRepository;
   private final MemberRepository memberRepository;
   private final InterestRepository interestRepository;
+  private final InterestService interestService;
   private final SmallGroupMemberRepository smallGroupMemberRepository;
   private final StoreFile storeFile;
 
@@ -104,7 +106,7 @@ public class SmallGroupService {
   public void editSmallGroup(MemberDetails principal, Long id, UpdateSmallGroupRequest request) {
     SmallGroup smallGroup = getSmallGroup(id);
 
-    validateUpdatable(principal, smallGroup, DO_NOT_HAVE_AUTHORITY_TO_UPDATE_GROUP.getDescription());
+    validateUpdatable(principal, smallGroup);
 
     smallGroup.updateSmallGroupInfo(
         request.getGroupName(),
@@ -114,10 +116,10 @@ public class SmallGroupService {
         request.getMaxMemberCount());
   }
 
-  private void validateUpdatable(MemberDetails principal, SmallGroup smallGroup, String doNotHaveAuthorityToUpdateGroup) {
+  private void validateUpdatable(MemberDetails principal, SmallGroup smallGroup) {
 
-    if (!smallGroup.isLeader(principal.getMemberId()) && !principal.isAdmin()) {
-      throw new AuthenticationException(doNotHaveAuthorityToUpdateGroup);
+    if (!smallGroup.isLeader(principal.getMemberId())) {
+      throw new NoPermissionException(PERMISSION_DENIED.getDescription());
     }
   }
 
@@ -125,37 +127,29 @@ public class SmallGroupService {
   public void deleteSmallGroup(MemberDetails principal, Long id) {
     SmallGroup smallGroup = getSmallGroup(id);
 
-    validateUpdatable(principal, smallGroup, DO_NOT_HAVE_AUTHORITY_TO_DELETE_GROUP.getDescription());
+    validateUpdatable(principal, smallGroup);
 
     smallGroupRepository.deleteById(id);
   }
 
   @Transactional
-  public void addSmallGroupInterest(MemberDetails principal, Long smallGroupId, Long interestId) {
-    SmallGroup smallGroup = findWithInterestById(smallGroupId);
-    validateUpdatable(principal, smallGroup, DO_NOT_HAVE_AUTHORITY_TO_UPDATE_GROUP.getDescription());
-    Interest interest = findInterestById(interestId);
+  public void addSmallGroupInterest(MemberDetails principal, String smallGroupPath, String interestName) {
+    SmallGroup smallGroup = findSmallGroupByPath(smallGroupPath);
+    validateUpdatable(principal, smallGroup);
+
+    Interest interest = interestService.findOrAddInterestByName(interestName);
 
     smallGroup.addInterest(interest);
   }
 
   @Transactional
-  public void removeSmallGroupInterest(MemberDetails principal, Long smallGroupId, Long interestId) {
-    SmallGroup smallGroup = findWithInterestById(smallGroupId);
-    validateUpdatable(principal, smallGroup, DO_NOT_HAVE_AUTHORITY_TO_UPDATE_GROUP.getDescription());
-    Interest interest = findInterestById(interestId);
+  public void removeSmallGroupInterest(MemberDetails principal, String smallGroupPath, String interestName) {
+    SmallGroup smallGroup = findSmallGroupByPath(smallGroupPath);
+    validateUpdatable(principal, smallGroup);
+    Interest interest = interestRepository.findByName(interestName)
+        .orElseThrow(() -> new IllegalArgumentException(INTEREST_NOT_FOUND.getDescription()));
 
     smallGroup.removeInterest(interest);
-  }
-
-  private SmallGroup findWithInterestById(Long id) {
-    return smallGroupRepository.findWithInterestById(id)
-        .orElseThrow(() -> new IllegalArgumentException(SMALL_GROUP_NOT_FOUND.getDescription()));
-  }
-
-  private Interest findInterestById(Long interestId) {
-    return interestRepository.findById(interestId)
-        .orElseThrow(() -> new IllegalArgumentException(INTEREST_NOT_FOUND.getDescription()));
   }
 
   public List<ManagerAndMemberDto> getSmallGroupManagersAndMembers(String path) {
