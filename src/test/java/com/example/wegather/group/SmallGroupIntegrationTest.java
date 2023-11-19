@@ -412,6 +412,33 @@ class SmallGroupIntegrationTest extends IntegrationTest {
     assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_FORBIDDEN);
   }
 
+  @Test
+  @DisplayName("소모임의 관심사를 조회합니다.")
+  void getSmallGroupInterestsByPath_success() {
+    // given
+    InterestDto interest1 = InterestIntegrationTest.insertInterest("축구", member01.getUsername());
+    InterestDto interest2 = InterestIntegrationTest.insertInterest("농구", member01.getUsername());
+    requestAddInterest(group01.getPath(), interest1.getName(), member01);
+    requestAddInterest(group01.getPath(), interest2.getName(), member01);
+    RequestSpecification spec = AuthControllerTest.signIn(member01.getUsername(), memberPassword);
+
+    // when
+    ExtractableResponse<Response> response = RestAssured.given().log().ifValidationFails()
+        .spec(spec)
+        .pathParam("path", group01.getPath())
+        .when().get("/smallGroups/{path}/interests")
+        .then().log().ifValidationFails()
+        .extract();
+
+    // then
+    assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_OK);
+
+    List<String> interests = response.body().jsonPath().getList(".",String.class);
+    assertThat(interests).hasSize(2);
+    assertThat(interests.get(0)).isEqualTo("축구");
+    assertThat(interests.get(1)).isEqualTo("농구");
+  }
+
   private ExtractableResponse<Response> requestCreateGroup(CreateSmallGroupRequest request, String requesterId) {
     RequestSpecification spec = AuthControllerTest.signIn(requesterId, memberPassword);
 

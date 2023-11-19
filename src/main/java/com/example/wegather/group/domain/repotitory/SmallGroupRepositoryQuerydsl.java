@@ -9,5 +9,5 @@ import org.springframework.data.domain.Pageable;
 public interface SmallGroupRepositoryQuerydsl {
   Page<SmallGroup> search(SmallGroupSearchCondition condition, Pageable pageable);
 
-  Optional<SmallGroup> findWithInterestById(Long smallGroupId);
+  Optional<SmallGroup> findWithInterestByPath(String smallGroupPath);
 }

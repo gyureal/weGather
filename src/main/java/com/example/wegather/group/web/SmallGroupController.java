@@ -148,6 +148,11 @@ public class SmallGroupController {
     return ResponseEntity.ok().build();
   }
 
+  @GetMapping("/{path}/interests")
+  public ResponseEntity<List<String>> getInterests(@PathVariable String path) {
+    return ResponseEntity.ok(smallGroupService.getInterests(path));
+  }
+
   /**
    * 소모임에 관심사를 삭제합니다.
    * @param path

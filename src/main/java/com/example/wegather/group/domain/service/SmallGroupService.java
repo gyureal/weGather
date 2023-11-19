@@ -190,4 +190,16 @@ public class SmallGroupService {
       storeFile.deleteFile(originalImage);
     }
   }
+
+  public List<String> getInterests(String path) {
+    SmallGroup smallGroupByInterests = findWithInterestByPath(path);
+    return smallGroupByInterests.getSmallGroupInterests().stream()
+        .map(smallGroupInterest -> smallGroupInterest.getInterest().getName())
+        .collect(Collectors.toList());
+  }
+
+  private SmallGroup findWithInterestByPath(String path) {
+    return smallGroupRepository.findWithInterestByPath(path)
+        .orElseThrow(() -> new IllegalArgumentException(SMALL_GROUP_NOT_FOUND.getDescription()));
+  }
 }

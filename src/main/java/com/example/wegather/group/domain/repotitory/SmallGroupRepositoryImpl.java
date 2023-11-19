@@ -2,9 +2,9 @@ package com.example.wegather.group.domain.repotitory;
 
 import static com.example.wegather.group.domain.entity.QSmallGroup.smallGroup;
 import static com.example.wegather.group.domain.entity.QSmallGroupInterest.*;
+import static com.example.wegather.interest.domain.QInterest.*;
 import static com.example.wegather.member.domain.entity.QMember.member;
 
-import com.example.wegather.group.domain.entity.QSmallGroupInterest;
 import com.example.wegather.group.domain.entity.SmallGroup;
 import com.example.wegather.group.dto.SmallGroupSearchCondition;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -62,12 +62,14 @@ public class SmallGroupRepositoryImpl implements SmallGroupRepositoryQuerydsl {
   }
 
   @Override
-  public Optional<SmallGroup> findWithInterestById(Long smallGroupId) {
+  public Optional<SmallGroup> findWithInterestByPath(String smallGroupPath) {
+
     return Optional.ofNullable(queryFactory
         .selectFrom(smallGroup).distinct()
           .leftJoin(smallGroup.leader, member).fetchJoin()
           .leftJoin(smallGroup.smallGroupInterests, smallGroupInterest).fetchJoin()
-        .where(smallGroup.id.eq(smallGroupId))
+          .leftJoin(smallGroupInterest.interest, interest).fetchJoin()
+        .where(smallGroup.path.eq(smallGroupPath))
         .fetchOne());
   }
 }
