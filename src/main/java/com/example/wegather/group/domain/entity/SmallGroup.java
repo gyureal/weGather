@@ -108,12 +108,22 @@ public class SmallGroup extends BaseTimeEntity {
     return maxMemberCount <= nowCount;
   }
 
-  public boolean isMember(Long memberId) {
+  /**
+   * 회원 ID가 해당 소모임의 회원에 포합되어 있는지 반환합니다.
+   * @param memberId 회원 ID
+   * @return
+   */
+  public boolean isMemberOrManager(Long memberId) {
     return containsInMember(memberId);
   }
 
-  public boolean isJoinable(Long memberId, boolean isManagerOrMember) {
-    return isPublished() && isRecruiting() && !isManagerOrMember;
+  /**
+   * 소모임이 가입 가능한지 반환합니다.
+   * @param isMember 해당 소모임의 회원인지 (isMember() 호출 결과)
+   * @return
+   */
+  public boolean isJoinable(boolean isMember) {
+    return isPublished() && isRecruiting() && !isMember;
   }
 
   public void updateBanner(String banner) {

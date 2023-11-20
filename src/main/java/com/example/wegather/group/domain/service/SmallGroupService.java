@@ -3,7 +3,6 @@ package com.example.wegather.group.domain.service;
 import static com.example.wegather.global.exception.ErrorCode.*;
 
 import com.example.wegather.auth.MemberDetails;
-import com.example.wegather.global.exception.customException.AuthenticationException;
 import com.example.wegather.global.exception.customException.NoPermissionException;
 import com.example.wegather.global.upload.StoreFile;
 import com.example.wegather.global.upload.UploadFile;
@@ -27,7 +26,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.codec.binary.Base64;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -85,9 +83,9 @@ public class SmallGroupService {
 
     SmallGroupDto smallGroupDto = SmallGroupDto.from(smallGroup);
 
-    boolean isMember = smallGroup.isMember(memberDetails.getMemberId());
-    boolean isJoinalble = smallGroup.isJoinable(memberDetails.getMemberId(), isMember);
-    smallGroupDto.changeMemberOrManager(isMember);
+    boolean isMemberOrManager = smallGroup.isMemberOrManager(memberDetails.getMemberId());
+    boolean isJoinalble = smallGroup.isJoinable(isMemberOrManager);
+    smallGroupDto.changeMemberOrManager(isMemberOrManager);
     smallGroupDto.changeJoinable(isJoinalble);
 
     return smallGroupDto;
@@ -116,6 +114,12 @@ public class SmallGroupService {
         request.getMaxMemberCount());
   }
 
+  /**
+   * 소모임 수정에 대한 유효성 체크를 합니다.
+   * - 관리자만 해당 소모임의 정보를 수정할 수 있습니다.
+   * @param principal 로그인한 회원의 정보
+   * @param smallGroup 소모임
+   */
   private void validateUpdatable(MemberDetails principal, SmallGroup smallGroup) {
 
     if (!smallGroup.isLeader(principal.getMemberId())) {
