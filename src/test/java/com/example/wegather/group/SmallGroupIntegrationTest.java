@@ -297,8 +297,8 @@ class SmallGroupIntegrationTest extends IntegrationTest {
     assertThat(updated.getMaxMemberCount()).isEqualTo(request.getMaxMemberCount());
   }
   @Test
-  @DisplayName("소모임장이 아니어서 소모임 수정에 실패합니다.")
-  void updateSmallGroupFailBecauseOfNotLeader() {
+  @DisplayName("소모임 관리자가 아니어서 소모임 수정에 실패합니다.")
+  void updateSmallGroupFailBecauseOfNotManager() {
     RequestSpecification spec = AuthControllerTest.signIn(member02.getUsername(), memberPassword);
 
     UpdateSmallGroupRequest request = UpdateSmallGroupRequest.builder()
@@ -336,8 +336,8 @@ class SmallGroupIntegrationTest extends IntegrationTest {
   }
 
   @Test
-  @DisplayName("소모임장이 아니어서 소모임 삭제에 실패합니다.")
-  void deleteSmallGroupFailBecauseOfNotLeader() {
+  @DisplayName("소모임 관리자가 아니어서 소모임 삭제에 실패합니다.")
+  void deleteSmallGroupFailBecauseOfNotManager() {
     RequestSpecification spec = AuthControllerTest.signIn(member02.getUsername(), memberPassword);
 
     Long id = group01.getId();
@@ -367,8 +367,8 @@ class SmallGroupIntegrationTest extends IntegrationTest {
   }
 
   @Test
-  @DisplayName("소모임장이 아니라서 소모임 관심사 추가에 실패합니다.")
-  void addInterestToSmallGroup_fail_because_not_leader() {
+  @DisplayName("소모임 관리자가 아니라서 소모임 관심사 추가에 실패합니다.")
+  void addInterestToSmallGroup_fail_because_not_manager() {
     // given
     InterestDto interestDto = InterestIntegrationTest.insertInterest("축구", member01.getUsername());
 
@@ -396,8 +396,8 @@ class SmallGroupIntegrationTest extends IntegrationTest {
   }
 
   @Test
-  @DisplayName("소모임 장이 아니라서 소모임에 관심사 삭제에 실패합니다.")
-  void removeInterestToSmallGroup_fail_because_not_leader() {
+  @DisplayName("소모임 관리자가 아니라서 소모임에 관심사 삭제에 실패합니다.")
+  void removeInterestToSmallGroup_fail_because_not_manager() {
     // given
     InterestDto interestDto = InterestIntegrationTest.insertInterest("축구", member01.getUsername());
     requestAddInterest(group01.getPath(), interestDto.getName(), member01);

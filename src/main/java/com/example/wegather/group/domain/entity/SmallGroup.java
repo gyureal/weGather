@@ -3,6 +3,7 @@ package com.example.wegather.group.domain.entity;
 import com.example.wegather.global.BaseTimeEntity;
 import com.example.wegather.global.vo.Address;
 import com.example.wegather.groupJoin.domain.entity.SmallGroupMember;
+import com.example.wegather.groupJoin.domain.vo.SmallGroupMemberType;
 import com.example.wegather.interest.domain.Interest;
 import com.example.wegather.member.domain.entity.Member;
 import java.time.LocalDateTime;
@@ -115,6 +116,18 @@ public class SmallGroup extends BaseTimeEntity {
    */
   public boolean isMemberOrManager(Long memberId) {
     return containsInMember(memberId);
+  }
+
+  /**
+   * 회원 ID가 해당 소모임의 관리자인지 판단합니다.
+   * @param memberId 회원 ID
+   * @return
+   */
+  public boolean isManager(Long memberId) {
+    return members.stream()
+        .filter(member -> member.getSmallGroupMemberType().equals(SmallGroupMemberType.MANAGER))
+        .map(SmallGroupMember::getMemberId)
+        .anyMatch(member -> member.equals(memberId));
   }
 
   /**

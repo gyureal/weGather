@@ -122,7 +122,7 @@ public class SmallGroupService {
    */
   private void validateUpdatable(MemberDetails principal, SmallGroup smallGroup) {
 
-    if (!smallGroup.isLeader(principal.getMemberId())) {
+    if (!smallGroup.isManager(principal.getMemberId())) {
       throw new NoPermissionException(PERMISSION_DENIED.getDescription());
     }
   }
