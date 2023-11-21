@@ -13,7 +13,7 @@ import com.example.wegather.group.dto.ManagerAndMemberDto;
 import com.example.wegather.group.dto.SmallGroupDto;
 import com.example.wegather.group.dto.SmallGroupSearchCondition;
 import com.example.wegather.group.dto.UpdateBannerRequest;
-import com.example.wegather.group.dto.UpdateSmallGroupRequest;
+import com.example.wegather.group.dto.UpdateGroupDescriptionRequest;
 import com.example.wegather.IntegrationTest;
 import com.example.wegather.groupJoin.domain.entity.SmallGroupMember;
 import com.example.wegather.groupJoin.domain.repository.SmallGroupMemberRepository;
@@ -267,54 +267,48 @@ class SmallGroupIntegrationTest extends IntegrationTest {
   }
 
   @Test
-  @DisplayName("소모임 정보를 수정합니다.")
+  @DisplayName("소모임 소개 정보를 수정합니다.")
   void updateSmallGroupSuccessfully() {
     RequestSpecification spec = AuthControllerTest.signIn(member01.getUsername(), memberPassword);
 
-    UpdateSmallGroupRequest request = UpdateSmallGroupRequest.builder()
-        .groupName("수정 모임")
-        .shortDescription("수정하였습니다.")
-        .streetAddress("수정광역시 수정로")
-        .maxMemberCount(123L)
+    UpdateGroupDescriptionRequest request = UpdateGroupDescriptionRequest.builder()
+        .shortDescription("수정하였습니다")
+        .fullDescription("수정하였습니다")
         .build();
 
     ExtractableResponse<Response> response = RestAssured
         .given().log().ifValidationFails()
         .spec(spec)
-        .pathParam("id", group01.getId())
+        .pathParam("path", group01.getPath())
         .body(request)
         .contentType(ContentType.JSON)
-        .when().put("/smallGroups/{id}")
+        .when().put("/smallGroups/{path}")
         .then().log().ifValidationFails()
         .extract();
 
     assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_OK);
     SmallGroup updated = smallGroupRepository.findById(group01.getId())
         .orElseThrow(() -> new AssertionFailure("group ID를 찾을 수 없습니다."));
-    assertThat(updated.getName()).isEqualTo(request.getGroupName());
     assertThat(updated.getShortDescription()).isEqualTo(request.getShortDescription());
-    assertThat(updated.getAddress().getStreetAddress()).isEqualTo(request.getStreetAddress());
-    assertThat(updated.getMaxMemberCount()).isEqualTo(request.getMaxMemberCount());
+    assertThat(updated.getFullDescription()).isEqualTo(request.getFullDescription());
   }
   @Test
-  @DisplayName("소모임 관리자가 아니어서 소모임 수정에 실패합니다.")
+  @DisplayName("소모임 관리자가 아니어서 소모임 소개 수정에 실패합니다.")
   void updateSmallGroupFailBecauseOfNotManager() {
     RequestSpecification spec = AuthControllerTest.signIn(member02.getUsername(), memberPassword);
 
-    UpdateSmallGroupRequest request = UpdateSmallGroupRequest.builder()
-        .groupName("수정 모임")
-        .shortDescription("수정하였습니다.")
-        .streetAddress("수정광역시 수정로")
-        .maxMemberCount(123L)
+    UpdateGroupDescriptionRequest request = UpdateGroupDescriptionRequest.builder()
+        .shortDescription("수정하였습니다")
+        .fullDescription("수정하였습니다")
         .build();
 
     RestAssured
         .given().log().ifValidationFails()
         .spec(spec)
-        .pathParam("id", group01.getId())
+        .pathParam("path", group01.getPath())
         .body(request)
         .contentType(ContentType.JSON)
-        .when().put("/smallGroups/{id}")
+        .when().put("/smallGroups/{path}")
         .then().log().ifValidationFails()
         .statusCode(HttpStatus.SC_FORBIDDEN);
   }

@@ -85,12 +85,9 @@ public class SmallGroup extends BaseTimeEntity {
     this.maxMemberCount = maxMemberCount;
   }
 
-  public void updateSmallGroupInfo(String name, String shortDescription, String fullDescription ,Address address, Long maxMemberCount) {
-    this.name = name;
+  public void updateSmallGroupDescription(String shortDescription, String fullDescription) {
     this.shortDescription = shortDescription;
     this.fullDescription = fullDescription;
-    this.address = address;
-    this.maxMemberCount = maxMemberCount;
   }
 
   public boolean isLeader(Long id) {

@@ -7,7 +7,7 @@ import com.example.wegather.group.dto.ManagerAndMemberDto;
 import com.example.wegather.group.dto.SmallGroupDto;
 import com.example.wegather.group.dto.SmallGroupSearchCondition;
 import com.example.wegather.group.dto.UpdateBannerRequest;
-import com.example.wegather.group.dto.UpdateSmallGroupRequest;
+import com.example.wegather.group.dto.UpdateGroupDescriptionRequest;
 import com.example.wegather.group.validator.CreateSmallGroupValidator;
 import com.example.wegather.interest.dto.InterestDto;
 import java.net.URI;
@@ -113,13 +113,13 @@ public class SmallGroupController {
    * @param request 소모임 update dto
    * @return
    */
-  @PutMapping("/{id}")
-  public ResponseEntity<Void> updateGroup(
+  @PutMapping("/{path}")
+  public ResponseEntity<Void> updateGroupDescription(
       @AuthenticationPrincipal MemberDetails principal,
-      @PathVariable Long id,
-      @RequestBody UpdateSmallGroupRequest request) {
+      @PathVariable String path,
+      @RequestBody UpdateGroupDescriptionRequest request) {
 
-    smallGroupService.editSmallGroup(principal, id, request);
+    smallGroupService.editSmallGroupDescription(principal, path, request);
     return ResponseEntity.ok().build();
   }
 

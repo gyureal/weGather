@@ -6,7 +6,6 @@ import com.example.wegather.auth.MemberDetails;
 import com.example.wegather.global.exception.customException.NoPermissionException;
 import com.example.wegather.global.upload.StoreFile;
 import com.example.wegather.global.upload.UploadFile;
-import com.example.wegather.global.vo.Address;
 import com.example.wegather.group.domain.entity.SmallGroup;
 import com.example.wegather.group.domain.repotitory.SmallGroupRepository;
 import com.example.wegather.group.dto.CreateSmallGroupRequest;
@@ -14,7 +13,7 @@ import com.example.wegather.group.dto.ManagerAndMemberDto;
 import com.example.wegather.group.dto.SmallGroupDto;
 import com.example.wegather.group.dto.SmallGroupSearchCondition;
 import com.example.wegather.group.dto.UpdateBannerRequest;
-import com.example.wegather.group.dto.UpdateSmallGroupRequest;
+import com.example.wegather.group.dto.UpdateGroupDescriptionRequest;
 import com.example.wegather.groupJoin.domain.entity.SmallGroupMember;
 import com.example.wegather.groupJoin.domain.repository.SmallGroupMemberRepository;
 import com.example.wegather.interest.domain.Interest;
@@ -101,17 +100,13 @@ public class SmallGroupService {
   }
 
   @Transactional
-  public void editSmallGroup(MemberDetails principal, Long id, UpdateSmallGroupRequest request) {
-    SmallGroup smallGroup = getSmallGroup(id);
-
+  public void editSmallGroupDescription(MemberDetails principal, String path, UpdateGroupDescriptionRequest request) {
+    SmallGroup smallGroup = findSmallGroupByPath(path);
     validateUpdatable(principal, smallGroup);
 
-    smallGroup.updateSmallGroupInfo(
-        request.getGroupName(),
+    smallGroup.updateSmallGroupDescription(
         request.getShortDescription(),
-        request.getFullDescription(),
-        Address.of(request.getStreetAddress(), request.getLongitude(), request.getLatitude()),
-        request.getMaxMemberCount());
+        request.getFullDescription());
   }
 
   /**
