@@ -190,6 +190,13 @@ public class SmallGroupService {
     }
   }
 
+  @Transactional
+  public void toggleUseBanner(MemberDetails memberDetails, String path) {
+    SmallGroup smallGroup = findSmallGroupByPath(path);
+    validateUpdatable(memberDetails, smallGroup);
+    smallGroup.toggleUseBanner();
+  }
+
   public List<String> getInterests(String path) {
     SmallGroup smallGroupByInterests = findWithInterestByPath(path);
     return smallGroupByInterests.getSmallGroupInterests().stream()

@@ -95,6 +95,18 @@ public class SmallGroupController {
   }
 
   /**
+   * 배너 사용 여부를 변겅합니다.
+   * 관리자만 변경가능합니다.
+   * @param path
+   * @return
+   */
+  @PostMapping("/{path}/toggle-use-banner")
+  public ResponseEntity<Void> toggleUseBanner(@AuthenticationPrincipal MemberDetails memberDetails, @PathVariable String path) {
+    smallGroupService.toggleUseBanner(memberDetails, path);
+    return ResponseEntity.ok().build();
+  }
+
+  /**
    * 소모임을 검색합니다.
    * @param cond 소모임 검색 조건
    * @param pageable 페이징 정보
@@ -109,7 +121,7 @@ public class SmallGroupController {
 
   /**
    * 소모임 정보를 업데이트 합니다.
-   * @param id 소모임 id
+   * @param path 소모임 path
    * @param request 소모임 update dto
    * @return
    */

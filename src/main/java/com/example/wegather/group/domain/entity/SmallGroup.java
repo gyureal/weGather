@@ -140,6 +140,14 @@ public class SmallGroup extends BaseTimeEntity {
     this.banner = banner;
   }
 
+  /**
+   * 배너 사용 여부를 변경합니다.
+   * true <-> false
+   */
+  public void toggleUseBanner() {
+    useBanner = !useBanner;
+  }
+
   private boolean containsInMember(Long memberId) {
     return members.stream().map(SmallGroupMember::getMemberId)
         .anyMatch(memberId::equals);
