@@ -99,7 +99,7 @@ public class SmallGroup extends BaseTimeEntity {
   }
 
   public void removeInterest(Interest interest) {
-    this.smallGroupInterests.add(SmallGroupInterest.of(this, interest));
+    this.smallGroupInterests.remove(SmallGroupInterest.of(this, interest));
   }
 
   public boolean isExceedMaxMember(Long nowCount) {

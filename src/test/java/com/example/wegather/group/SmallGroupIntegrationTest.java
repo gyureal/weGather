@@ -7,6 +7,7 @@ import com.example.wegather.auth.AuthControllerTest;
 import com.example.wegather.global.upload.StoreFile;
 import com.example.wegather.global.upload.UploadFile;
 import com.example.wegather.group.domain.entity.SmallGroup;
+import com.example.wegather.group.domain.entity.SmallGroupInterest;
 import com.example.wegather.group.domain.repotitory.SmallGroupRepository;
 import com.example.wegather.group.dto.CreateSmallGroupRequest;
 import com.example.wegather.group.dto.ManagerAndMemberDto;
@@ -31,6 +32,7 @@ import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import java.util.List;
+import java.util.Set;
 import org.apache.http.HttpStatus;
 import org.hibernate.AssertionFailure;
 import org.junit.jupiter.api.BeforeEach;
@@ -358,6 +360,10 @@ class SmallGroupIntegrationTest extends IntegrationTest {
 
     // then
     assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_OK);
+
+    SmallGroup smallGroup = findSmallWithInterestGroupByPath(group01.getPath());
+    Set<SmallGroupInterest> smallGroupInterests = smallGroup.getSmallGroupInterests();
+    assertThat(smallGroupInterests).hasSize(1);
   }
 
   @Test
@@ -387,6 +393,15 @@ class SmallGroupIntegrationTest extends IntegrationTest {
 
     // then
     assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_OK);
+
+    SmallGroup smallGroup = findSmallWithInterestGroupByPath(group01.getPath());
+    Set<SmallGroupInterest> smallGroupInterests = smallGroup.getSmallGroupInterests();
+    assertThat(smallGroupInterests).isEmpty();
+  }
+
+  SmallGroup findSmallWithInterestGroupByPath(String path) {
+    return smallGroupRepository.findWithInterestByPath(path)
+        .orElseThrow(() -> new RuntimeException("test 실패"));
   }
 
   @Test
