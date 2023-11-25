@@ -104,6 +104,12 @@ public class SmallGroupService {
     SmallGroup smallGroup = findSmallGroupByPath(path);
     validateUpdatable(principal, smallGroup);
 
+    if (StringUtils.hasText(request.getImage())) { // 이미지 값이 있을 때만 저장
+      byte[] base64Image = storeFile.decodeBase64Image(request.getImage());
+      UploadFile uploadFile = storeFile.storeFile(base64Image, request.getOriginalImageName());
+      smallGroup.updateImage(uploadFile.getStoreFileName());
+    }
+
     smallGroup.updateSmallGroupDescription(
         request.getShortDescription(),
         request.getFullDescription());

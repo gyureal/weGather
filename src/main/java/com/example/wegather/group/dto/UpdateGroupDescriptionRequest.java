@@ -10,4 +10,6 @@ import lombok.Getter;
 public class UpdateGroupDescriptionRequest {
   private String shortDescription;
   private String fullDescription;
+  private String image;
+  private String originalImageName;
 }

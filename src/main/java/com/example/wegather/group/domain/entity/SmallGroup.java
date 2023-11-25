@@ -148,6 +148,14 @@ public class SmallGroup extends BaseTimeEntity {
     useBanner = !useBanner;
   }
 
+  /**
+   * 소모임의 이미지를 새 이미지로 업데이트 합니다.
+   * @param newImage 새 이미지
+   */
+  public void updateImage(String newImage) {
+    this.image = newImage;
+  }
+
   private boolean containsInMember(Long memberId) {
     return members.stream().map(SmallGroupMember::getMemberId)
         .anyMatch(memberId::equals);

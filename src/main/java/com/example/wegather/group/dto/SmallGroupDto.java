@@ -33,6 +33,7 @@ public class SmallGroupDto {
         .name(smallGroup.getName())
         .shortDescription(smallGroup.getShortDescription())
         .fullDescription(smallGroup.getFullDescription())
+        .image(smallGroup.getImage())
         .leaderId(smallGroup.getLeader().getId())
         .leaderUsername(smallGroup.getLeader().getUsername())
         .maxMemberCount(smallGroup.getMaxMemberCount())
