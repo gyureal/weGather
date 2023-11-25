@@ -195,7 +195,7 @@ class SmallGroupIntegrationTest extends IntegrationTest {
 
     // then
     assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_OK);
-    // 호출 검증
+    // 호출 검증지
     then(storeFile).should().storeFile(any(), any());
 
     SmallGroup smallGroup = smallGroupRepository.findByPath(path)
@@ -294,6 +294,43 @@ class SmallGroupIntegrationTest extends IntegrationTest {
     assertThat(updated.getShortDescription()).isEqualTo(request.getShortDescription());
     assertThat(updated.getFullDescription()).isEqualTo(request.getFullDescription());
   }
+
+  @Test
+  @DisplayName("소모임 소개 정보 수정 시, image 입력값이 있을 경우, 이미지 업로드 또한 수행합니다.")
+  void updateSmallGroupSuccessfullyInCaseImageExists() {
+    RequestSpecification spec = AuthControllerTest.signIn(member01.getUsername(), memberPassword);
+
+    UpdateGroupDescriptionRequest request = UpdateGroupDescriptionRequest.builder()
+        .shortDescription("수정하였습니다")
+        .fullDescription("수정하였습니다")
+        .image("data:image/png;base64, new image")
+        .originalImageName("image.jpg")
+        .build();
+    String storeFileName = "new Image";
+    given(storeFile.decodeBase64Image(any())).willReturn(new byte[1]);
+    given(storeFile.storeFile(any(), any())).willReturn(new UploadFile("", storeFileName));
+
+    ExtractableResponse<Response> response = RestAssured
+        .given().log().ifValidationFails()
+        .spec(spec)
+        .pathParam("path", group01.getPath())
+        .body(request)
+        .contentType(ContentType.JSON)
+        .when().put("/smallGroups/{path}")
+        .then().log().ifValidationFails()
+        .extract();
+
+    assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_OK);
+    SmallGroup updated = smallGroupRepository.findById(group01.getId())
+        .orElseThrow(() -> new AssertionFailure("group ID를 찾을 수 없습니다."));
+    assertThat(updated.getShortDescription()).isEqualTo(request.getShortDescription());
+    assertThat(updated.getFullDescription()).isEqualTo(request.getFullDescription());
+    // 이미지 업로드 메서드 호출 테스트
+    then(storeFile).should().storeFile(any(), any());
+    // 이미지 DB 저장 테스트
+    assertThat(updated.getImage()).isEqualTo(storeFileName);
+  }
+
   @Test
   @DisplayName("소모임 관리자가 아니어서 소모임 소개 수정에 실패합니다.")
   void updateSmallGroupFailBecauseOfNotManager() {
