@@ -30,6 +30,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
@@ -162,10 +163,16 @@ public class SmallGroupService {
         .map(ManagerAndMemberDto::from).collect(Collectors.toList());
   }
 
+  /**
+   * 배너 이미지를 수정합니다. (base64 이미지)
+   * 관리자만 수정 가능합니다.
+   * 수정 전 이미지는 삭제됩니다.
+   * @param memberDetails
+   * @param path
+   * @param request
+   */
   @Transactional
-  public void updateBanner(MemberDetails memberDetails, String path,
-      UpdateBannerRequest request) {
-
+  public void updateBanner(MemberDetails memberDetails, String path, UpdateBannerRequest request) {
     SmallGroup smallGroup = findSmallGroupByPath(path);
     validateUpdatable(memberDetails, smallGroup);
 
@@ -173,6 +180,10 @@ public class SmallGroupService {
     byte[] imageBytes = storeFile.decodeBase64Image(request.getImage());
     UploadFile uploadFile = storeFile.storeFile(imageBytes, request.getOriginalImageName());
 
+    replaceBannerImage(smallGroup, uploadFile);
+  }
+
+  private void replaceBannerImage(SmallGroup smallGroup, UploadFile uploadFile) {
     String originalImage = smallGroup.getBanner();
     smallGroup.updateBanner(uploadFile.getStoreFileName());
 
@@ -180,6 +191,24 @@ public class SmallGroupService {
     if (StringUtils.hasText(originalImage)) {
       storeFile.deleteFile(originalImage);
     }
+  }
+
+  /**
+   * 배너 이미지를 수정합니다. (MultipartFile 형식 이미지)
+   * @param memberDetails
+   * @param path
+   * @param multipartImage
+   */
+  @Transactional
+  public void updateBanner(MemberDetails memberDetails, String path, MultipartFile multipartImage) {
+
+    SmallGroup smallGroup = findSmallGroupByPath(path);
+    validateUpdatable(memberDetails, smallGroup);
+
+    // 이미지 업로드
+    UploadFile uploadFile = storeFile.storeFile(multipartImage);
+
+    replaceBannerImage(smallGroup, uploadFile);
   }
 
   @Transactional

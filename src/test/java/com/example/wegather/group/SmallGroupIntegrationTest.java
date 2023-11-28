@@ -171,8 +171,8 @@ class SmallGroupIntegrationTest extends IntegrationTest {
   }
 
   @Test
-  @DisplayName("소모임의 배너 이미지를 수정합니다.")
-  void updateSmallGroupBannerSuccessfully() {
+  @DisplayName("base64 형식의 이미지로 소모임의 배너 이미지를 수정합니다.")
+  void updateSmallGroupBannerByBase64ImageSuccessfully() {
     // given
     RequestSpecification spec = AuthControllerTest.signIn(member01.getUsername(), memberPassword);
     String path = group01.getPath();
@@ -197,6 +197,38 @@ class SmallGroupIntegrationTest extends IntegrationTest {
     assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_OK);
     // 호출 검증지
     then(storeFile).should().storeFile(any(), any());
+
+    SmallGroup smallGroup = smallGroupRepository.findByPath(path)
+        .orElseThrow(() -> new RuntimeException("test fail"));
+    assertThat(smallGroup.getBanner()).isEqualTo(storeFileName);
+  }
+
+  @Test
+  @DisplayName("MultipartFile 형식의 이미지로 소모임의 배너 이미지를 수정합니다.")
+  void updateSmallGroupBannerByMultipartFileSuccessfully() {
+    // given
+    RequestSpecification spec = AuthControllerTest.signIn(member01.getUsername(), memberPassword);
+    String path = group01.getPath();
+    // 가짜 파일
+    String fakeFileContent = "fakeFile";
+    byte[] fakeFileBytes = fakeFileContent.getBytes();
+    // 이미지 저장 mock
+    String storeFileName = "storeFileName";
+    given(storeFile.storeFile(any())).willReturn(UploadFile.of("", storeFileName));
+
+    // when
+    ExtractableResponse<Response> response = RestAssured.given().log().ifValidationFails().spec(spec)
+        .pathParam("path", path)
+        .contentType(ContentType.MULTIPART)
+        .multiPart("file", "fake-file.txt", fakeFileBytes)
+        .when().post("/smallGroups/{path}/banner/v2")
+        .then().log().ifValidationFails()
+        .extract();
+
+    // then
+    assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_OK);
+    // 호출 검증지
+    then(storeFile).should().storeFile(any());
 
     SmallGroup smallGroup = smallGroupRepository.findByPath(path)
         .orElseThrow(() -> new RuntimeException("test fail"));

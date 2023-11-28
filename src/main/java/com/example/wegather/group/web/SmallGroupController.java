@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 
 @RequiredArgsConstructor
@@ -83,7 +84,7 @@ public class SmallGroupController {
   }
 
   /**
-   * 소모임 배너 수정
+   * 소모임 배너 수정 (base64 이미지 형식)
    * 소모임의 관리자만 수정 가능합니다.
    * @return
    */
@@ -91,6 +92,18 @@ public class SmallGroupController {
   public ResponseEntity<Void> updateSmallGroupBanner(@AuthenticationPrincipal MemberDetails memberDetails,
       @PathVariable String path, @RequestBody @Valid UpdateBannerRequest request) {
     smallGroupService.updateBanner(memberDetails, path ,request);
+    return ResponseEntity.ok().build();
+  }
+
+  /**
+   * 소모임 배너 수정 (MultipartFile 이미지 형식)
+   * 소모임의 관리자만 수정 가능합니다.
+   * @return
+   */
+  @PostMapping("/{path}/banner/v2")
+  public ResponseEntity<Void> updateSmallGroupBanner(@AuthenticationPrincipal MemberDetails memberDetails,
+      @PathVariable String path, MultipartFile multipartImage) {
+    smallGroupService.updateBanner(memberDetails, path ,multipartImage);
     return ResponseEntity.ok().build();
   }
 
