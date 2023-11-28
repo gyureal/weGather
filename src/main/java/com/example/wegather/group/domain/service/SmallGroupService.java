@@ -122,7 +122,6 @@ public class SmallGroupService {
    * @param smallGroup 소모임
    */
   private void validateUpdatable(MemberDetails principal, SmallGroup smallGroup) {
-
     if (!smallGroup.isManager(principal.getMemberId())) {
       throw new NoPermissionException(PERMISSION_DENIED.getDescription());
     }
@@ -168,20 +167,7 @@ public class SmallGroupService {
       UpdateBannerRequest request) {
 
     SmallGroup smallGroup = findSmallGroupByPath(path);
-    List<SmallGroupMember> managers = smallGroupMemberRepository.findManagerBySmallGroupId(
-        smallGroup.getId());
-
-    boolean exists = false;
-    for(SmallGroupMember manager : managers) {
-      if (Objects.equals(manager.getMember().getId(), memberDetails.getMemberId())) {
-        exists = true;
-        break;
-      }
-    }
-
-    if(!exists) {
-      throw new NoPermissionException(PERMISSION_DENIED.getDescription());
-    }
+    validateUpdatable(memberDetails, smallGroup);
 
     // 이미지 업로드
     byte[] imageBytes = storeFile.decodeBase64Image(request.getImage());
