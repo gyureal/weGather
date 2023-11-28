@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/members")
@@ -85,9 +86,16 @@ public class MemberController {
   }
 
   @PostMapping("/profile/image")
-  public ResponseEntity<Void> editProfileImage(@AuthenticationPrincipal MemberDetails memberDetails, @RequestBody
-  EditProfileImageRequest editProfileImageRequest) {
+  public ResponseEntity<Void> editProfileImage(@AuthenticationPrincipal MemberDetails memberDetails,
+      @RequestBody EditProfileImageRequest editProfileImageRequest) {
     memberService.updateProfileImage(memberDetails.getId(), editProfileImageRequest);
+    return ResponseEntity.ok().build();
+  }
+
+  @PostMapping("/profile/image/v2")
+  public ResponseEntity<Void> editProfileImage(@AuthenticationPrincipal MemberDetails memberDetails,
+      MultipartFile multipartImage) {
+    memberService.updateProfileImageMultipart(memberDetails.getId(), multipartImage);
     return ResponseEntity.ok().build();
   }
 

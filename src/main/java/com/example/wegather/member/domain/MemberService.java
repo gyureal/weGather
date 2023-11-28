@@ -29,6 +29,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
@@ -57,6 +58,12 @@ public class MemberService {
     memberRepository.deleteById(id);
   }
 
+  /**
+   * 프로필 이미지 수정  (base64 encoded input)
+   * Base64로 인코딩된 이미지를 입력값으로 받습니다.
+   * @param memberId 회원 ID
+   * @param request base64로 인코딩된 이미지 입력값
+   */
   @Transactional
   public void updateProfileImage(Long memberId, EditProfileImageRequest request) {
     Member member = getMemberById(memberId);
@@ -65,13 +72,38 @@ public class MemberService {
     byte[] imageBytes = storeFile.decodeBase64Image(request.getImage());
     UploadFile uploadFile = storeFile.storeFile(imageBytes, request.getOriginalImageName());
 
-    String originalImage = member.getProfileImage();
+    replaceProfileImage(member, uploadFile);
+  }
+
+  /**
+   * 프로필 이미지 저장 후, 기존 이미지 삭제
+   * @param member
+   * @param uploadFile
+   */
+  private void replaceProfileImage(Member member, UploadFile uploadFile) {
+    String priorImage = member.getProfileImage();
     member.changeProfileImage(uploadFile.getStoreFileName());
 
     // 기존 이미지 삭제
-    if(StringUtils.hasText(originalImage)) {
-      storeFile.deleteFile(originalImage);
+    if(StringUtils.hasText(priorImage)) {
+      storeFile.deleteFile(priorImage);
     }
+  }
+
+  /**
+   * 프로필 이미지 수정 (MultipartFile 타입 입력값)
+   * MultipartFile 타입으로 입력값을 받습니다.
+   * @param memberId 회원 ID
+   * @param multipartImage MultipartFile 타입 이미지
+   */
+  @Transactional
+  public void updateProfileImageMultipart(Long memberId, MultipartFile multipartImage) {
+    Member member = getMemberById(memberId);
+
+    // 이미지 업로드
+    UploadFile uploadFile = storeFile.storeFile(multipartImage);
+
+    replaceProfileImage(member, uploadFile);
   }
 
   @Transactional

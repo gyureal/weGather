@@ -149,6 +149,36 @@ class MemberIntegrationTest extends IntegrationTest {
   }
 
   @Test
+  @DisplayName("MultipartFile 형식의 입력값으로 회원 프로필 이미지를 수정합니다.")
+  void editProfileImageMultipartFileSuccessfully() {
+    // given
+    RequestSpecification spec = AuthControllerTest.signIn(member01.getUsername(), memberPassword);
+    // 가짜 파일
+    String fakeFileContent = "This is a fake file content.";
+    byte[] fakeFileBytes = fakeFileContent.getBytes();
+    // 이미지 저장 mock
+    String storeFileName = "storeFileName";
+    given(storeFile.storeFile(any())).willReturn(UploadFile.of("", storeFileName));
+
+    // when
+    ExtractableResponse<Response> response = RestAssured.given().log().ifValidationFails().spec(spec)
+        .contentType(ContentType.MULTIPART)
+        .multiPart("file", "fake-file.txt", fakeFileBytes)
+        .when().post("/members/profile/image/v2")
+        .then().log().ifValidationFails()
+        .extract();
+
+    // then
+    assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_OK);
+    // 호출 검증
+    then(storeFile).should().storeFile(any());
+
+    Member member = memberRepository.findById(member01.getId())
+        .orElseThrow(() -> new RuntimeException("test fail"));
+    assertThat(member.getProfileImage()).isEqualTo(storeFileName);
+  }
+
+  @Test
   @DisplayName("회원의 관심사를 추가합니다.")
   void addMemberInterestsSuccessfully() {
     // given
