@@ -8,6 +8,7 @@ import com.example.wegather.group.dto.SmallGroupDto;
 import com.example.wegather.group.dto.SmallGroupSearchCondition;
 import com.example.wegather.group.dto.UpdateBannerRequest;
 import com.example.wegather.group.dto.UpdateGroupDescriptionRequest;
+import com.example.wegather.group.dto.UpdateGroupWithMultipartImageRequest;
 import com.example.wegather.group.validator.CreateSmallGroupValidator;
 import com.example.wegather.interest.dto.InterestDto;
 import java.net.URI;
@@ -17,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -28,6 +30,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -133,7 +136,7 @@ public class SmallGroupController {
   }
 
   /**
-   * 소모임 정보를 업데이트 합니다.
+   * 소모임 정보를 업데이트 합니다. (base64 이미지)
    * @param path 소모임 path
    * @param request 소모임 update dto
    * @return
@@ -145,6 +148,24 @@ public class SmallGroupController {
       @RequestBody UpdateGroupDescriptionRequest request) {
 
     smallGroupService.editSmallGroupDescription(principal, path, request);
+    return ResponseEntity.ok().build();
+  }
+
+  /**
+   * 소모임 정보를 업데이트 합니다. (MultipartFile 이미지)
+   * @param path 소모임 path
+   * @param descriptionInfo 소모임 정보
+   * @param image 소모임 썸네일 이미지 (MultipartFile 형식)
+   * @return
+   */
+  @PutMapping("/{path}/v2")
+  public ResponseEntity<Void> updateGroupWithMultipartImage(
+      @AuthenticationPrincipal MemberDetails principal,
+      @PathVariable String path,
+      @RequestPart("descriptionInfo") UpdateGroupWithMultipartImageRequest descriptionInfo,
+      @RequestPart("image") @Nullable MultipartFile image) {
+
+    smallGroupService.editSmallGroupDescriptionWithMultipart(principal, path, descriptionInfo, image);
     return ResponseEntity.ok().build();
   }
 

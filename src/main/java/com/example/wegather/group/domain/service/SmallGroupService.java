@@ -14,6 +14,7 @@ import com.example.wegather.group.dto.SmallGroupDto;
 import com.example.wegather.group.dto.SmallGroupSearchCondition;
 import com.example.wegather.group.dto.UpdateBannerRequest;
 import com.example.wegather.group.dto.UpdateGroupDescriptionRequest;
+import com.example.wegather.group.dto.UpdateGroupWithMultipartImageRequest;
 import com.example.wegather.groupJoin.domain.entity.SmallGroupMember;
 import com.example.wegather.groupJoin.domain.repository.SmallGroupMemberRepository;
 import com.example.wegather.interest.domain.Interest;
@@ -100,6 +101,12 @@ public class SmallGroupService {
     return smallGroupRepository.search(cond, pageable);
   }
 
+  /**
+   * 소모임 소개 정보를 수정합니다. (base64 형식의 썸네일 이미지)
+   * @param principal 로그인 유저
+   * @param path  소모임 path
+   * @param request 소모임 소개 정보
+   */
   @Transactional
   public void editSmallGroupDescription(MemberDetails principal, String path, UpdateGroupDescriptionRequest request) {
     SmallGroup smallGroup = findSmallGroupByPath(path);
@@ -111,9 +118,33 @@ public class SmallGroupService {
       smallGroup.updateImage(uploadFile.getStoreFileName());
     }
 
+
     smallGroup.updateSmallGroupDescription(
         request.getShortDescription(),
         request.getFullDescription());
+  }
+
+  /**
+   * 소모임 소개 정보를 수정합니다. (MultipartFile 형식의 썸네일 이미지)
+   * @param principal 로그인 유저
+   * @param path  소모임 path
+   * @param descriptionInfo 소모임 소개 정보
+   * @param image MultipartFile 형식의 썸네일 이미지
+   */
+  @Transactional
+  public void editSmallGroupDescriptionWithMultipart(MemberDetails principal, String path,
+      UpdateGroupWithMultipartImageRequest descriptionInfo, MultipartFile image) {
+    SmallGroup smallGroup = findSmallGroupByPath(path);
+    validateUpdatable(principal, smallGroup);
+
+    if (!image.isEmpty()) { // 이미지 값이 있을 때만 저장
+      UploadFile uploadFile = storeFile.storeFile(image);
+      smallGroup.updateImage(uploadFile.getStoreFileName());
+    }
+
+    smallGroup.updateSmallGroupDescription(
+        descriptionInfo.getShortDescription(),
+        descriptionInfo.getFullDescription());
   }
 
   /**

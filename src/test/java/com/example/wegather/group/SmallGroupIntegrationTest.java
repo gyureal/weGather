@@ -2,6 +2,8 @@ package com.example.wegather.group;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.*;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
 
 import com.example.wegather.auth.AuthControllerTest;
 import com.example.wegather.global.upload.StoreFile;
@@ -16,6 +18,7 @@ import com.example.wegather.group.dto.SmallGroupSearchCondition;
 import com.example.wegather.group.dto.UpdateBannerRequest;
 import com.example.wegather.group.dto.UpdateGroupDescriptionRequest;
 import com.example.wegather.IntegrationTest;
+import com.example.wegather.group.dto.UpdateGroupWithMultipartImageRequest;
 import com.example.wegather.groupJoin.domain.entity.SmallGroupMember;
 import com.example.wegather.groupJoin.domain.repository.SmallGroupMemberRepository;
 import com.example.wegather.groupJoin.domain.vo.SmallGroupMemberType;
@@ -26,11 +29,13 @@ import com.example.wegather.member.domain.MemberRepository;
 import com.example.wegather.member.domain.entity.Member;
 import com.example.wegather.member.dto.MemberDto;
 import io.restassured.RestAssured;
+import io.restassured.builder.MultiPartSpecBuilder;
 import io.restassured.http.ContentType;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Set;
 import org.apache.http.HttpStatus;
@@ -382,6 +387,53 @@ class SmallGroupIntegrationTest extends IntegrationTest {
         .when().put("/smallGroups/{path}")
         .then().log().ifValidationFails()
         .statusCode(HttpStatus.SC_FORBIDDEN);
+  }
+
+  @Test
+  @DisplayName("소모임 소개 정보 수정 시 (MultipartFile 이미지 입력값), image 입력값이 있을 경우, 이미지 업로드 또한 수행합니다.")
+  void updateGroupWithMultipartImageSuccessfullyInCaseImageExists() {
+    RequestSpecification spec = AuthControllerTest.signIn(member01.getUsername(), memberPassword);
+
+    UpdateGroupWithMultipartImageRequest descriptionInfo = UpdateGroupWithMultipartImageRequest.builder()
+        .shortDescription("수정하였습니다")
+        .fullDescription("수정하였습니다")
+        .build();
+    // 가짜 파일
+    String fakeFileContent = "fakeFile";
+    byte[] fakeFileBytes = fakeFileContent.getBytes();
+    // 이미지 저장 mock
+    String storeFileName = "storeFileName";
+    given(storeFile.storeFile(any())).willReturn(UploadFile.of("", storeFileName));
+
+    ExtractableResponse<Response> response = RestAssured
+        .given().log().ifValidationFails()
+          .spec(spec)
+          .pathParam("path", group01.getPath())
+          .contentType(ContentType.MULTIPART)
+          //.multiPart("descriptionInfo", descriptionInfo, APPLICATION_JSON_VALUE)  // charset 미지정으로 한글 깨짐
+        .multiPart(
+            new MultiPartSpecBuilder(descriptionInfo)
+                .controlName("descriptionInfo")
+                .mimeType(APPLICATION_JSON_VALUE)
+                .charset(StandardCharsets.UTF_8)
+                .build()
+        )
+          .multiPart("image", "fake-file.txt", fakeFileBytes, MULTIPART_FORM_DATA_VALUE)
+        .when()
+          .put("/smallGroups/{path}/v2")
+        .then()
+          .log().ifValidationFails()
+          .extract();
+
+    assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_OK);
+    SmallGroup updated = smallGroupRepository.findById(group01.getId())
+        .orElseThrow(() -> new AssertionFailure("group ID를 찾을 수 없습니다."));
+    assertThat(updated.getShortDescription()).isEqualTo(descriptionInfo.getShortDescription());
+    assertThat(updated.getFullDescription()).isEqualTo(descriptionInfo.getFullDescription());
+    // 이미지 업로드 메서드 호출 테스트
+    then(storeFile).should().storeFile(any());
+    // 이미지 DB 저장 테스트
+    assertThat(updated.getImage()).isEqualTo(storeFileName);
   }
 
   @Test
