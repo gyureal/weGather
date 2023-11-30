@@ -10,3 +10,7 @@ spring:
       org.hibernate.SQL: debug
   file:
     dir: /Users/yonggyujeong/temp/
+  servlet:
+    multipart:
+      max-file-size: 3MB
+
