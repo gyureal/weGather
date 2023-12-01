@@ -10,6 +10,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor @Builder
 public class SmallGroupSearchDto {
+  private String path;
   private String name;
   private String shortDescription;
   private String image;
@@ -20,6 +21,7 @@ public class SmallGroupSearchDto {
 
   public static SmallGroupSearchDto from (SmallGroup smallGroup) {
     return SmallGroupSearchDto.builder()
+        .path(smallGroup.getPath())
         .name(smallGroup.getName())
         .shortDescription(smallGroup.getShortDescription())
         .image(smallGroup.getImage())

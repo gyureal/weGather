@@ -23,12 +23,12 @@ public class SmallGroupRepositoryImpl implements SmallGroupRepositoryQuerydsl {
   private final JPAQueryFactory queryFactory;
 
   @Override
-  public Page<SmallGroup> search(String title, Pageable pageable) {
+  public Page<SmallGroup> search(String keyword, Pageable pageable) {
     List<SmallGroup> content = queryFactory
         .selectFrom(smallGroup)
         .join(smallGroup.leader, member)
         .where(
-            groupNameContains(title)
+            groupNameContains(keyword)
             )
         .offset(pageable.getOffset())
         .limit(pageable.getPageSize())

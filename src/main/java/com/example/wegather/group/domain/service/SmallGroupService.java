@@ -96,8 +96,8 @@ public class SmallGroupService {
         .orElseThrow(() -> new IllegalArgumentException(SMALL_GROUP_NOT_FOUND.getDescription()));
   }
 
-  public Page<SmallGroupSearchDto> searchSmallGroups(String title, Pageable pageable) {
-    Page<SmallGroup> searchResult = smallGroupRepository.search(title, pageable);
+  public Page<SmallGroupSearchDto> searchSmallGroups(String keyword, Pageable pageable) {
+    Page<SmallGroup> searchResult = smallGroupRepository.search(keyword, pageable);
     return searchResult.map(SmallGroupSearchDto::from);
   }
 

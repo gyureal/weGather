@@ -124,15 +124,15 @@ public class SmallGroupController {
 
   /**
    * 소모임을 검색합니다.
-   * @param title 소모임 제목
+   * @param keyword 검색어
    * @param pageable 페이징 정보
    * @return 페이징 정보를 포함한 소모임 검색 결과
    */
   @GetMapping
   public ResponseEntity<Page<SmallGroupSearchDto>> searchGroups(
-      @RequestParam String title,
+      @RequestParam @Nullable String keyword,
       Pageable pageable) {
-    return ResponseEntity.ok(smallGroupService.searchSmallGroups(title, pageable));
+    return ResponseEntity.ok(smallGroupService.searchSmallGroups(keyword, pageable));
   }
 
   /**
