@@ -6,7 +6,6 @@ import static com.example.wegather.interest.domain.QInterest.*;
 import static com.example.wegather.member.domain.entity.QMember.member;
 
 import com.example.wegather.group.domain.entity.SmallGroup;
-import com.example.wegather.group.dto.SmallGroupSearchCondition;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
@@ -24,16 +23,13 @@ public class SmallGroupRepositoryImpl implements SmallGroupRepositoryQuerydsl {
   private final JPAQueryFactory queryFactory;
 
   @Override
-  public Page<SmallGroup> search(SmallGroupSearchCondition cond, Pageable pageable) {
+  public Page<SmallGroup> search(String title, Pageable pageable) {
     List<SmallGroup> content = queryFactory
         .selectFrom(smallGroup)
         .join(smallGroup.leader, member)
         .where(
-            groupNameContains(cond.getSmallGroupName()),
-            streetAddressContains(cond.getStreetAddress()),
-            leaderUsernameLike(cond.getLeaderUsername()),
-            maxMemberCountGoe(cond.getMaxMemberCountFrom()),
-            maxMemberCountLt(cond.getMaxMemberCountTo()))
+            groupNameContains(title)
+            )
         .offset(pageable.getOffset())
         .limit(pageable.getPageSize())
         .fetch();
@@ -43,22 +39,6 @@ public class SmallGroupRepositoryImpl implements SmallGroupRepositoryQuerydsl {
 
   private BooleanExpression groupNameContains(String groupName) {
     return groupName != null ? smallGroup.name.contains(groupName) : null;
-  }
-
-  private BooleanExpression streetAddressContains(String streetAddress) {
-    return streetAddress != null ? smallGroup.address.streetAddress.contains(streetAddress) : null;
-  }
-
-  private BooleanExpression leaderUsernameLike(String leaderUsername) {
-    return leaderUsername != null ? smallGroup.leader.username.like(leaderUsername) : null;
-  }
-
-  private BooleanExpression maxMemberCountGoe(Integer maxMemberCountFrom) {
-    return maxMemberCountFrom != null ? smallGroup.maxMemberCount.goe(maxMemberCountFrom) : null;
-  }
-
-  private BooleanExpression maxMemberCountLt(Integer maxMemberCountTo) {
-    return maxMemberCountTo != null ? smallGroup.maxMemberCount.lt(maxMemberCountTo) : null;
   }
 
   @Override

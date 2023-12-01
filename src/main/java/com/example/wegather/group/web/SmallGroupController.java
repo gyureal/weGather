@@ -5,7 +5,7 @@ import com.example.wegather.group.domain.service.SmallGroupService;
 import com.example.wegather.group.dto.CreateSmallGroupRequest;
 import com.example.wegather.group.dto.ManagerAndMemberDto;
 import com.example.wegather.group.dto.SmallGroupDto;
-import com.example.wegather.group.dto.SmallGroupSearchCondition;
+import com.example.wegather.group.dto.SmallGroupSearchDto;
 import com.example.wegather.group.dto.UpdateBannerRequest;
 import com.example.wegather.group.dto.UpdateGroupDescriptionRequest;
 import com.example.wegather.group.dto.UpdateGroupWithMultipartImageRequest;
@@ -124,15 +124,15 @@ public class SmallGroupController {
 
   /**
    * 소모임을 검색합니다.
-   * @param cond 소모임 검색 조건
+   * @param title 소모임 제목
    * @param pageable 페이징 정보
-   * @return 페이징 정보를 포함한 소모임 목록
+   * @return 페이징 정보를 포함한 소모임 검색 결과
    */
   @GetMapping
-  public ResponseEntity<Page<SmallGroupDto>> searchGroups(
-      @RequestBody SmallGroupSearchCondition cond,
+  public ResponseEntity<Page<SmallGroupSearchDto>> searchGroups(
+      @RequestParam String title,
       Pageable pageable) {
-    return ResponseEntity.ok(smallGroupService.searchSmallGroups(cond, pageable).map(SmallGroupDto::from));
+    return ResponseEntity.ok(smallGroupService.searchSmallGroups(title, pageable));
   }
 
   /**

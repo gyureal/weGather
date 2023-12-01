@@ -8,8 +8,10 @@ import com.example.wegather.interest.domain.Interest;
 import com.example.wegather.member.domain.entity.Member;
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
 import javax.persistence.Basic;
@@ -102,6 +104,12 @@ public class SmallGroup extends BaseTimeEntity {
     this.smallGroupInterests.remove(SmallGroupInterest.of(this, interest));
   }
 
+  public List<String> getInterests() {
+    return smallGroupInterests.stream()
+        .map(smallGroupInterest -> smallGroupInterest.getInterest().getName())
+        .collect(Collectors.toList());
+  }
+
   public boolean isExceedMaxMember(Long nowCount) {
     return maxMemberCount <= nowCount;
   }
@@ -134,6 +142,10 @@ public class SmallGroup extends BaseTimeEntity {
    */
   public boolean isJoinable(boolean isMember) {
     return isPublished() && isRecruiting() && !isMember;
+  }
+
+  public int getCurrentMemberCount() {
+    return this.members.size();
   }
 
   public void updateBanner(String banner) {

@@ -12,6 +12,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
 import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,9 +48,7 @@ class SmallGroupRepositoryQuerydslTest extends RepositoryTest {
   @DisplayName("이름만으로 조회")
   void searchGroupOnlyName() {
     // given
-    SmallGroupSearchCondition cond = SmallGroupSearchCondition.builder()
-        .smallGroupName("탁사모")
-        .build();
+    String title = "탁사모";
 
     int size = 10;
     int page = 0;
@@ -57,85 +56,10 @@ class SmallGroupRepositoryQuerydslTest extends RepositoryTest {
     PageRequest pageRequest = PageRequest.of(page, size);
 
     // when
-    List<SmallGroup> smallGroups = smallGroupRepositoryQuerydsl.search(cond, pageRequest).getContent();
+    List<SmallGroup> smallGroups = smallGroupRepositoryQuerydsl.search(title, pageRequest).getContent();
 
     assertThat(smallGroups).hasSize(2);
     assertThat(smallGroups).extracting(SmallGroup::getName).contains("탁사모", "탁사모 부산");
-  }
-
-  @Test
-  @DisplayName("도로명 주소로 조회")
-  void searchGroupOnlyStreetAddress() {
-    SmallGroupSearchCondition cond = SmallGroupSearchCondition.builder()
-        .streetAddress("서울")
-        .build();
-
-    int size = 10;
-    int page = 0;
-
-    PageRequest pageRequest = PageRequest.of(page, size);
-
-    // when
-    List<SmallGroup> smallGroups = smallGroupRepositoryQuerydsl.search(cond, pageRequest).getContent();
-
-    assertThat(smallGroups).hasSize(3);
-    assertThat(smallGroups).extracting(SmallGroup::getName).contains("탁사모", "농구 최고", "서울 토익 스터디");
-  }
-
-  @Test
-  @DisplayName("그룹장의 username 으로 검색")
-  void searchGroupByLeaderUsername() {
-    SmallGroupSearchCondition cond = SmallGroupSearchCondition.builder()
-        .leaderUsername("member01")
-        .build();
-    int size = 10;
-    int page = 0;
-    PageRequest pageRequest = PageRequest.of(page, size);
-
-    // when
-    List<SmallGroup> smallGroups = smallGroupRepositoryQuerydsl.search(cond, pageRequest).getContent();
-
-    assertThat(smallGroups).hasSize(3);
-    assertThat(smallGroups).extracting(SmallGroup::getName).contains("탁사모", "농구 최고", "서울 토익 스터디");
-  }
-
-  @Test
-  @DisplayName("소그룹 인원수 제한 범위로 조회")
-  void searchGroupOnlyMaxMemberCountRange() {
-    SmallGroupSearchCondition cond = SmallGroupSearchCondition.builder()
-        .maxMemberCountFrom(10)
-        .maxMemberCountTo(30)
-        .build();
-
-    int size = 10;
-    int page = 0;
-
-    PageRequest pageRequest = PageRequest.of(page, size);
-
-    // when
-    List<SmallGroup> smallGroups = smallGroupRepositoryQuerydsl.search(cond, pageRequest).getContent();
-
-    assertThat(smallGroups).hasSize(2);
-  }
-
-  @Test
-  @DisplayName("그룹이름과 도로명 주소로 조회")
-  void searchGroupGroupNameAndStreetAddress() {
-    SmallGroupSearchCondition cond = SmallGroupSearchCondition.builder()
-        .smallGroupName("토익")
-        .streetAddress("서울")
-        .build();
-
-    int size = 10;
-    int page = 0;
-
-    PageRequest pageRequest = PageRequest.of(page, size);
-
-    // when
-    List<SmallGroup> smallGroups = smallGroupRepositoryQuerydsl.search(cond, pageRequest).getContent();
-
-    assertThat(smallGroups).hasSize(1);
-    assertThat(smallGroups).extracting(SmallGroup::getName).contains("서울 토익 스터디");
   }
 
   Member insertMember(String username) {

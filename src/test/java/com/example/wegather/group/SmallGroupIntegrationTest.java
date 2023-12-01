@@ -15,6 +15,7 @@ import com.example.wegather.group.dto.CreateSmallGroupRequest;
 import com.example.wegather.group.dto.ManagerAndMemberDto;
 import com.example.wegather.group.dto.SmallGroupDto;
 import com.example.wegather.group.dto.SmallGroupSearchCondition;
+import com.example.wegather.group.dto.SmallGroupSearchDto;
 import com.example.wegather.group.dto.UpdateBannerRequest;
 import com.example.wegather.group.dto.UpdateGroupDescriptionRequest;
 import com.example.wegather.IntegrationTest;
@@ -241,31 +242,26 @@ class SmallGroupIntegrationTest extends IntegrationTest {
   }
 
   @Test
-  @DisplayName("그룹 이름과 최대회원수 범위로 소그룹 조회를 성공합니다.")
-  @Disabled
-  void searchSmallGroupByGroupNameAndMaxMemberCountRangeSuccessfully() {
+  @DisplayName("소모임 명으로 소모임 검색에 성공합니다.")
+  void searchSmallGroupByGroupNameSuccessfully() {
     RequestSpecification spec = AuthControllerTest.signIn(member01.getUsername(), memberPassword);
 
-    SmallGroupSearchCondition smallGroupSearchCondition = SmallGroupSearchCondition.builder()
-        .smallGroupName("사모")
-        .maxMemberCountFrom(100)
-        .maxMemberCountTo(201)
-        .build();
+    String title = "사모";
     int size = 2;
     int page = 0;
 
     ExtractableResponse<Response> response = RestAssured.given().log().ifValidationFails()
         .spec(spec)
-        .body(smallGroupSearchCondition).contentType(ContentType.JSON)
-        .queryParam("size", size, "page", page)
+        .queryParam("title", title)
+        .queryParam("size", size)
+        .queryParam("page", page)
         .when().get("/smallGroups")
         .then().log().ifValidationFails()
         .extract();
 
     assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_OK);
-    List<SmallGroupDto> result = response.jsonPath().getList("content", SmallGroupDto.class);
+    List<SmallGroupSearchDto> result = response.jsonPath().getList("content", SmallGroupSearchDto.class);
     assertThat(result).hasSize(2);
-    assertThat(result).usingRecursiveFieldByFieldElementComparator().contains(group02, group03);
     // 페이징 관련 리턴값 검증
     int pageSize = (int) response.path("pageable.pageSize");
     int pageNumber = (int) response.path("pageable.pageNumber");

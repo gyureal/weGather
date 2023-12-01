@@ -11,7 +11,7 @@ import com.example.wegather.group.domain.repotitory.SmallGroupRepository;
 import com.example.wegather.group.dto.CreateSmallGroupRequest;
 import com.example.wegather.group.dto.ManagerAndMemberDto;
 import com.example.wegather.group.dto.SmallGroupDto;
-import com.example.wegather.group.dto.SmallGroupSearchCondition;
+import com.example.wegather.group.dto.SmallGroupSearchDto;
 import com.example.wegather.group.dto.UpdateBannerRequest;
 import com.example.wegather.group.dto.UpdateGroupDescriptionRequest;
 import com.example.wegather.group.dto.UpdateGroupWithMultipartImageRequest;
@@ -23,7 +23,6 @@ import com.example.wegather.interest.domain.InterestService;
 import com.example.wegather.member.domain.entity.Member;
 import com.example.wegather.member.domain.MemberRepository;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -97,8 +96,9 @@ public class SmallGroupService {
         .orElseThrow(() -> new IllegalArgumentException(SMALL_GROUP_NOT_FOUND.getDescription()));
   }
 
-  public Page<SmallGroup> searchSmallGroups(SmallGroupSearchCondition cond, Pageable pageable) {
-    return smallGroupRepository.search(cond, pageable);
+  public Page<SmallGroupSearchDto> searchSmallGroups(String title, Pageable pageable) {
+    Page<SmallGroup> searchResult = smallGroupRepository.search(title, pageable);
+    return searchResult.map(SmallGroupSearchDto::from);
   }
 
   /**
@@ -251,9 +251,7 @@ public class SmallGroupService {
 
   public List<String> getInterests(String path) {
     SmallGroup smallGroupByInterests = findWithInterestByPath(path);
-    return smallGroupByInterests.getSmallGroupInterests().stream()
-        .map(smallGroupInterest -> smallGroupInterest.getInterest().getName())
-        .collect(Collectors.toList());
+    return smallGroupByInterests.getInterests();
   }
 
   private SmallGroup findWithInterestByPath(String path) {
