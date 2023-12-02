@@ -2,6 +2,7 @@ package com.example.wegather.group.domain.repotitory;
 
 import static com.example.wegather.group.domain.entity.QSmallGroup.smallGroup;
 import static com.example.wegather.group.domain.entity.QSmallGroupInterest.*;
+import static com.example.wegather.groupJoin.domain.entity.QSmallGroupMember.*;
 import static com.example.wegather.interest.domain.QInterest.*;
 import static com.example.wegather.member.domain.entity.QMember.member;
 
@@ -25,8 +26,12 @@ public class SmallGroupRepositoryImpl implements SmallGroupRepositoryQuerydsl {
   @Override
   public Page<SmallGroup> search(String keyword, Pageable pageable) {
     List<SmallGroup> content = queryFactory
-        .selectFrom(smallGroup)
-        .join(smallGroup.leader, member)
+        .selectFrom(smallGroup).distinct()
+          .join(smallGroup.leader, member).fetchJoin()
+          .leftJoin(smallGroup.smallGroupInterests, smallGroupInterest).fetchJoin()
+          .leftJoin(smallGroupInterest.interest, interest).fetchJoin()
+          .leftJoin(smallGroup.members, smallGroupMember).fetchJoin()
+          .leftJoin(smallGroupMember.member, member).fetchJoin()
         .where(
             groupNameContains(keyword)
             )
