@@ -32,7 +32,7 @@ class SmallGroupRepositoryQuerydslTest extends RepositoryTest {
 
   @BeforeEach
   void initTest() {
-    smallGroupRepositoryQuerydsl = new SmallGroupRepositoryImpl(new JPAQueryFactory(entityManager));
+    smallGroupRepositoryQuerydsl = new SmallGroupRepositoryImpl(entityManager);
 
     Member member01 = insertMember("member01");
     Member member02 = insertMember("member02");
@@ -45,6 +45,7 @@ class SmallGroupRepositoryQuerydslTest extends RepositoryTest {
   }
 
   @Test
+  //@Disabled
   @DisplayName("이름만으로 조회")
   void searchGroupOnlyName() {
     // given

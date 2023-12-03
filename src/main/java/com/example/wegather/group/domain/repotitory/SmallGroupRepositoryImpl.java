@@ -11,6 +11,7 @@ import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.JPQLQuery;
 import java.util.Optional;
+import javax.persistence.EntityManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -20,8 +21,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class SmallGroupRepositoryImpl extends QuerydslRepositorySupport implements SmallGroupRepositoryQuerydsl {
 
-  public SmallGroupRepositoryImpl() {
+  public SmallGroupRepositoryImpl(EntityManager entityManager) {
     super(SmallGroup.class);
+    setEntityManager(entityManager);
   }
 
   @Override
