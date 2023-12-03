@@ -173,6 +173,13 @@ public class SmallGroup extends BaseTimeEntity {
         .anyMatch(memberId::equals);
   }
 
+  /**
+   * 소모임을 공개 합니다.
+   */
+  public void publish() {
+    this.published = true;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {

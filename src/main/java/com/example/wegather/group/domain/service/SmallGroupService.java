@@ -258,4 +258,11 @@ public class SmallGroupService {
     return smallGroupRepository.findWithInterestByPath(path)
         .orElseThrow(() -> new IllegalArgumentException(SMALL_GROUP_NOT_FOUND.getDescription()));
   }
+
+  @Transactional
+  public void publishSmallGroup(MemberDetails principal, String path) {
+    SmallGroup smallGroup = findSmallGroupByPath(path);
+    validateUpdatable(principal, smallGroup);
+    smallGroup.publish();
+  }
 }

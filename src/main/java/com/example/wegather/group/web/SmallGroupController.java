@@ -214,4 +214,11 @@ public class SmallGroupController {
     smallGroupService.removeSmallGroupInterest(principal, path, interestName);
     return ResponseEntity.ok().build();
   }
+
+  @PostMapping("/{path}/publish")
+  public ResponseEntity<Void> publishSmallGroup(@AuthenticationPrincipal MemberDetails principal,
+      @PathVariable String path) {
+    smallGroupService.publishSmallGroup(principal, path);
+    return ResponseEntity.ok().build();
+  }
 }
