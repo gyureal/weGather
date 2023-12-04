@@ -194,6 +194,13 @@ public class SmallGroup extends BaseTimeEntity {
     this.recruitingProcess = recruitingProcess;
   }
 
+  /**
+   * 소모임을 종료합니다.
+   */
+  public void close() {
+    this.closed = true;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {

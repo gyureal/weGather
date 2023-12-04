@@ -229,4 +229,11 @@ public class SmallGroupController {
     smallGroupService.openRecruiting(principal, path, recruitingProcess);
     return ResponseEntity.ok().build();
   }
+
+  @PostMapping("/{path}/close")
+  public ResponseEntity<Void> closeSmallGroup(@AuthenticationPrincipal MemberDetails principal,
+      @PathVariable String path) {
+    smallGroupService.closeSmallGroup(principal, path);
+    return ResponseEntity.ok().build();
+  }
 }

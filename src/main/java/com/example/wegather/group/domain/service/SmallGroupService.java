@@ -273,4 +273,11 @@ public class SmallGroupService {
     validateUpdatable(principal, smallGroup);
     smallGroup.openRecruiting(recruitingProcess);
   }
+
+  @Transactional
+  public void closeSmallGroup(MemberDetails principal, String path) {
+    SmallGroup smallGroup = findSmallGroupByPath(path);
+    validateUpdatable(principal, smallGroup);
+    smallGroup.close();
+  }
 }
