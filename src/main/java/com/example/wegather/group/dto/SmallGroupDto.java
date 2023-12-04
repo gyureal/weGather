@@ -1,6 +1,7 @@
 package com.example.wegather.group.dto;
 
 import com.example.wegather.group.domain.entity.SmallGroup;
+import com.example.wegather.group.domain.vo.RecruitingProcess;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,6 +22,7 @@ public class SmallGroupDto {
   private String banner;
   private String image;
   private boolean recruiting;
+  private String recruitingProcess;
   private boolean published;
   private boolean closed;
   private boolean joinable;
@@ -40,6 +42,7 @@ public class SmallGroupDto {
         .banner(smallGroup.getBanner())
         .useBanner(smallGroup.isUseBanner())
         .recruiting(smallGroup.isRecruiting())
+        .recruitingProcess(smallGroup.getRecruitingProcess().name())
         .published(smallGroup.isPublished())
         .closed(smallGroup.isClosed())
         .build();
