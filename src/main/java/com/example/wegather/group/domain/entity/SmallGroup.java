@@ -2,6 +2,7 @@ package com.example.wegather.group.domain.entity;
 
 import com.example.wegather.global.BaseTimeEntity;
 import com.example.wegather.global.vo.Address;
+import com.example.wegather.group.domain.vo.RecruitingProcess;
 import com.example.wegather.groupJoin.domain.entity.SmallGroupMember;
 import com.example.wegather.groupJoin.domain.vo.SmallGroupMemberType;
 import com.example.wegather.interest.domain.Interest;
@@ -19,6 +20,8 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -71,6 +74,8 @@ public class SmallGroup extends BaseTimeEntity {
   private LocalDateTime publishedDateTime;
   private LocalDateTime closedDateTime;
   private boolean recruiting = false;
+  @Enumerated(EnumType.STRING)
+  private RecruitingProcess recruitingProcess;
   private boolean published = false;
   private boolean closed = false;
   private boolean useBanner = false;
@@ -178,6 +183,15 @@ public class SmallGroup extends BaseTimeEntity {
    */
   public void publish() {
     this.published = true;
+  }
+
+  /**
+   * 소모임 인원 모집을 시작합니다.
+   * @param recruitingProcess 소모임 모집 방식
+   */
+  public void openRecruiting(RecruitingProcess recruitingProcess) {
+    this.recruiting = true;
+    this.recruitingProcess = recruitingProcess;
   }
 
   @Override

@@ -2,6 +2,7 @@ package com.example.wegather.group.web;
 
 import com.example.wegather.auth.MemberDetails;
 import com.example.wegather.group.domain.service.SmallGroupService;
+import com.example.wegather.group.domain.vo.RecruitingProcess;
 import com.example.wegather.group.dto.CreateSmallGroupRequest;
 import com.example.wegather.group.dto.ManagerAndMemberDto;
 import com.example.wegather.group.dto.SmallGroupDto;
@@ -219,6 +220,13 @@ public class SmallGroupController {
   public ResponseEntity<Void> publishSmallGroup(@AuthenticationPrincipal MemberDetails principal,
       @PathVariable String path) {
     smallGroupService.publishSmallGroup(principal, path);
+    return ResponseEntity.ok().build();
+  }
+
+  @PostMapping("/{path}/open-recruiting")
+  public ResponseEntity<Void> openRecruiting(@AuthenticationPrincipal MemberDetails principal,
+      @PathVariable String path, @RequestParam RecruitingProcess recruitingProcess) {
+    smallGroupService.openRecruiting(principal, path, recruitingProcess);
     return ResponseEntity.ok().build();
   }
 }
