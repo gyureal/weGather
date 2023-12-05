@@ -11,6 +11,7 @@ import com.example.wegather.global.upload.UploadFile;
 import com.example.wegather.group.domain.entity.SmallGroup;
 import com.example.wegather.group.domain.entity.SmallGroupInterest;
 import com.example.wegather.group.domain.repotitory.SmallGroupRepository;
+import com.example.wegather.group.domain.vo.RecruitingProcess;
 import com.example.wegather.group.dto.CreateSmallGroupRequest;
 import com.example.wegather.group.dto.ManagerAndMemberDto;
 import com.example.wegather.group.dto.SmallGroupDto;
@@ -563,6 +564,115 @@ class SmallGroupIntegrationTest extends IntegrationTest {
     assertThat(interests.get(1)).isEqualTo("농구");
   }
 
+  @Test
+  @DisplayName("소모임 공개를 성공합니다.")
+  void smallGroupPublishSuccessfully() {
+    String path = group01.getPath();
+    RequestSpecification spec = AuthControllerTest.signIn(member01.getUsername(), memberPassword);
+
+    ExtractableResponse<Response> response = requestSmallGroupPublish(
+        spec);
+
+    assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_OK);
+    SmallGroup smallGroup = findSmallGroupById(path);
+    assertThat(smallGroup.isPublished()).isTrue();
+    assertThat(smallGroup.getPublishedDateTime()).isNotNull();
+  }
+
+  @Test
+  @DisplayName("관리자가 아니어서 소모임 공개에 실패합니다.")
+  void smallGroupPublishFail_not_manager() {
+    String path = group01.getPath();
+    RequestSpecification spec = AuthControllerTest.signIn(member02.getUsername(), memberPassword);
+
+    ExtractableResponse<Response> response = requestSmallGroupPublish(
+        spec);
+
+    assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_FORBIDDEN);
+  }
+
+  private ExtractableResponse<Response> requestSmallGroupPublish(RequestSpecification spec) {
+    ExtractableResponse<Response> response = RestAssured.given().log().ifValidationFails()
+        .spec(spec)
+        .pathParam("path", group01.getPath())
+        .when().post("/smallGroups/{path}/publish")
+        .then().log().ifValidationFails()
+        .extract();
+    return response;
+  }
+
+  @Test
+  @DisplayName("소모임 인원 모집 오픈에 성공합니다.")
+  void openRecruitingSuccessfully() {
+    String path = group01.getPath();
+    RequestSpecification spec = AuthControllerTest.signIn(member01.getUsername(), memberPassword);
+
+    ExtractableResponse<Response> response = requestOpenRecruiting(path, spec);
+
+    assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_OK);
+    SmallGroup smallGroup = findSmallGroupById(path);
+    assertThat(smallGroup.isRecruiting()).isTrue();
+    assertThat(smallGroup.getRecruitingProcess()).isEqualTo(RecruitingProcess.FCFS);
+    assertThat(smallGroup.getRecruitingUpdatedDateTime()).isNotNull();
+  }
+
+  @Test
+  @DisplayName("관리자가 아니어서 소모임 인원 모집 오픈에 실패합니다.")
+  void openRecruitingFail_not_manger() {
+    String path = group01.getPath();
+    RequestSpecification spec = AuthControllerTest.signIn(member02.getUsername(), memberPassword);
+
+    ExtractableResponse<Response> response = requestOpenRecruiting(path, spec);
+
+    assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_FORBIDDEN);
+  }
+
+  private ExtractableResponse<Response> requestOpenRecruiting(String path, RequestSpecification spec) {
+    ExtractableResponse<Response> response = RestAssured.given().log().ifValidationFails()
+        .spec(spec)
+        .pathParam("path", path)
+        .queryParam("recruitingProcess", RecruitingProcess.FCFS)
+        .when().post("/smallGroups/{path}/open-recruiting")
+        .then().log().ifValidationFails()
+        .extract();
+    return response;
+  }
+
+  @Test
+  @DisplayName("소모임 종료에 성공합니다.")
+  void closeSmallGroupSuccessfully() {
+    String path = group01.getPath();
+    RequestSpecification spec = AuthControllerTest.signIn(member01.getUsername(), memberPassword);
+
+    ExtractableResponse<Response> response = requestCloseSmallGroup(path ,spec);
+
+    assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_OK);
+    SmallGroup smallGroup = findSmallGroupById(path);
+    assertThat(smallGroup.isClosed()).isTrue();
+    assertThat(smallGroup.getClosedDateTime()).isNotNull();
+  }
+
+  @Test
+  @DisplayName("관리자가 아니어서 소모임 종료에 실패합니다.")
+  void closeSmallGroupFail_not_manager() {
+    String path = group01.getPath();
+    RequestSpecification spec = AuthControllerTest.signIn(member02.getUsername(), memberPassword);
+
+    ExtractableResponse<Response> response = requestCloseSmallGroup(path ,spec);
+
+    assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_FORBIDDEN);
+  }
+
+  private ExtractableResponse<Response> requestCloseSmallGroup(String path, RequestSpecification spec) {
+    ExtractableResponse<Response> response = RestAssured.given().log().ifValidationFails()
+        .spec(spec)
+        .pathParam("path", path)
+        .when().post("/smallGroups/{path}/close")
+        .then().log().ifValidationFails()
+        .extract();
+    return response;
+  }
+
   private ExtractableResponse<Response> requestCreateGroup(CreateSmallGroupRequest request, String requesterId) {
     RequestSpecification spec = AuthControllerTest.signIn(requesterId, memberPassword);
 
@@ -619,5 +729,10 @@ class SmallGroupIntegrationTest extends IntegrationTest {
         .when().delete("/smallGroups/{path}/interest")
         .then().log().ifValidationFails()
         .extract();
+  }
+
+  private SmallGroup findSmallGroupById(String path) {
+    return smallGroupRepository.findByPath(path)
+        .orElseThrow(() -> new RuntimeException("소모임을 찾을 수 없습니다."));
   }
 }

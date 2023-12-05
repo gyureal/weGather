@@ -183,6 +183,7 @@ public class SmallGroup extends BaseTimeEntity {
    */
   public void publish() {
     this.published = true;
+    this.publishedDateTime = LocalDateTime.now();
   }
 
   /**
@@ -192,6 +193,7 @@ public class SmallGroup extends BaseTimeEntity {
   public void openRecruiting(RecruitingProcess recruitingProcess) {
     this.recruiting = true;
     this.recruitingProcess = recruitingProcess;
+    this.recruitingUpdatedDateTime = LocalDateTime.now();
   }
 
   /**
@@ -199,6 +201,7 @@ public class SmallGroup extends BaseTimeEntity {
    */
   public void close() {
     this.closed = true;
+    this.closedDateTime = LocalDateTime.now();
   }
 
   @Override
