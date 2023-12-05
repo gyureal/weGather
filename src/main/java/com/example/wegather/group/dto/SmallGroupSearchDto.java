@@ -1,6 +1,7 @@
 package com.example.wegather.group.dto;
 
 import com.example.wegather.group.domain.entity.SmallGroup;
+import com.example.wegather.group.domain.vo.SmallGroupStatus;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -14,6 +15,7 @@ public class SmallGroupSearchDto {
   private String name;
   private String shortDescription;
   private String image;
+  private SmallGroupStatus status;
   private List<String> interests;
   private long maxMemberCount;
   private int currentMemberCount;
@@ -25,6 +27,7 @@ public class SmallGroupSearchDto {
         .name(smallGroup.getName())
         .shortDescription(smallGroup.getShortDescription())
         .image(smallGroup.getImage())
+        .status(smallGroup.getStatus())
         .interests(smallGroup.getInterests())
         .maxMemberCount(smallGroup.getMaxMemberCount())
         .currentMemberCount(smallGroup.getCurrentMemberCount())

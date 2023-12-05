@@ -3,6 +3,7 @@ package com.example.wegather.group.domain.entity;
 import com.example.wegather.global.BaseTimeEntity;
 import com.example.wegather.global.vo.Address;
 import com.example.wegather.group.domain.vo.RecruitingProcess;
+import com.example.wegather.group.domain.vo.SmallGroupStatus;
 import com.example.wegather.groupJoin.domain.entity.SmallGroupMember;
 import com.example.wegather.groupJoin.domain.vo.SmallGroupMemberType;
 import com.example.wegather.interest.domain.Interest;
@@ -202,6 +203,23 @@ public class SmallGroup extends BaseTimeEntity {
   public void close() {
     this.closed = true;
     this.closedDateTime = LocalDateTime.now();
+  }
+
+  /**
+   * 소모임 상태를 반환합니다.
+   * @return
+   */
+  public SmallGroupStatus getStatus() {
+    if (this.closed) {
+      return SmallGroupStatus.CLOSED;
+    }
+    if (this.recruiting) {
+      return SmallGroupStatus.RECRUITING;
+    }
+    if (this.published) {
+      return SmallGroupStatus.PUBLISHED;
+    }
+    return SmallGroupStatus.BEFORE_OPEN;
   }
 
   @Override

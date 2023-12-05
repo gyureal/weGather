@@ -2,6 +2,7 @@ package com.example.wegather.group.dto;
 
 import com.example.wegather.group.domain.entity.SmallGroup;
 import com.example.wegather.group.domain.vo.RecruitingProcess;
+import com.example.wegather.group.domain.vo.SmallGroupStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -27,6 +28,7 @@ public class SmallGroupDto {
   private boolean closed;
   private boolean joinable;
   private boolean managerOrMember;
+  private SmallGroupStatus status;
 
   public static SmallGroupDto from(SmallGroup smallGroup) {
     return SmallGroupDto.builder()
@@ -44,6 +46,7 @@ public class SmallGroupDto {
         .recruiting(smallGroup.isRecruiting())
         .recruitingProcess(smallGroup.getRecruitingProcess()!=null ? smallGroup.getRecruitingProcess().name() : "")
         .published(smallGroup.isPublished())
+        .status(smallGroup.getStatus())
         .closed(smallGroup.isClosed())
         .build();
   }
