@@ -197,6 +197,11 @@ public class SmallGroupController {
     return ResponseEntity.ok().build();
   }
 
+  /**
+   * 소모임의 관심사를 조회합니다.
+   * @param path 소모임 path
+   * @return
+   */
   @GetMapping("/{path}/interests")
   public ResponseEntity<List<String>> getInterests(@PathVariable String path) {
     return ResponseEntity.ok(smallGroupService.getInterests(path));
@@ -216,6 +221,12 @@ public class SmallGroupController {
     return ResponseEntity.ok().build();
   }
 
+  /**
+   * 소모임을 공개합니다.
+   * @param principal 로그인한 회원
+   * @param path 소모임 path
+   * @return
+   */
   @PostMapping("/{path}/publish")
   public ResponseEntity<Void> publishSmallGroup(@AuthenticationPrincipal MemberDetails principal,
       @PathVariable String path) {
@@ -223,6 +234,13 @@ public class SmallGroupController {
     return ResponseEntity.ok().build();
   }
 
+  /**
+   * 소모임의 인원 모집을 오픈합니다.
+   * @param principal 로그인한 회원
+   * @param path 소모임 path
+   * @param recruitingProcess 모집 방식
+   * @return
+   */
   @PostMapping("/{path}/open-recruiting")
   public ResponseEntity<Void> openRecruiting(@AuthenticationPrincipal MemberDetails principal,
       @PathVariable String path, @RequestParam RecruitingProcess recruitingProcess) {
@@ -230,6 +248,12 @@ public class SmallGroupController {
     return ResponseEntity.ok().build();
   }
 
+  /**
+   * 소모임 종료
+   * @param principal 로그인한 회원
+   * @param path 소모임 path
+   * @return
+   */
   @PostMapping("/{path}/close")
   public ResponseEntity<Void> closeSmallGroup(@AuthenticationPrincipal MemberDetails principal,
       @PathVariable String path) {
