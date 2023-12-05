@@ -42,7 +42,7 @@ public class SmallGroupDto {
         .banner(smallGroup.getBanner())
         .useBanner(smallGroup.isUseBanner())
         .recruiting(smallGroup.isRecruiting())
-        .recruitingProcess(smallGroup.getRecruitingProcess().name())
+        .recruitingProcess(smallGroup.getRecruitingProcess()!=null ? smallGroup.getRecruitingProcess().name() : "")
         .published(smallGroup.isPublished())
         .closed(smallGroup.isClosed())
         .build();
