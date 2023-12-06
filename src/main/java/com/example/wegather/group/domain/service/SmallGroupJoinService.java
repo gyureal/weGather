@@ -1,15 +1,15 @@
-package com.example.wegather.groupJoin.domain.service;
+package com.example.wegather.group.domain.service;
 
 import static com.example.wegather.global.exception.ErrorCode.*;
 
 import com.example.wegather.global.exception.customException.NoPermissionException;
 import com.example.wegather.group.domain.entity.SmallGroup;
-import com.example.wegather.groupJoin.domain.entity.SmallGroupJoin;
-import com.example.wegather.groupJoin.domain.entity.SmallGroupMember;
-import com.example.wegather.groupJoin.domain.repository.SmallGroupJoinRepository;
-import com.example.wegather.groupJoin.domain.repository.SmallGroupMemberRepository;
+import com.example.wegather.group.domain.entity.SmallGroupJoin;
+import com.example.wegather.group.domain.entity.SmallGroupMember;
+import com.example.wegather.group.domain.repotitory.SmallGroupJoinRepository;
+import com.example.wegather.group.domain.repotitory.SmallGroupMemberRepository;
 import com.example.wegather.group.domain.repotitory.SmallGroupRepository;
-import com.example.wegather.groupJoin.dto.GroupJoinRequestDto;
+import com.example.wegather.group.dto.GroupJoinRequestDto;
 import com.example.wegather.member.domain.MemberRepository;
 import com.example.wegather.member.domain.entity.Member;
 import lombok.RequiredArgsConstructor;

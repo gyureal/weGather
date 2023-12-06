@@ -1,10 +1,10 @@
-package com.example.wegather.groupJoin;
+package com.example.wegather.group;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.example.wegather.auth.AuthControllerTest;
 import com.example.wegather.group.dto.CreateSmallGroupRequest;
-import com.example.wegather.groupJoin.dto.GroupJoinRequestDto;
+import com.example.wegather.group.dto.GroupJoinRequestDto;
 import com.example.wegather.group.dto.SmallGroupDto;
 import com.example.wegather.auth.dto.SignUpRequest;
 import com.example.wegather.IntegrationTest;
@@ -17,7 +17,6 @@ import io.restassured.specification.RequestSpecification;
 import java.util.List;
 import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

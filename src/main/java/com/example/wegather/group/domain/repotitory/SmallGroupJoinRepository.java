@@ -1,7 +1,7 @@
-package com.example.wegather.groupJoin.domain.repository;
+package com.example.wegather.group.domain.repotitory;
 
 import com.example.wegather.group.domain.entity.SmallGroup;
-import com.example.wegather.groupJoin.domain.entity.SmallGroupJoin;
+import com.example.wegather.group.domain.entity.SmallGroupJoin;
 import com.example.wegather.member.domain.entity.Member;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

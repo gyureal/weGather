@@ -1,13 +1,14 @@
-package com.example.wegather.groupJoin.domain.repository;
+package com.example.wegather.group.domain.repotitory;
 
 
 import static org.assertj.core.api.Assertions.*;
 
 import com.example.wegather.RepositoryTest;
 import com.example.wegather.group.domain.entity.SmallGroup;
+import com.example.wegather.group.domain.repotitory.SmallGroupMemberRepository;
 import com.example.wegather.group.domain.repotitory.SmallGroupRepository;
-import com.example.wegather.groupJoin.domain.entity.SmallGroupMember;
-import com.example.wegather.groupJoin.domain.vo.SmallGroupMemberType;
+import com.example.wegather.group.domain.entity.SmallGroupMember;
+import com.example.wegather.group.domain.vo.SmallGroupMemberType;
 import com.example.wegather.member.domain.MemberRepository;
 import com.example.wegather.member.domain.entity.Member;
 import java.util.List;

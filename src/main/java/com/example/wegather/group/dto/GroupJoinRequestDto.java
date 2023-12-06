@@ -1,6 +1,6 @@
-package com.example.wegather.groupJoin.dto;
+package com.example.wegather.group.dto;
 
-import com.example.wegather.groupJoin.domain.entity.SmallGroupJoin;
+import com.example.wegather.group.domain.entity.SmallGroupJoin;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

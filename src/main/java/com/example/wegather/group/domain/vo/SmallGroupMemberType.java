@@ -1,4 +1,4 @@
-package com.example.wegather.groupJoin.domain.vo;
+package com.example.wegather.group.domain.vo;
 
 
 public enum SmallGroupMemberType {

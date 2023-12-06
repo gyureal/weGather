@@ -1,8 +1,7 @@
-package com.example.wegather.groupJoin.domain.repository;
+package com.example.wegather.group.domain.repotitory;
 
 import com.example.wegather.group.domain.entity.SmallGroup;
-import com.example.wegather.groupJoin.domain.entity.SmallGroupMember;
-import com.example.wegather.member.domain.entity.Member;
+import com.example.wegather.group.domain.entity.SmallGroupMember;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -22,7 +21,7 @@ public interface SmallGroupMemberRepository extends JpaRepository<SmallGroupMemb
 
   @Query("select sgm from SmallGroupMember sgm "
       + "where sgm.smallGroup.id = :smallGroupId "
-      + "and sgm.smallGroupMemberType = com.example.wegather.groupJoin.domain.vo.SmallGroupMemberType.MANAGER"
+      + "and sgm.smallGroupMemberType = com.example.wegather.group.domain.vo.SmallGroupMemberType.MANAGER"
   )
   List<SmallGroupMember> findManagerBySmallGroupId(Long smallGroupId);
 }

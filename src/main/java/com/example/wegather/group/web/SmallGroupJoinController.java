@@ -1,8 +1,8 @@
-package com.example.wegather.groupJoin.web;
+package com.example.wegather.group.web;
 
 import com.example.wegather.auth.MemberDetails;
-import com.example.wegather.groupJoin.domain.service.SmallGroupJoinService;
-import com.example.wegather.groupJoin.dto.GroupJoinRequestDto;
+import com.example.wegather.group.domain.service.SmallGroupJoinService;
+import com.example.wegather.group.dto.GroupJoinRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

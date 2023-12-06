@@ -2,10 +2,11 @@ package com.example.wegather.group.domain.repotitory;
 
 import static com.example.wegather.group.domain.entity.QSmallGroup.smallGroup;
 import static com.example.wegather.group.domain.entity.QSmallGroupInterest.*;
-import static com.example.wegather.groupJoin.domain.entity.QSmallGroupMember.*;
+import static com.example.wegather.group.domain.entity.QSmallGroupMember.smallGroupMember;
 import static com.example.wegather.interest.domain.QInterest.*;
 import static com.example.wegather.member.domain.entity.QMember.member;
 
+import com.example.wegather.group.domain.entity.QSmallGroupMember;
 import com.example.wegather.group.domain.entity.SmallGroup;
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.dsl.BooleanExpression;
