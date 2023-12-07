@@ -9,6 +9,7 @@ import com.example.wegather.group.domain.entity.SmallGroupMember;
 import com.example.wegather.group.domain.repotitory.SmallGroupJoinRepository;
 import com.example.wegather.group.domain.repotitory.SmallGroupMemberRepository;
 import com.example.wegather.group.domain.repotitory.SmallGroupRepository;
+import com.example.wegather.group.domain.vo.RecruitingProcess;
 import com.example.wegather.group.dto.GroupJoinRequestDto;
 import com.example.wegather.member.domain.MemberRepository;
 import com.example.wegather.member.domain.entity.Member;
@@ -27,33 +28,46 @@ public class SmallGroupJoinService {
   private final SmallGroupMemberRepository smallGroupMemberRepository;
 
   /**
-   * 가입 요청 유효성 체크
+   * 가입 요청
+   *
    * @param smallGroupId 가입할 소모임 ID
    * @param loginId 로그인한 회원의 ID
    * @throws IllegalArgumentException
    *    - 이미 가입 요청한 회원일 경우
-   *    - 소모임장인 경우
    * @throws IllegalStateException
    *    - 최대 회원수를 초과한 경우
    */
-  public Long requestJoin(Long smallGroupId, Long loginId) {
+  @Transactional
+  public void joinSmallGroup(Long smallGroupId, Long loginId) {
     SmallGroup smallGroup = findSmallGroupById(smallGroupId);
     Member member = findMemberById(loginId);
 
-    validRequestJoin(smallGroup, member);
+    validJoinSmallGroup(smallGroup, member);
 
-    return smallGroupJoinRepository.save(SmallGroupJoin.of(smallGroup, member))
-        .getId();
+    if (smallGroup.getRecruitingProcess() == RecruitingProcess.FCFS) {
+      joinAsFCFS(smallGroup, member);
+      return;
+    }
+    smallGroupJoinRepository.save(SmallGroupJoin.of(smallGroup, member));
   }
 
-  private void validRequestJoin(SmallGroup smallGroup, Member member) {
+  private void validJoinSmallGroup(SmallGroup smallGroup, Member member) {
     if (smallGroupJoinRepository.existsBySmallGroupAndMember(smallGroup, member)) {
       throw new IllegalArgumentException(ALREADY_REQUEST_JOIN_MEMBER.getDescription());
     }
-    if (smallGroup.isLeader(member.getId())) {
-      throw new IllegalArgumentException(LEADER_CANNOT_REQUEST_JOIN.getDescription());
-    }
     validateExceedMaxCount(smallGroup);
+  }
+
+  /**
+   * 선착순인 소모임에 가입합니다.
+   * 가입 테이블 데이터 추가
+   * 소모임 회원에 바로 추가
+   * @param smallGroup
+   * @param member
+   */
+  private void joinAsFCFS(SmallGroup smallGroup, Member member) {
+    smallGroupJoinRepository.save(SmallGroupJoin.ofAsFCFS(smallGroup, member));
+    smallGroupMemberRepository.save(SmallGroupMember.of(smallGroup, member));
   }
 
   /**

@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 public enum JoinRequestStatus {
   REQUEST("요청"),
   APPROVE("승인"),
-  REJECT("거부");
+  REJECT("거부"),
+  FCFS("선착순");
   private final String description;
 }

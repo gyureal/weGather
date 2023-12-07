@@ -29,14 +29,31 @@ public class SmallGroupJoin extends BaseTimeEntity {
   @Enumerated(EnumType.STRING)
   private JoinRequestStatus status;
 
-  private SmallGroupJoin(SmallGroup smallGroup, Member member) {
+  private SmallGroupJoin(SmallGroup smallGroup, Member member, JoinRequestStatus status) {
     this.smallGroup = smallGroup;
     this.member = member;
-    this.status = JoinRequestStatus.REQUEST;
+    this.status = status;
   }
 
+  /**
+   * 소모임 가입 객체를 만듭니다.
+   * Request 상태로 만들어집니다.
+   * @param smallGroup
+   * @param member
+   * @return
+   */
   public static SmallGroupJoin of(SmallGroup smallGroup, Member member) {
-    return new SmallGroupJoin(smallGroup, member);
+    return new SmallGroupJoin(smallGroup, member, JoinRequestStatus.REQUEST);
+  }
+
+  /**
+   * 선착순 상태로 소모임 가입 객체를 만듭니다.
+   * @param smallGroup
+   * @param member
+   * @return
+   */
+  public static SmallGroupJoin ofAsFCFS(SmallGroup smallGroup, Member member) {
+    return new SmallGroupJoin(smallGroup, member, JoinRequestStatus.FCFS);
   }
 
   public void approve() {

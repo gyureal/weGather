@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface SmallGroupJoinRepository extends JpaRepository<SmallGroupJoin, Long> {
   boolean existsBySmallGroupAndMember(SmallGroup smallGroup, Member member);
+  boolean existsBySmallGroupAndMember_Id(SmallGroup smallGroup, Long memberId);
 
   @Query(
       value = "select distinct s "

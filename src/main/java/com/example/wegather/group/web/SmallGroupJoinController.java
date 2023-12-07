@@ -27,9 +27,10 @@ public class SmallGroupJoinController {
    * @return
    */
   @PostMapping("/requests")
-  public ResponseEntity<Long> requestSmallGroupJoin(@PathVariable Long id, @AuthenticationPrincipal
+  public ResponseEntity<Void> requestSmallGroupJoin(@PathVariable Long id, @AuthenticationPrincipal
       MemberDetails memberDetails) {
-    return ResponseEntity.ok(smallGroupJoinService.requestJoin(id, memberDetails.getMemberId()));
+    smallGroupJoinService.joinSmallGroup(id, memberDetails.getMemberId());
+    return ResponseEntity.ok().build();
   }
 
   /**
