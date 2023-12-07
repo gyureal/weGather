@@ -55,6 +55,9 @@ public class SmallGroupJoinService {
     if (smallGroupJoinRepository.existsBySmallGroupAndMember(smallGroup, member)) {
       throw new IllegalArgumentException(ALREADY_REQUEST_JOIN_MEMBER.getDescription());
     }
+    if (smallGroupMemberRepository.existsBySmallGroupAndMember(smallGroup, member)) {
+      throw new IllegalArgumentException(ALREADY_JOINED_MEMBER.getDescription());
+    }
     validateExceedMaxCount(smallGroup);
   }
 

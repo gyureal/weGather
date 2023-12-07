@@ -51,6 +51,7 @@ public enum ErrorCode {
   DO_NOT_HAVE_AUTHORITY_TO_UPDATE_GROUP("4001", "소모임 정보를 수정할 권한이 없습니다."),
   DO_NOT_HAVE_AUTHORITY_TO_DELETE_GROUP("4002", "소모임을 삭제할 권한이 없습니다."),
   ALREADY_REQUEST_JOIN_MEMBER("4003", "이미 가입 요청한 회원입니다."),
+  ALREADY_JOINED_MEMBER("4004", "이미 가입한 회원입니다."),
   LEADER_ONLY("4005", "소모임장만 가능합니다."),
   EXCESS_MAX_MEMBER_COUNT("4006", "최대 회원수를 초과하였습니다."),
   SMALL_GROUP_JOIN_NOT_FOUND("4007", "소모임 가입 요청을 찾을 수 없습니다.");

@@ -2,6 +2,7 @@ package com.example.wegather.group.domain.repotitory;
 
 import com.example.wegather.group.domain.entity.SmallGroup;
 import com.example.wegather.group.domain.entity.SmallGroupMember;
+import com.example.wegather.member.domain.entity.Member;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -9,6 +10,8 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface SmallGroupMemberRepository extends JpaRepository<SmallGroupMember, Long> {
   Long countBySmallGroup(SmallGroup smallGroup);
+
+  boolean existsBySmallGroupAndMember(SmallGroup smallGroup, Member member);
 
   @Query("select distinct sgm "
       + "from SmallGroupMember sgm "

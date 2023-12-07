@@ -3,6 +3,8 @@ package com.example.wegather.group;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.example.wegather.auth.AuthControllerTest;
+import com.example.wegather.group.domain.entity.SmallGroupJoin;
+import com.example.wegather.group.domain.repotitory.SmallGroupJoinRepository;
 import com.example.wegather.group.dto.CreateSmallGroupRequest;
 import com.example.wegather.group.dto.GroupJoinRequestDto;
 import com.example.wegather.group.dto.SmallGroupDto;
@@ -19,9 +21,13 @@ import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @DisplayName("소모임 가입 통합 테스트")
 class SmallGroupJoinIntegrationTest extends IntegrationTest {
+  @Autowired
+  private SmallGroupJoinRepository smallGroupJoinRepository;
+
   private static final String memberPassword = "1234";
   private MemberDto member01;
   private MemberDto member02;
@@ -48,7 +54,7 @@ class SmallGroupJoinIntegrationTest extends IntegrationTest {
   }
 
   @Test
-  @DisplayName("소모임장이어서 소모임 가입 요청에 실패합니다.")
+  @DisplayName("이미 가입한 회원이어서 소모임 가입 요청에 실패합니다.")
   void smallGroupJoinRequest_fail_because_groupLeader_request() {
     SmallGroupDto smallGroup = group01;
     MemberDto joinMember = member01;
@@ -113,7 +119,8 @@ class SmallGroupJoinIntegrationTest extends IntegrationTest {
   void approveSmallGroupJoin_success() {
     SmallGroupDto smallGroup = group01;
     MemberDto joinMember = member02;
-    Long requestId = requestSmallGroupJoinRequest(smallGroup, joinMember).as(Long.class);// 가입 요청
+    requestSmallGroupJoinRequest(smallGroup, joinMember);
+    Long requestId = findSmallGroupJoin(smallGroup.getId(), joinMember.getId()).getId();
 
     ExtractableResponse<Response> response = requestApproveSmallGroupJoin(
         smallGroup, requestId, member01);
@@ -122,16 +129,23 @@ class SmallGroupJoinIntegrationTest extends IntegrationTest {
   }
 
   @Test
-  @DisplayName("소모임장이 아니어서 소모임 가입 요청을 실패합니다.")
+  @DisplayName("소모임장이 아니어서 소모임 가입 요청 승인에 실패합니다.")
   void approveSmallGroupJoin_fail_because_not_leader() {
     SmallGroupDto smallGroup = group01;
     MemberDto joinMember = member02;
-    Long requestId = requestSmallGroupJoinRequest(smallGroup, joinMember).as(Long.class);// 가입 요청
+    requestSmallGroupJoinRequest(smallGroup, joinMember);
+
+    SmallGroupJoin smallGroupJoin = findSmallGroupJoin(smallGroup.getId(), joinMember.getId());
 
     ExtractableResponse<Response> response = requestApproveSmallGroupJoin(
-        smallGroup, requestId, member02);
+        smallGroup, smallGroupJoin.getId(), member02);
 
     assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_FORBIDDEN);
+  }
+
+  private SmallGroupJoin findSmallGroupJoin(Long smallGroupId, Long memberId) {
+    return smallGroupJoinRepository.findBySmallGroup_IdAndMember_Id(smallGroupId, memberId)
+        .orElseThrow(() -> new RuntimeException("소모임 가입 내역을 찾을 수 없습니다."));
   }
 
   @Test
@@ -139,7 +153,8 @@ class SmallGroupJoinIntegrationTest extends IntegrationTest {
   void rejectSmallGroupJoin_success() {
     SmallGroupDto smallGroup = group01;
     MemberDto joinMember = member02;
-    Long requestId = requestSmallGroupJoinRequest(smallGroup, joinMember).as(Long.class);// 가입 요청
+    requestSmallGroupJoinRequest(smallGroup, joinMember);
+    Long requestId = findSmallGroupJoin(smallGroup.getId(), joinMember.getId()).getId();
     RequestSpecification spec = AuthControllerTest.signIn(member01.getUsername(), memberPassword);
 
     ExtractableResponse<Response> response = RestAssured.given().log().ifValidationFails()
