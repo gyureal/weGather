@@ -142,11 +142,10 @@ public class SmallGroup extends BaseTimeEntity {
 
   /**
    * 소모임이 가입 가능한지 반환합니다.
-   * @param isMember 해당 소모임의 회원인지 (isMember() 호출 결과)
    * @return
    */
-  public boolean isJoinable(boolean isMember) {
-    return isPublished() && isRecruiting() && !isMember;
+  public boolean isJoinable() {
+    return isPublished() && isRecruiting() && !isClosed();
   }
 
   public int getCurrentMemberCount() {

@@ -29,6 +29,7 @@ public class SmallGroupDto {
   private boolean joinable;
   private boolean managerOrMember;
   private SmallGroupStatus status;
+  private boolean joinRequested;
 
   public static SmallGroupDto from(SmallGroup smallGroup) {
     return SmallGroupDto.builder()
@@ -55,4 +56,5 @@ public class SmallGroupDto {
     this.joinable = joinable;
   }
   public void changeMemberOrManager(boolean managerOrMember) { this.managerOrMember = managerOrMember; }
+  public void changeJoinRequested(boolean joinRequested) {this.joinRequested = joinRequested;}
 }

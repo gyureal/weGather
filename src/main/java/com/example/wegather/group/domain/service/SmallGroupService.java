@@ -7,6 +7,7 @@ import com.example.wegather.global.exception.customException.NoPermissionExcepti
 import com.example.wegather.global.upload.StoreFile;
 import com.example.wegather.global.upload.UploadFile;
 import com.example.wegather.group.domain.entity.SmallGroup;
+import com.example.wegather.group.domain.repotitory.SmallGroupJoinRepository;
 import com.example.wegather.group.domain.repotitory.SmallGroupRepository;
 import com.example.wegather.group.domain.vo.RecruitingProcess;
 import com.example.wegather.group.dto.CreateSmallGroupRequest;
@@ -42,6 +43,7 @@ public class SmallGroupService {
   private final InterestRepository interestRepository;
   private final InterestService interestService;
   private final SmallGroupMemberRepository smallGroupMemberRepository;
+  private final SmallGroupJoinRepository smallGroupJoinRepository;
   private final StoreFile storeFile;
 
   @Transactional
@@ -81,14 +83,12 @@ public class SmallGroupService {
 
   public SmallGroupDto getSmallGroupByPath(String path, MemberDetails memberDetails) {
     SmallGroup smallGroup = findSmallGroupByPath(path);
-
     SmallGroupDto smallGroupDto = SmallGroupDto.from(smallGroup);
 
-    boolean isMemberOrManager = smallGroup.isMemberOrManager(memberDetails.getMemberId());
-    boolean isJoinalble = smallGroup.isJoinable(isMemberOrManager);
-    smallGroupDto.changeMemberOrManager(isMemberOrManager);
-    smallGroupDto.changeJoinable(isJoinalble);
-
+    smallGroupDto.changeJoinable(smallGroup.isJoinable());
+    smallGroupDto.changeMemberOrManager(smallGroup.isMemberOrManager(memberDetails.getMemberId()));
+    smallGroupDto.changeJoinRequested(
+        smallGroupJoinRepository.existsBySmallGroupAndMember_Id(smallGroup, memberDetails.getMemberId()));
     return smallGroupDto;
   }
 
