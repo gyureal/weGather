@@ -13,6 +13,8 @@ import com.example.wegather.group.domain.vo.RecruitingProcess;
 import com.example.wegather.group.dto.GroupJoinRequestDto;
 import com.example.wegather.member.domain.MemberRepository;
 import com.example.wegather.member.domain.entity.Member;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -82,13 +84,13 @@ public class SmallGroupJoinService {
    *    - 요청자가 소모임장이 아닌 경우
    * @return
    */
-  public Page<GroupJoinRequestDto> getAllJoinRequests(Long id, Long loginId ,Pageable pageable) {
+  public List<GroupJoinRequestDto> getAllJoinRequests(Long id, Long loginId) {
     SmallGroup smallGroup = findSmallGroupById(id);
 
     validateGetAllJoinRequests(smallGroup, loginId);
 
-    return smallGroupJoinRepository.findRequestBySmallGroup(smallGroup, pageable)
-        .map(GroupJoinRequestDto::from);
+    return smallGroupJoinRepository.findRequestBySmallGroup(smallGroup).stream()
+        .map(GroupJoinRequestDto::from).collect(Collectors.toList());
   }
 
   private void validateGetAllJoinRequests(SmallGroup smallGroup, Long loginId) {

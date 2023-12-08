@@ -3,6 +3,7 @@ package com.example.wegather.group.domain.repotitory;
 import com.example.wegather.group.domain.entity.SmallGroup;
 import com.example.wegather.group.domain.entity.SmallGroupJoin;
 import com.example.wegather.member.domain.entity.Member;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,11 +20,6 @@ public interface SmallGroupJoinRepository extends JpaRepository<SmallGroupJoin, 
       + " from SmallGroupJoin s"
       + "   inner join fetch s.member m"
       + " where s.smallGroup = :smallGroup"
-      + "   and s.status = 'REQUEST'",
-      countQuery = "select count(s) "
-          + " from SmallGroupJoin s"
-          + "   inner join s.member m"
-          + " where s.smallGroup = :smallGroup"
-          + "   and s.status = 'REQUEST'")
-  Page<SmallGroupJoin> findRequestBySmallGroup(SmallGroup smallGroup, Pageable pageable);
+      + "   and s.status = 'REQUEST'")
+  List<SmallGroupJoin> findRequestBySmallGroup(SmallGroup smallGroup);
 }

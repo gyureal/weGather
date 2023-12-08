@@ -91,7 +91,7 @@ class SmallGroupJoinIntegrationTest extends IntegrationTest {
 
     assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_OK);
     List<GroupJoinRequestDto> content = response.jsonPath()
-        .getList("content", GroupJoinRequestDto.class);
+        .getList(".", GroupJoinRequestDto.class);
     GroupJoinRequestDto requestDto = content.get(0);
     assertThat(requestDto.getSmallGroupJoinId()).isEqualTo(group01.getId());
     assertThat(requestDto.getMemberId()).isEqualTo(joinMember.getId());

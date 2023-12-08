@@ -3,6 +3,7 @@ package com.example.wegather.group.web;
 import com.example.wegather.auth.MemberDetails;
 import com.example.wegather.group.domain.service.SmallGroupJoinService;
 import com.example.wegather.group.dto.GroupJoinRequestDto;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -37,16 +38,13 @@ public class SmallGroupJoinController {
    * 소모임 가입 요청 회원 목록 조회
    * @param id 소모임 ID
    * @param memberDetails 로그인한 회원
-   * @param pageable 페이징 정보
    * @return
    */
   @GetMapping("/requests")
-  public ResponseEntity<Page<GroupJoinRequestDto>> readAllJoinRequests(
+  public ResponseEntity<List<GroupJoinRequestDto>> readAllJoinRequests(
       @PathVariable Long id,
-      @AuthenticationPrincipal MemberDetails memberDetails,
-      Pageable pageable) {
-    return ResponseEntity.ok(smallGroupJoinService.getAllJoinRequests(
-        id, memberDetails.getMemberId() ,pageable));
+      @AuthenticationPrincipal MemberDetails memberDetails) {
+    return ResponseEntity.ok(smallGroupJoinService.getAllJoinRequests(id, memberDetails.getMemberId()));
   }
 
   @PostMapping("/requests/{requestId}/approve")
