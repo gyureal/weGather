@@ -96,7 +96,7 @@ class SmallGroupJoinIntegrationTest extends IntegrationTest {
     assertThat(requestDto.getSmallGroupJoinId()).isEqualTo(group01.getId());
     assertThat(requestDto.getMemberId()).isEqualTo(joinMember.getId());
     assertThat(requestDto.getUsername()).isEqualTo(joinMember.getUsername());
-    assertThat(requestDto.getName()).isEqualTo(joinMember.getEmail());
+    assertThat(requestDto.getEmail()).isEqualTo(joinMember.getEmail());
     assertThat(requestDto.getProfileImage()).isEqualTo(joinMember.getProfileImage());
   }
 

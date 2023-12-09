@@ -12,7 +12,8 @@ public class GroupJoinRequestDto {
   private Long smallGroupJoinId;
   private Long memberId;
   private String username;
-  private String name;
+  private String email;
+  private String introduction;
   private String profileImage;
 
   public static GroupJoinRequestDto from(SmallGroupJoin smallGroupJoin) {
@@ -20,7 +21,8 @@ public class GroupJoinRequestDto {
         .smallGroupJoinId(smallGroupJoin.getId())
         .memberId(smallGroupJoin.getMember().getId())
         .username(smallGroupJoin.getMember().getUsername())
-        .name(smallGroupJoin.getMember().getEmail())
+        .email(smallGroupJoin.getMember().getEmail())
+        .introduction(smallGroupJoin.getMember().getIntroductionText())
         .profileImage(smallGroupJoin.getMember().getProfileImage())
         .build();
   }
