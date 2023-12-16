@@ -3,7 +3,7 @@ package com.example.wegather.group.domain.entity;
 import com.example.wegather.global.BaseTimeEntity;
 import com.example.wegather.global.vo.Address;
 import com.example.wegather.group.domain.vo.RecruitingProcess;
-import com.example.wegather.group.domain.vo.SmallGroupStatus;
+import com.example.wegather.global.vo.SmallGroupStatus;
 import com.example.wegather.group.domain.vo.SmallGroupMemberType;
 import com.example.wegather.interest.domain.Interest;
 import com.example.wegather.member.domain.entity.Member;

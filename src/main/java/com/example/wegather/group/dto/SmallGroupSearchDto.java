@@ -1,7 +1,7 @@
 package com.example.wegather.group.dto;
 
 import com.example.wegather.group.domain.entity.SmallGroup;
-import com.example.wegather.group.domain.vo.SmallGroupStatus;
+import com.example.wegather.global.vo.SmallGroupStatus;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;

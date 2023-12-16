@@ -1,8 +1,7 @@
 package com.example.wegather.group.dto;
 
 import com.example.wegather.group.domain.entity.SmallGroup;
-import com.example.wegather.group.domain.vo.RecruitingProcess;
-import com.example.wegather.group.domain.vo.SmallGroupStatus;
+import com.example.wegather.global.vo.SmallGroupStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
