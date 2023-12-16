@@ -9,6 +9,10 @@ import com.example.wegather.IntegrationTest;
 import com.example.wegather.auth.AuthControllerTest;
 import com.example.wegather.global.upload.StoreFile;
 import com.example.wegather.global.upload.UploadFile;
+import com.example.wegather.group.SmallGroupIntegrationTest;
+import com.example.wegather.group.SmallGroupJoinIntegrationTest;
+import com.example.wegather.group.dto.CreateSmallGroupRequest;
+import com.example.wegather.group.dto.SmallGroupDto;
 import com.example.wegather.interest.dto.CreateInterestRequest;
 import com.example.wegather.interest.dto.InterestDto;
 import com.example.wegather.member.domain.MemberRepository;
@@ -16,6 +20,7 @@ import com.example.wegather.auth.dto.SignUpRequest;
 import com.example.wegather.member.domain.entity.Member;
 import com.example.wegather.member.dto.EditProfileImageRequest;
 import com.example.wegather.member.dto.MemberDto;
+import com.example.wegather.member.dto.ProfileSmallGroupDto;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.ExtractableResponse;
@@ -38,15 +43,20 @@ class MemberIntegrationTest extends IntegrationTest {
   MemberDto member01;
   MemberDto member02;
   MemberDto member03;
+  SmallGroupDto smallGroup01;
+  SmallGroupDto smallGroup02;
+  SmallGroupDto smallGroup03;
   @MockBean
   StoreFile storeFile;
-
 
   @BeforeEach
   void init() {
     member01 = insertTestMember("test01","testUser1@gmail.com" ,memberPassword);
     member02 = insertTestMember("test02", "testUser2@gmail.com" ,memberPassword);
     member03 = insertTestMember("test03", "testUser3@gmail.com", memberPassword);
+    smallGroup01 = insertSmallGroup("toeic-study", "토익스터디", 5L, member01);
+    smallGroup02 = insertSmallGroup("math-study", "수학스터디", 5L, member01);
+    smallGroup03 = insertSmallGroup("english-study", "영어스터디", 5L, member01);
   }
 
   @Test
@@ -231,6 +241,34 @@ class MemberIntegrationTest extends IntegrationTest {
         .doesNotContain(interest1.getName());
   }
 
+  @Test
+  @DisplayName("해당 회원이 가입한 소모임을 조회합니다.")
+  void getJoinSmallGroups_success() {
+    // given
+    // 소모임 가입요청
+    Long requestId1 = SmallGroupJoinIntegrationTest.requestSmallGroupJoinRequest(smallGroup01.getId(),
+        member02.getUsername()).as(Long.class);
+    Long requestId2 = SmallGroupJoinIntegrationTest.requestSmallGroupJoinRequest(smallGroup02.getId(),
+        member02.getUsername()).as(Long.class);
+
+    // 소모임 가입승인
+    SmallGroupJoinIntegrationTest.requestApproveSmallGroupJoin(smallGroup01.getId(), requestId1, smallGroup01.getLeaderUsername());
+    SmallGroupJoinIntegrationTest.requestApproveSmallGroupJoin(smallGroup02.getId(), requestId2, smallGroup02.getLeaderUsername());
+
+    // when
+    ExtractableResponse<Response> response = RestAssured.given().log().ifValidationFails()
+        .spec(AuthControllerTest.signIn(member02.getUsername(), memberPassword))
+        .when().get("/members/profile/smallGroups/join")
+        .then().log().ifValidationFails()
+        .extract();
+
+    // then
+    assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_OK);
+    List<ProfileSmallGroupDto> smallGroupDtos = response.jsonPath().getList(".", ProfileSmallGroupDto.class);
+    assertThat(smallGroupDtos).hasSize(2);
+    assertThat(smallGroupDtos).extracting("path").contains(smallGroup01.getPath(), smallGroup02.getPath());
+  }
+
   private InterestDto insertInterest(String interestName, MemberDto loginMember) {
     RequestSpecification spec = AuthControllerTest.signIn(loginMember.getUsername(), memberPassword);
 
@@ -255,5 +293,17 @@ class MemberIntegrationTest extends IntegrationTest {
         .build();
 
     return AuthControllerTest.signUp(request).as(MemberDto.class);
+  }
+
+  private SmallGroupDto insertSmallGroup(String path, String groupName, Long maxMemberCount, MemberDto loginMember) {
+    CreateSmallGroupRequest request = CreateSmallGroupRequest.builder()
+        .path(path)
+        .name(groupName)
+        .shortDescription("테스트입니다.")
+        .maxMemberCount(maxMemberCount)
+        .build();
+
+    return SmallGroupIntegrationTest.requestCreateGroup(request, loginMember.getUsername())
+        .as(SmallGroupDto.class);
   }
 }

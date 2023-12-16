@@ -10,6 +10,7 @@ import com.example.wegather.interest.dto.InterestDto;
 import com.example.wegather.member.domain.MemberService;
 import com.example.wegather.member.dto.EditProfileForm;
 import com.example.wegather.member.dto.MemberDto;
+import com.example.wegather.member.dto.ProfileSmallGroupDto;
 import com.example.wegather.member.validator.ChangePasswordFormValidator;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -131,6 +132,17 @@ public class MemberController {
   public ResponseEntity<List<String>> getInterestsInProfile(@AuthenticationPrincipal MemberDetails memberDetails) {
     List<String> myInterests = memberService.getMyInterests(memberDetails.getId());
     return ResponseEntity.ok(myInterests);
+  }
+
+  /**
+   * 로그인한 회원이 가입한 소모임 목록을 반환합니다.
+   * @param memberDetails
+   * @return
+   */
+  @GetMapping("/profile/smallGroups/join")
+  public ResponseEntity<List<ProfileSmallGroupDto>> getJoinSmallGroups(@AuthenticationPrincipal MemberDetails memberDetails) {
+    List<ProfileSmallGroupDto> joinSmallGroups = memberService.getJoinSmallGroups(memberDetails);
+    return ResponseEntity.ok(joinSmallGroups);
   }
 
   /**

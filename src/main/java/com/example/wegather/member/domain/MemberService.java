@@ -6,6 +6,7 @@ import static com.example.wegather.global.exception.ErrorCode.MEMBER_NOT_FOUND;
 import static com.example.wegather.global.exception.ErrorCode.PASSWORD_NOT_MATCHED;
 
 import com.example.wegather.auth.MemberDetails;
+import com.example.wegather.group.domain.entity.SmallGroup;
 import com.example.wegather.interest.domain.InterestService;
 import com.example.wegather.member.dto.ChangeAlarmSettingsForm;
 import com.example.wegather.member.dto.ChangePasswordForm;
@@ -21,7 +22,9 @@ import com.example.wegather.interest.dto.InterestDto;
 import com.example.wegather.member.domain.entity.Member;
 import com.example.wegather.member.dto.EditProfileForm;
 import com.example.wegather.member.dto.MemberDto;
+import com.example.wegather.member.dto.ProfileSmallGroupDto;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -213,5 +216,16 @@ public class MemberService {
   private Member getMemberById(Long id) {
     return memberRepository.findById(id)
         .orElseThrow(() -> new IllegalArgumentException(MEMBER_NOT_FOUND.getDescription()));
+  }
+
+  /**
+   * 로그인한 회원이 가입한 소모임을 조회합니다.
+   * @param memberDetails 로그인한 회원
+   */
+  public List<ProfileSmallGroupDto> getJoinSmallGroups(MemberDetails memberDetails) {
+    return memberRepository.findJoinSmallGroupsByMemberId(
+            memberDetails.getMemberId())
+        .stream().map(ProfileSmallGroupDto::from)
+        .collect(Collectors.toList());
   }
 }
