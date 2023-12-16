@@ -40,17 +40,16 @@ public class SmallGroupJoinService {
    *    - 최대 회원수를 초과한 경우
    */
   @Transactional
-  public void joinSmallGroup(Long smallGroupId, Long loginId) {
+  public Long joinSmallGroup(Long smallGroupId, Long loginId) {
     SmallGroup smallGroup = findSmallGroupById(smallGroupId);
     Member member = findMemberById(loginId);
 
     validJoinSmallGroup(smallGroup, member);
 
     if (smallGroup.getRecruitingProcess() == RecruitingProcess.FCFS) {
-      joinAsFCFS(smallGroup, member);
-      return;
+      return joinAsFCFS(smallGroup, member);
     }
-    smallGroupJoinRepository.save(SmallGroupJoin.of(smallGroup, member));
+    return smallGroupJoinRepository.save(SmallGroupJoin.of(smallGroup, member)).getId();
   }
 
   private void validJoinSmallGroup(SmallGroup smallGroup, Member member) {
@@ -69,10 +68,12 @@ public class SmallGroupJoinService {
    * 소모임 회원에 바로 추가
    * @param smallGroup
    * @param member
+   * @return 생성된 소모임가입 ID
    */
-  private void joinAsFCFS(SmallGroup smallGroup, Member member) {
-    smallGroupJoinRepository.save(SmallGroupJoin.ofAsFCFS(smallGroup, member));
+  private Long joinAsFCFS(SmallGroup smallGroup, Member member) {
+    Long joinId = smallGroupJoinRepository.save(SmallGroupJoin.ofAsFCFS(smallGroup, member)).getId();
     smallGroupMemberRepository.save(SmallGroupMember.of(smallGroup, member));
+    return joinId;
   }
 
   /**
