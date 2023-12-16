@@ -269,6 +269,26 @@ class MemberIntegrationTest extends IntegrationTest {
     assertThat(smallGroupDtos).extracting("path").contains(smallGroup01.getPath(), smallGroup02.getPath());
   }
 
+  @Test
+  @DisplayName("회원이 생성한 소모임을 조회합니다.")
+  void getCreateSmallGroups_success() {
+    // given
+    // BeforeEach 에서 소모임 생성 요청 보냄
+
+    // when
+    ExtractableResponse<Response> response = RestAssured.given().log().ifValidationFails()
+        .spec(AuthControllerTest.signIn(member01.getUsername(), memberPassword))
+        .when().get("/members/profile/smallGroups/create")
+        .then().log().ifValidationFails()
+        .extract();
+
+    // then
+    assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_OK);
+    List<ProfileSmallGroupDto> smallGroupDtos = response.jsonPath().getList(".", ProfileSmallGroupDto.class);
+    assertThat(smallGroupDtos).hasSize(3);
+    assertThat(smallGroupDtos).extracting("path").contains(smallGroup01.getPath(), smallGroup02.getPath(), smallGroup03.getPath());
+  }
+
   private InterestDto insertInterest(String interestName, MemberDto loginMember) {
     RequestSpecification spec = AuthControllerTest.signIn(loginMember.getUsername(), memberPassword);
 

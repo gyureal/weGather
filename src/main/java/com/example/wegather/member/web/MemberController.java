@@ -146,6 +146,17 @@ public class MemberController {
   }
 
   /**
+   * 로그인한 회원이 생성한 소모임 목록을 반환합니다.
+   * @param memberDetails
+   * @return
+   */
+  @GetMapping("/profile/smallGroups/create")
+  public ResponseEntity<List<ProfileSmallGroupDto>> getCreateSmallGroups(@AuthenticationPrincipal MemberDetails memberDetails) {
+    List<ProfileSmallGroupDto> createSmallGroups = memberService.getCreateSmallGroups(memberDetails);
+    return ResponseEntity.ok(createSmallGroups);
+  }
+
+  /**
    * id로 회원을 삭제합니다.
    * @param id
    */

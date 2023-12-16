@@ -228,4 +228,16 @@ public class MemberService {
         .stream().map(ProfileSmallGroupDto::from)
         .collect(Collectors.toList());
   }
+
+  /**
+   * 로그인한 회원이 생성한 소모임을 조회합니다.
+   * @param memberDetails
+   * @return
+   */
+  public List<ProfileSmallGroupDto> getCreateSmallGroups(MemberDetails memberDetails) {
+    return memberRepository.findCreateSmallGroupsByMemberId(
+            memberDetails.getMemberId())
+        .stream().map(ProfileSmallGroupDto::from)
+        .collect(Collectors.toList());
+  }
 }

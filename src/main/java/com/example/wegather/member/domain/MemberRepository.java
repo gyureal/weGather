@@ -3,6 +3,7 @@ package com.example.wegather.member.domain;
 import com.example.wegather.group.domain.entity.SmallGroup;
 import com.example.wegather.member.domain.entity.Member;
 import com.example.wegather.member.dto.ProfileSmallGroupDto;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.EntityGraph;
@@ -31,4 +32,9 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
       + "where sgm.member.id = :memberId "
       + "and sg.leader.id != :memberId")
   List<SmallGroup> findJoinSmallGroupsByMemberId(Long memberId);
+
+  @Query("select sg "
+      + "from SmallGroup sg "
+      + "where sg.leader.id = :memberId")
+  List<SmallGroup> findCreateSmallGroupsByMemberId(Long memberId);
 }
