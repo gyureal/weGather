@@ -50,7 +50,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 @DisplayName("소모임 통합 테스트")
-class SmallGroupIntegrationTest extends IntegrationTest {
+public class SmallGroupIntegrationTest extends IntegrationTest {
 
   @Autowired
   private SmallGroupRepository smallGroupRepository;
@@ -673,13 +673,13 @@ class SmallGroupIntegrationTest extends IntegrationTest {
     return response;
   }
 
-  private ExtractableResponse<Response> requestCreateGroup(CreateSmallGroupRequest request, String requesterId) {
+  public static ExtractableResponse<Response> requestCreateGroup(CreateSmallGroupRequest request, String requesterId) {
     RequestSpecification spec = AuthControllerTest.signIn(requesterId, memberPassword);
 
     return RestAssured.given().log().ifValidationFails().spec(spec)
         .body(request).contentType(ContentType.JSON)
         .when().post("/smallGroups")
-        .then().log().ifStatusCodeIsEqualTo(HttpStatus.SC_CREATED)
+        .then().log().ifValidationFails()
         .extract();
   }
 

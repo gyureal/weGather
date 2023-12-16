@@ -12,7 +12,6 @@ import com.example.wegather.auth.dto.SignUpRequest;
 import com.example.wegather.IntegrationTest;
 import com.example.wegather.member.dto.MemberDto;
 import io.restassured.RestAssured;
-import io.restassured.http.ContentType;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
@@ -24,7 +23,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @DisplayName("소모임 가입 통합 테스트")
-class SmallGroupJoinIntegrationTest extends IntegrationTest {
+public class SmallGroupJoinIntegrationTest extends IntegrationTest {
   @Autowired
   private SmallGroupJoinRepository smallGroupJoinRepository;
 
@@ -48,7 +47,7 @@ class SmallGroupJoinIntegrationTest extends IntegrationTest {
     SmallGroupDto smallGroup = group01;
     MemberDto joinMember = member02;
 
-    ExtractableResponse<Response> response = requestSmallGroupJoinRequest(smallGroup, joinMember);
+    ExtractableResponse<Response> response = requestSmallGroupJoinRequest(smallGroup.getId(), joinMember.getUsername());
 
     assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_OK);
   }
@@ -60,7 +59,7 @@ class SmallGroupJoinIntegrationTest extends IntegrationTest {
     MemberDto joinMember = member01;
 
     ExtractableResponse<Response> response = requestSmallGroupJoinRequest(
-        smallGroup, joinMember);
+        smallGroup.getId(), joinMember.getUsername());
 
     assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_BAD_REQUEST);
   }
@@ -73,7 +72,7 @@ class SmallGroupJoinIntegrationTest extends IntegrationTest {
 
     MemberDto joinMember1 = member03;
     // when
-    ExtractableResponse<Response> response = requestSmallGroupJoinRequest(smallGroup, joinMember1);
+    ExtractableResponse<Response> response = requestSmallGroupJoinRequest(smallGroup.getId(), joinMember1.getUsername());
     // then
     assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_BAD_REQUEST);
   }
@@ -83,11 +82,11 @@ class SmallGroupJoinIntegrationTest extends IntegrationTest {
   void readAllJoinRequests_success() {
     SmallGroupDto smallGroup = group01;
     MemberDto joinMember = member02;
-    requestSmallGroupJoinRequest(smallGroup, joinMember); // 가입 요청
+    requestSmallGroupJoinRequest(smallGroup.getId(), joinMember.getUsername()); // 가입 요청
     int page = 0;
 
     ExtractableResponse<Response> response = requestReadAllJoinRequests(
-        smallGroup, page, member01);
+        smallGroup.getId(), page, member01.getUsername());
 
     assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_OK);
     List<GroupJoinRequestDto> content = response.jsonPath()
@@ -105,11 +104,11 @@ class SmallGroupJoinIntegrationTest extends IntegrationTest {
   void readAllJoinRequests_fail_because_not_leader() {
     SmallGroupDto smallGroup = group01;
     MemberDto joinMember = member02;
-    requestSmallGroupJoinRequest(smallGroup, joinMember); // 가입 요청
+    requestSmallGroupJoinRequest(smallGroup.getId(), joinMember.getUsername()); // 가입 요청
     int page = 0;
 
     ExtractableResponse<Response> response = requestReadAllJoinRequests(
-        smallGroup, page, member02);
+        smallGroup.getId(), page, member02.getUsername());
 
     assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_FORBIDDEN);
   }
@@ -119,11 +118,11 @@ class SmallGroupJoinIntegrationTest extends IntegrationTest {
   void approveSmallGroupJoin_success() {
     SmallGroupDto smallGroup = group01;
     MemberDto joinMember = member02;
-    requestSmallGroupJoinRequest(smallGroup, joinMember);
+    requestSmallGroupJoinRequest(smallGroup.getId(), joinMember.getUsername());
     Long requestId = findSmallGroupJoin(smallGroup.getId(), joinMember.getId()).getId();
 
     ExtractableResponse<Response> response = requestApproveSmallGroupJoin(
-        smallGroup, requestId, member01);
+        smallGroup.getId(), requestId, member01.getUsername());
 
     assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_OK);
   }
@@ -133,12 +132,12 @@ class SmallGroupJoinIntegrationTest extends IntegrationTest {
   void approveSmallGroupJoin_fail_because_not_leader() {
     SmallGroupDto smallGroup = group01;
     MemberDto joinMember = member02;
-    requestSmallGroupJoinRequest(smallGroup, joinMember);
+    requestSmallGroupJoinRequest(smallGroup.getId(), joinMember.getUsername());
 
     SmallGroupJoin smallGroupJoin = findSmallGroupJoin(smallGroup.getId(), joinMember.getId());
 
     ExtractableResponse<Response> response = requestApproveSmallGroupJoin(
-        smallGroup, smallGroupJoin.getId(), member02);
+        smallGroup.getId(), smallGroupJoin.getId(), member02.getUsername());
 
     assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_FORBIDDEN);
   }
@@ -153,7 +152,7 @@ class SmallGroupJoinIntegrationTest extends IntegrationTest {
   void rejectSmallGroupJoin_success() {
     SmallGroupDto smallGroup = group01;
     MemberDto joinMember = member02;
-    requestSmallGroupJoinRequest(smallGroup, joinMember);
+    requestSmallGroupJoinRequest(smallGroup.getId(), joinMember.getUsername());
     Long requestId = findSmallGroupJoin(smallGroup.getId(), joinMember.getId()).getId();
     RequestSpecification spec = AuthControllerTest.signIn(member01.getUsername(), memberPassword);
 
@@ -167,43 +166,42 @@ class SmallGroupJoinIntegrationTest extends IntegrationTest {
     assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_OK);
   }
 
-  private ExtractableResponse<Response> requestApproveSmallGroupJoin(SmallGroupDto smallGroup,
-      Long requestId, MemberDto loginMember) {
-    RequestSpecification spec = AuthControllerTest.signIn(loginMember.getUsername(), memberPassword);
+  public static ExtractableResponse<Response> requestSmallGroupJoinRequest(
+      Long smallGroupId, String loginUsername) {
+    RequestSpecification spec = AuthControllerTest.signIn(loginUsername, memberPassword);
     ExtractableResponse<Response> response = RestAssured.given().log().ifValidationFails()
         .spec(spec)
-        .pathParam("id", smallGroup.getId())
+        .pathParam("id", smallGroupId)
+        .when().post("smallGroups/{id}/join/requests")
+        .then().log().ifValidationFails().extract();
+    return response;
+  }
+
+  public static ExtractableResponse<Response> requestApproveSmallGroupJoin(Long smallGroupId,
+      Long requestId, String loginUsername) {
+    RequestSpecification spec = AuthControllerTest.signIn(loginUsername, memberPassword);
+    ExtractableResponse<Response> response = RestAssured.given().log().ifValidationFails()
+        .spec(spec)
+        .pathParam("id", smallGroupId)
         .pathParam("requestId", requestId)
         .when().post("smallGroups/{id}/join/requests/{requestId}/approve")
         .then().log().ifValidationFails().extract();
     return response;
   }
 
-  private ExtractableResponse<Response> requestReadAllJoinRequests(SmallGroupDto smallGroup,
-      int page, MemberDto loginMember) {
-    RequestSpecification spec = AuthControllerTest.signIn(loginMember.getUsername(), memberPassword);
+  private ExtractableResponse<Response> requestReadAllJoinRequests(Long smallGroupId,
+      int page, String loginUsername) {
+    RequestSpecification spec = AuthControllerTest.signIn(loginUsername, memberPassword);
     ExtractableResponse<Response> response = RestAssured.given().log().ifValidationFails()
         .spec(spec)
-        .pathParam("id", smallGroup.getId())
+        .pathParam("id", smallGroupId)
         .queryParam("page", page)
         .when().get("smallGroups/{id}/join/requests")
         .then().log().ifValidationFails().extract();
     return response;
   }
 
-  private static ExtractableResponse<Response> requestSmallGroupJoinRequest(
-      SmallGroupDto smallGroup, MemberDto loginMember) {
-    RequestSpecification spec = AuthControllerTest.signIn(loginMember.getUsername(), memberPassword);
-    ExtractableResponse<Response> response = RestAssured.given().log().ifValidationFails()
-        .spec(spec)
-        .pathParam("id", smallGroup.getId())
-        .when().post("smallGroups/{id}/join/requests")
-        .then().log().ifValidationFails().extract();
-    return response;
-  }
-
   private SmallGroupDto insertSmallGroup(String path, String groupName, Long maxMemberCount, MemberDto loginMember) {
-    RequestSpecification spec = AuthControllerTest.signIn(loginMember.getUsername(), memberPassword);
     CreateSmallGroupRequest request = CreateSmallGroupRequest.builder()
         .path(path)
         .name(groupName)
@@ -211,13 +209,8 @@ class SmallGroupJoinIntegrationTest extends IntegrationTest {
         .maxMemberCount(maxMemberCount)
         .build();
 
-    return RestAssured.given().log().ifValidationFails()
-        .spec(spec)
-        .body(request)
-        .contentType(ContentType.JSON)
-        .when().post("/smallGroups")
-        .then().log().ifStatusCodeIsEqualTo(HttpStatus.SC_CREATED)
-        .extract().as(SmallGroupDto.class);
+    return SmallGroupIntegrationTest.requestCreateGroup(request, loginMember.getUsername())
+        .as(SmallGroupDto.class);
   }
 
   private MemberDto insertMember(String username, String email ,String password) {
