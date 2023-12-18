@@ -30,11 +30,13 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
       +   "inner join sgm.smallGroup sg "
       +   "inner join sgm.member m "
       + "where sgm.member.id = :memberId "
-      + "and sg.leader.id != :memberId")
+      + "and sg.leader.id != :memberId "
+      + "order by sg.createdAt desc")
   List<SmallGroup> findJoinSmallGroupsByMemberId(Long memberId);
 
   @Query("select sg "
       + "from SmallGroup sg "
-      + "where sg.leader.id = :memberId")
+      + "where sg.leader.id = :memberId "
+      + "order by sg.createdAt desc")
   List<SmallGroup> findCreateSmallGroupsByMemberId(Long memberId);
 }
