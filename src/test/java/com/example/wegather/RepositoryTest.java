@@ -1,6 +1,7 @@
 package com.example.wegather;
 
 import com.example.wegather.config.TestConfig;
+import com.example.wegather.testContainer.MysqlTestContainer;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
@@ -12,6 +13,6 @@ import org.springframework.test.context.jdbc.Sql;
 @Import(TestConfig.class)
 @Sql("/truncate.sql")
 @DataJpaTest
-public class RepositoryTest {
+public abstract class RepositoryTest extends MysqlTestContainer {
 
 }

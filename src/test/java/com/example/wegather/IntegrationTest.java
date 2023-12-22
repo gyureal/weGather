@@ -1,5 +1,6 @@
 package com.example.wegather;
 
+import com.example.wegather.testContainer.MysqlTestContainer;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,7 +15,7 @@ import org.springframework.test.context.jdbc.Sql;
 @ActiveProfiles("test")
 @Sql("/truncate.sql")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class IntegrationTest {
+public abstract class IntegrationTest extends MysqlTestContainer {
   @LocalServerPort
   int port;
 
