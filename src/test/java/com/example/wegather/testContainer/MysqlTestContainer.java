@@ -1,13 +1,10 @@
 package com.example.wegather.testContainer;
 
-import org.springframework.boot.test.util.TestPropertyValues;
-import org.springframework.context.ApplicationContextInitializer;
-import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-@ContextConfiguration(initializers = MysqlTestContainer.ContainerPropertiesInitializer.class)
 @Testcontainers
 public abstract class MysqlTestContainer {
   public static final MySQLContainer<?> mysqlContainer;
@@ -21,15 +18,10 @@ public abstract class MysqlTestContainer {
     mysqlContainer.start();
   }
 
-  static class ContainerPropertiesInitializer implements
-      ApplicationContextInitializer<ConfigurableApplicationContext> {
-    @Override
-    public void initialize(ConfigurableApplicationContext configurableApplicationContext) {
-      TestPropertyValues.of(
-          "spring.datasource.url=" + mysqlContainer.getJdbcUrl(),
-          "spring.datasource.username=" + mysqlContainer.getUsername(),
-          "spring.datasource.password=" + mysqlContainer.getPassword()
-      ).applyTo(configurableApplicationContext.getEnvironment());
-    }
+  @DynamicPropertySource
+  private static void overrideProps(DynamicPropertyRegistry registry) {
+    registry.add("spring.datasource.url", mysqlContainer::getJdbcUrl);
+    registry.add("spring.datasource.username", mysqlContainer::getUsername);
+    registry.add("spring.datasource.password", mysqlContainer::getPassword);
   }
 }
