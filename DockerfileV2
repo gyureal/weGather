@@ -8,7 +8,9 @@ RUN gradle build -x test --parallel --continue > /dev/null 2>&1 || true
 
 # 어플리케이션 빌드
 COPY . /build
-RUN gradle build -x test --parallel
+ENV DOCKER_HOST tcp://dind:2375
+RUN ./gradlew --no-daemon clean build
+
 
 # APP
 FROM openjdk:11.0-slim
