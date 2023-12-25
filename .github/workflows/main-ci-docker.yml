@@ -27,13 +27,17 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
-      - 
-        name: Grant run_test.sh  # test 스크립트 실행 권한 부여
-        run: chmod +x ./run_test.sh 
-        shell: bash
+      # - 
+        # name: Grant run_test.sh  # test 스크립트 실행 권한 부여
+        # run: chmod +x ./run_test.sh 
+        # shell: bash
+      # - 
+      #   name: test
+      #   run: script -e -c ./run_test.sh
       - 
         name: test
-        run: script -e -c ./run_test.sh
+        run: docker run -it --rm -v $PWD:$PWD -w $PWD -v /var/run/docker.sock:/var/run/docker.sock -e TESTCONTAINERS_HOST_OVERRIDE=host.docker.internal gradle:latest gradle test
+
       - 
         name: build
         run: docker build . --file DockerfileV2 --tag ${{ env.REGISTRY}}/${{ env.IMGAE_NAME }}:${{ env.TAG }}
