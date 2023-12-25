@@ -36,7 +36,7 @@ jobs:
       #   run: script -e -c ./run_test.sh
       - 
         name: test
-        run: docker run -it --rm -v $PWD:$PWD -w $PWD -v /var/run/docker.sock:/var/run/docker.sock -e TESTCONTAINERS_HOST_OVERRIDE=host.docker.internal gradle:latest gradle test
+        run: docker run --rm -v $PWD:$PWD -w $PWD -v /var/run/docker.sock:/var/run/docker.sock -e TESTCONTAINERS_HOST_OVERRIDE=host.docker.internal gradle:latest gradle test
 
       - 
         name: build
