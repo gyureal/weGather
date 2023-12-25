@@ -33,7 +33,7 @@ jobs:
         shell: bash
       - 
         name: test
-        run: bash ./run_test.sh
+        run: bash run_test.sh
       - 
         name: build
         run: docker build . --file DockerfileV2 --tag ${{ env.REGISTRY}}/${{ env.IMGAE_NAME }}:${{ env.TAG }}
