@@ -8,7 +8,7 @@ RUN gradle build -x test --parallel --continue > /dev/null 2>&1 || true
 
 # 어플리케이션 빌드
 COPY . /build
-RUN ./gradlew --no-daemon clean build
+RUN ./gradlew -x test --no-daemon clean build
 
 # APP
 FROM openjdk:11.0-slim
@@ -20,5 +20,5 @@ ENTRYPOINT [                                                \
     "java",                                                 \
     "-jar",                                                 \
     "-Dspring.profiles.active=dev",		            \
-    "*.jar"              \
+    "weGather-0.0.1-SNAPSHOT.jar"              \
 ]
