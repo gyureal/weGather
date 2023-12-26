@@ -55,5 +55,4 @@ jobs:
           aws-region: ap-northeast-2
       -
         name : Image Pull and Run Container
-        run: aws deploy --application-name $CODE_DEPLOY_APP_NAME  \ 
-                        --deployment-config-name CodeDeployDefault.AllAtOnce --deployment-group-name $CODE_DEPLOY_GROUP_NAME
+        run: aws deploy --application-name $CODE_DEPLOY_APP_NAME --deployment-config-name CodeDeployDefault.AllAtOnce --deployment-group-name $CODE_DEPLOY_GROUP_NAME
