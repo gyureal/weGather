@@ -6,9 +6,8 @@ permissions:
     pattern: "**"
     owner: ec2-user
     group: ec2-user
-
 hooks:
   ApplicationStart:
-    - location: docker_deploy.sh
+    - location: scripts/docker_deploy.sh
       timeout: 60
       runas: ec2-user
