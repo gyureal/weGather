@@ -43,9 +43,9 @@ jobs:
       -
         name: set env variables
         run: |
-          export REGISTRY = ${{ env.REGISTRY}}
-          export IMAGE_NAME = ${{ env.IMGAE_NAME }}
-          export TAG = ${{ env.TAG }}
+          export REGISTRY=${{ env.REGISTRY}}
+          export IMAGE_NAME=${{ env.IMGAE_NAME }}
+          export TAG=${{ env.TAG }}
       -
         name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1      #(13)
