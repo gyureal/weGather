@@ -14,12 +14,10 @@ RUN ./gradlew -x test --no-daemon clean build
 FROM openjdk:11.0-slim
 WORKDIR /app
 
-ENV ENV_DIR=$(pwd)/src/main/resources
+ENV ENV_DIR=src/main/resources
 COPY --from=builder /build/build/libs/*.jar .
 EXPOSE 8080
-ENTRYPOINT java -jar    \
-    -Dspring.config.location=classpath:/application.yml,classpath:/application-app.yml, \
-    $ENV_DIR/application-aws.yml,$ENV_DIR/application-db-dev.yml \
-    -Dspring.profiles.active=dev		            \
-    weGather-0.0.1-SNAPSHOT.jar              \
+ENTRYPOINT java -jar \
+           -Dspring.config.location=classpath:/application.yml,classpath:/application-app.yml,$ENV_DIR/application-aws.yml,$ENV_DIR/application-db-dev.yml \
+           -Dspring.profiles.active=dev build/libs/weGather-0.0.1-SNAPSHOT.jar
 
