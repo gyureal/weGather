@@ -1,9 +1,5 @@
 version: 0.0
 os: linux
-files:
-  - source: /
-    destination: /home/ec2-user/app/zip/
-    overwrite: yes
 
 permissions:
   - object: /
@@ -13,6 +9,6 @@ permissions:
 
 hooks:
   ApplicationStart:
-    - location: deploy.sh # 엔진엑스와 연결되어 있지 않은 Port로 새 버전의 스프링 부트를 시작합니다.
+    - location: docker_deploy.sh
       timeout: 60
       runas: ec2-user
