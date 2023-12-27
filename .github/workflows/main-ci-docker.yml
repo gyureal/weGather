@@ -72,7 +72,7 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ec2-user
           key: ${{ secrets.EC2_ACCESS_KEY }}
-          script: scripts/docker-deploy.sh
+          script: ./docker-deploy.sh
       -
         name: revoke runner ip address
         run: |
