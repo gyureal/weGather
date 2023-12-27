@@ -77,7 +77,7 @@ jobs:
             docker stop wegather
             docker rm wegather
             export ENV_DIR=/home/ec2-user/app/wegather/env
-            docker run -d --name wegather -v $ENV_DIR:/app/env -e ENV_DIR=/app/env -p 8080:8080 ${{ env.REGISTRY}}/${{ env.IMGAE_NAME }}:${{ env.TAG }}
+            docker run -d --name wegather -v $ENV_DIR:/app/env -e ENV_DIR=/app/env -p :8080 ${{ env.REGISTRY}}/${{ env.IMGAE_NAME }}:${{ env.TAG }}
       -
         name: revoke runner ip address
         run: |
