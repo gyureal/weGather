@@ -73,11 +73,7 @@ jobs:
           username: ec2-user
           key: ${{ secrets.EC2_ACCESS_KEY }}
           script: |
-            docker pull ${{ env.REGISTRY}}/${{ env.IMGAE_NAME }}:${{ env.TAG }}
-            docker stop wegather
-            docker rm wegather
-            export ENV_DIR=/home/ec2-user/app/wegather/env
-            docker run -d --name wegather -v $ENV_DIR:/app/env -e ENV_DIR=/app/env -p 8080:8080 ${{ env.REGISTRY}}/${{ env.IMGAE_NAME }}:${{ env.TAG }}
+            ./scripts/docker-deploy.sh
       -
         name: revoke runner ip address
         run: |
