@@ -73,7 +73,6 @@ jobs:
           username: ec2-user
           key: ${{ secrets.EC2_ACCESS_KEY }}
           script: |
-            docker login
             docker pull ${{ env.REGISTRY}}/${{ env.IMGAE_NAME }}:${{ env.TAG }}
             docker stop wegather
             docker rm wegather
