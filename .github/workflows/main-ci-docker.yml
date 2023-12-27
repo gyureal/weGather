@@ -53,6 +53,37 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-northeast-2
-#      -
-#        name : Image Pull and Run Container
-#        run: aws deploy create-deployment --application-name $CODE_DEPLOY_APP_NAME --deployment-config-name CodeDeployDefault.AllAtOnce --deployment-group-name $CODE_DEPLOY_GROUP_NAME
+      -
+        name: get runner ip address
+        id: ip
+        uses: haythem/public-ip@v1.2
+      -
+        name: whitelist runner ip address
+        run: |
+          aws ec2 authorize-security-group-ingress \
+            --group-id ${{  secrets.AWS_INSTANCE_SG_ID }} \
+            --protocol tcp \
+            --port 22 \
+            --cidr ${{ steps.ip.outputs.ipv4 }}/32
+      -
+        name: executing remote ssh commands using ssh key
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ec2-user
+          key: ${{ secrets.EC2_ACCESS_KEY }}
+          script: |
+            docker login
+            docker pull ${{ env.REGISTRY}}/${{ env.IMGAE_NAME }}:${{ env.TAG }}
+            docker stop wegather
+            docker rm wegather
+            export ENV_DIR=/home/ec2-user/app/wegather/env
+            docker run -d --name wegather -v $ENV_DIR:/app/env -e ENV_DIR=/app/env -p 8080:8080 ${{ env.REGISTRY}}/${{ env.IMGAE_NAME }}:${{ env.TAG }}
+      -
+        name: revoke runner ip address
+        run: |
+          aws ec2 revoke-security-group-ingress \
+            --group-id $AWS_INSTANCE_SG_ID \
+            --protocol tcp \
+            --port 22 \
+            --cidr ${{ steps.ip.outputs.ipv4 }}/32
