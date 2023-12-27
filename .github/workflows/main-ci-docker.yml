@@ -67,7 +67,7 @@ jobs:
             --cidr ${{ steps.ip.outputs.ipv4 }}/32
       -
         name: Grant docker_deploy.sh  # docker deploy 스크립트 실행 권한 부여
-        run: chmod +x ./scripts/docker_deploy.sh
+        run: chmod +x scripts/docker_deploy.sh
         shell: bash
       -
         name: executing remote ssh commands using ssh key
@@ -77,7 +77,7 @@ jobs:
           username: ec2-user
           key: ${{ secrets.EC2_ACCESS_KEY }}
           script: |
-            ./scripts/docker-deploy.sh
+            scripts/docker-deploy.sh
       -
         name: revoke runner ip address
         run: |
