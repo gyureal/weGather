@@ -2,7 +2,7 @@ name: main-ci docker version
 
 env:  
   REGISTRY: prebird
-  IMGAE_NAME: wegather
+  IMAGE_NAME: wegather
   TAG: latest
   CODE_DEPLOY_APP_NAME: weGather                 
   CODE_DEPLOY_GROUP_NAME: weGather
@@ -36,16 +36,10 @@ jobs:
 #         run: ./run_test.sh
       - 
         name: build
-        run: docker build . --file DockerfileV2 --tag ${{ env.REGISTRY}}/${{ env.IMGAE_NAME }}:${{ env.TAG }}
+        run: docker build . --file DockerfileV2 --tag ${{ env.REGISTRY}}/${{ env.IMAGE_NAME }}:${{ env.TAG }}
       -
         name: push image to dockerhub
-        run: docker push ${{ env.REGISTRY}}/${{ env.IMGAE_NAME }}:${{ env.TAG }}
-      -
-        name: set env variables
-        run: |
-          export REGISTRY=${{ env.REGISTRY}}
-          export IMAGE_NAME=${{ env.IMGAE_NAME }}
-          export TAG=${{ env.TAG }}
+        run: docker push ${{ env.REGISTRY}}/${{ env.IMAGE_NAME }}:${{ env.TAG }}
       -
         name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -74,7 +68,7 @@ jobs:
           key: ${{ secrets.EC2_ACCESS_KEY }}
           script: |
             echo 'pull image'
-            docker pull $REGISTRY/$IMAGE_NAME:$TAG
+            docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.TAG}}
 
             echo 'stop running container'
             docker stop wegather
@@ -84,7 +78,7 @@ jobs:
             export ENV_DIR=/home/ec2-user/app/wegather/env
 
             echo 'run deployed container'
-            docker run -d --name wegather -v $ENV_DIR:/app/env -e ENV_DIR=/app/env -p 8080:8080 $REGISTRY/$IMAGE_NAME:$TAG
+            docker run -d --name wegather -v $ENV_DIR:/app/env -e ENV_DIR=/app/env -p 8080:8080 ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.TAG}}
       -
         name: revoke runner ip address
         run: |
