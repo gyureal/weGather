@@ -2,6 +2,7 @@ package com.example.wegather.member.dto;
 
 import com.example.wegather.member.domain.entity.Member;
 import java.time.LocalDateTime;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,6 +16,7 @@ public class MemberProfileDto {
   private Boolean emailVerified;
   private String introductionText;
   private String profileImage;
+  private List<String> interests;
   private boolean groupCreatedByEmail;
   private boolean groupCreatedByWeb;
   private boolean joinResultByEmail;
@@ -30,6 +32,7 @@ public class MemberProfileDto {
         .emailVerified(member.isEmailVerified())
         .introductionText(member.getIntroductionText())
         .profileImage(member.getProfileImage())
+        .interests(member.getInterestsName())
         .groupCreatedByEmail(member.getMemberAlarmSetting().isGroupCreatedByEmail())
         .groupCreatedByWeb(member.getMemberAlarmSetting().isGroupCreatedByWeb())
         .joinResultByEmail(member.getMemberAlarmSetting().isJoinResultByEmail())
