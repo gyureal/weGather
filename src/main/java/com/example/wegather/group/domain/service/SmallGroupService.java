@@ -88,7 +88,7 @@ public class SmallGroupService {
     smallGroupDto.changeJoinable(smallGroup.isJoinable());
     smallGroupDto.changeMemberOrManager(smallGroup.isMemberOrManager(memberDetails.getMemberId()));
     smallGroupDto.changeJoinRequested(
-        smallGroupJoinRepository.existsBySmallGroupAndMember_Id(smallGroup, memberDetails.getMemberId()));
+        smallGroupJoinRepository.existsRequestedJoin(smallGroup.getId(), memberDetails.getMemberId()));
     return smallGroupDto;
   }
 
