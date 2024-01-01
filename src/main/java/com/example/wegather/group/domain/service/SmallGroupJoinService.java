@@ -94,8 +94,8 @@ public class SmallGroupJoinService {
         .map(GroupJoinRequestDto::from).collect(Collectors.toList());
   }
 
-  private void validateGetAllJoinRequests(SmallGroup smallGroup, Long loginId) {
-    if (!smallGroup.isLeader(loginId)) {
+  private void validateGetAllJoinRequests(SmallGroup smallGroup, Long loginMemberId) {
+    if (!smallGroup.isManager(loginMemberId)) {
       throw new NoPermissionException(LEADER_ONLY.getDescription());
     }
   }
