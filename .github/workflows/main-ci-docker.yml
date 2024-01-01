@@ -1,11 +1,9 @@
 name: main-ci docker version
 
 env:  
-  REGISTRY: prebird
+  REGISTRY: gyureal
   IMAGE_NAME: wegather
   TAG: latest
-  CODE_DEPLOY_APP_NAME: weGather                 
-  CODE_DEPLOY_GROUP_NAME: weGather
 
 on:
   release:
