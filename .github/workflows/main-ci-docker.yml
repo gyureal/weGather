@@ -76,7 +76,7 @@ jobs:
             export ENV_DIR=/home/ec2-user/app/wegather/env
 
             echo 'run deployed container'
-            docker run -d --name wegather -v $ENV_DIR:/app/env -e ENV_DIR=/app/env -p 8080:8080 ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.TAG}}
+            docker run -d --name wegather --network app-network -v $ENV_DIR:/app/env -e ENV_DIR=/app/env -p 8080:8080 ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.TAG}}
       -
         name: revoke runner ip address
         run: |
