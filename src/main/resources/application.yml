@@ -9,4 +9,5 @@ spring:
         - app
         - aws
         - db-dev
+        - mail
     active: local

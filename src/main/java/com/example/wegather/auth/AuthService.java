@@ -12,6 +12,7 @@ import com.example.wegather.auth.dto.SignUpRequest;
 import com.example.wegather.member.domain.entity.MemberAlarmSetting;
 import com.example.wegather.member.dto.MemberDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -24,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Service
 public class AuthService {
+  private final ServerProperties serverProperties;
   private final AuthenticationManager authenticationManager;
   private final MemberRepository memberRepository;
   private final PasswordEncoder passwordEncoder;
@@ -45,8 +47,8 @@ public class AuthService {
 
   private void sendSignUpConfirmEmail(Member newMember) {
     EmailMessage emailMessage = EmailMessage.builder()
-        .to("WeGather, 회원 가입 인증")
-        .subject("WeGather, 회원 가입 인증")
+        .to(newMember.getEmail())
+        .subject("WeGather 서비스 회원 가입 인증 메일")
         .message("/check-email-token?token=" + newMember.getEmailCheckToken() +
             "&email=" + newMember.getEmail())
         .build();

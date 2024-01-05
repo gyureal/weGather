@@ -10,11 +10,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 @Slf4j
 @Profile("dev")
-@Component
+@Service
 @RequiredArgsConstructor
 public class HtmlEmailSerivce implements EmailService {
   private final JavaMailSender javaMailSender;
