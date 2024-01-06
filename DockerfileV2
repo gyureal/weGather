@@ -18,6 +18,6 @@ ENV ENV_DIR=src/main/resources
 COPY --from=builder /build/build/libs/*.jar .
 EXPOSE 8080
 ENTRYPOINT java -jar \
-           -Dspring.config.location=classpath:/application.yml,classpath:/application-app.yml,$ENV_DIR/application-aws.yml,$ENV_DIR/application-db-dev.yml \
+           -Dspring.config.location=classpath:/application.yml,classpath:/application-app.yml,$ENV_DIR/application-aws.yml,$ENV_DIR/application-db-dev.yml,$ENV_DIR/application-mail.yml \
            -Dspring.profiles.active=dev weGather-0.0.1-SNAPSHOT.jar
 
