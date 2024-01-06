@@ -39,4 +39,4 @@ out/
 ### application
 application-aws.yml
 application-db-dev.yml
-application-mail.properties
+application-mail.yml
