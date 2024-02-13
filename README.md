@@ -25,7 +25,8 @@ JDK 버전 : JDK 11
 <img src="https://img.shields.io/badge/amazon ec2-FF9900?style=for-the-badge&logo=mamazonec2&logoColor=white"> <img src="https://img.shields.io/badge/amazon rds-527FFF?style=for-the-badge&logo=amazonrds&logoColor=white"> <img src="https://img.shields.io/badge/github actions-2088FF?style=for-the-badge&logo=githubactions&logoColor=white"> <img src="https://img.shields.io/badge/amazon s3-569A31?style=for-the-badge&logo=amazons3&logoColor=white"> <img src="https://img.shields.io/badge/amazone CodeDeploy-072240?style=for-the-badge&logo=&logoColor=white">
 
 ## 📌 Backend Architecture
-<img width="876" alt="image" src="https://github.com/gyureal/weGather/assets/78974381/7934ff9e-20f5-4f94-a445-42066cd4c8d9">
+<img width="797" alt="image" src="https://github.com/prebird/weGather/assets/78974381/060b500e-df8e-4a27-af6d-e3a3a5f5402f">
+
 
 
 ## 🔎 프로젝트 기능
