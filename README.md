@@ -82,10 +82,6 @@ JDK 버전 : JDK 11
    - 해당 소모임의 `최대회원수`를 `초과`하면 요청할 수 없습니다.
  
 
-
-## 🎓 API 명세
-https://great-lizard-b83.notion.site/API-d1ca66eb2a554be68e47284d727a59e3?pvs=4
-
 ## 📖 ERD
 https://www.erdcloud.com/d/J3yFTcYwZDscXNmSY
 
