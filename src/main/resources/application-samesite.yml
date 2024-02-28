@@ -1,0 +1,8 @@
+server:
+  servlet:
+    session:
+      cookie:
+        name: JSESSIONID
+        domain: ec2-15-164-45-178.ap-northeast-2.compute.amazonaws.com
+        http-only: true
+        path: /
