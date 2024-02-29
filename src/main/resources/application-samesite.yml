@@ -3,6 +3,6 @@ server:
     session:
       cookie:
         name: JSESSIONID
-        domain: ec2-15-164-45-178.ap-northeast-2.compute.amazonaws.com
+        domain: wegather.me
         http-only: true
         path: /
