@@ -80,24 +80,7 @@ public class AuthController {
    * @return
    */
   @GetMapping("/current-user")
-  public ResponseEntity<MemberInfo> getMyInfo(@AuthenticationPrincipal MemberDetails memberDetails, HttpServletRequest request, HttpSession session) {
-    log.info("current-user called");
-    Cookie[] cookies = request.getCookies();
-
-    if (cookies != null) {
-      log.info("cookies");
-      for (Cookie cookie : cookies) {
-        log.info(cookie.getName() + ", " + cookie.getValue());
-      }
-    }
-    log.info("sessions");
-    Enumeration<String> attributeNames = session.getAttributeNames();
-    while (attributeNames.hasMoreElements()) {
-      var attributeName = attributeNames.nextElement();
-      log.info("{}, {}", attributeName, session.getAttribute(attributeName));
-    }
-
-
+  public ResponseEntity<MemberInfo> getMyInfo(@AuthenticationPrincipal MemberDetails memberDetails) {
     if (memberDetails != null) {
       Member member = memberRepository.findWithAlarmSettingByUsername(memberDetails.getUsername())
           .orElseThrow(() -> new AuthenticationException(ErrorCode.MEMBER_NOT_FOUND.getDescription()));
