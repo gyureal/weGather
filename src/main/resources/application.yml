@@ -10,5 +10,4 @@ spring:
         - aws
         - db-dev
         - mail
-        - samesite
     active: local
