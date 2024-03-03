@@ -14,3 +14,5 @@ spring:
     multipart:
       max-file-size: 3MB
 
+app:
+  domain: localhost:3000

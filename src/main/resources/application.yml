@@ -2,11 +2,12 @@ spring:
   profiles:
     group:
       local:
-        - app
+        - app-local
         - aws
         - db-local
+        - mail
       dev:
-        - app
+        - app-dev
         - aws
         - db-dev
         - mail
