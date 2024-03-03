@@ -15,4 +15,4 @@ spring:
       max-file-size: 3MB
 
 app:
-  domain: wegather.me
+  domain: http://wegather.me
