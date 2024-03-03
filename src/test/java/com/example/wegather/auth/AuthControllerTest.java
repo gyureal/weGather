@@ -50,7 +50,7 @@ public class AuthControllerTest extends IntegrationTest {
     assertThat(member.getEmail()).isEqualTo(signUpRequest.getEmail());
     assertThat(member.getEmailCheckToken()).isNotEmpty();
     assertThat(member.getEmailCheckTokenGeneratedAt()).isNotNull();
-    BDDMockito.then(emailService).should().sendEmail(any(EmailMessage.class));
+    BDDMockito.then(emailService).should().sendEmail(any(String.class), any(EmailMessage.class));
   }
 
   @Test

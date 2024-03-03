@@ -41,3 +41,5 @@ application:
   bucket:
     name: my-neighbor-solver
 
+app:
+  domain: test
