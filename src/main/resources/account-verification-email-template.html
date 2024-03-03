@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>이메일 인증</title>
+</head>
+<body style="font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 20px;">
+<div class="container" style="max-width: 600px; margin: auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
+  <header style="display: flex; justify-content: center;">
+    <h2>WeGather 계정 인증</h2>
+  </header>
+  <main>
+    <p>안녕하세요,</p>
+    <p>WeGather 커뮤니티에 가입해주셔서 감사합니다! 회원님의 이메일 주소를 인증하여 가입 절차를 완료해 주세요.</p>
+    <p>아래의 "이메일 인증하기" 버튼을 클릭하여 이메일 인증을 완료해 주세요. 버튼 클릭 시, 자동으로 WeGather 사이트의 이메일 인증 페이지로 리다이렉트 됩니다.</p>
+    <p class="link-button-area" style="display: flex; justify-content: center;">
+      <a href="${verifyMemberUrl}" class="button" style="display: inline-block; padding: 10px 20px; background-color: #007bff; color: #ffffff; text-decoration: none; border-radius: 5px; font-weight: bold; margin-top: 10px; margin-bottom: 10px;">이메일 인증하기</a>
+    </p>
+    <div style="background-color: #F3E2A9; padding: 10px; border-radius: 5px; margin-top: 20px;">
+      <p style="margin: 0;">버튼 클릭으로 동작하지 않을 경우 아래 URL을 복사하여 주소창에 붙혀 넣어 주세요:</p>
+      <p style="margin: 10px 0 0;">${verifyMemberUrl}</p>
+    </div>
+  </main>
+  <footer style="margin-top: 20px; text-align: center; font-size: 0.9em; color: #777;">Copyright © WeGather 2024.</footer>
+</div>
+</body>
+</html>

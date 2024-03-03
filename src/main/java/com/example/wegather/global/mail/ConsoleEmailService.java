@@ -10,7 +10,10 @@ import org.springframework.stereotype.Component;
 public class ConsoleEmailService implements EmailService {
 
   @Override
-  public void sendEmail(EmailMessage emailMessage) {
-    log.info("sent email: {}", emailMessage.getMessage());
+  public void sendEmail(String templateName, EmailMessage emailMessage) {
+    log.info("templateName: {}", templateName);
+    log.info("mail to: {}", emailMessage.getTo());
+    log.info("mail subject: {}", emailMessage.getSubject());
+    log.info("bindingVariables: {}", emailMessage.getBindingVariables());
   }
 }

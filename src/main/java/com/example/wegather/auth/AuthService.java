@@ -12,6 +12,7 @@ import com.example.wegather.auth.dto.SignUpRequest;
 import com.example.wegather.member.domain.entity.MemberAlarmSetting;
 import com.example.wegather.member.dto.MemberDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -30,6 +31,8 @@ public class AuthService {
   private final MemberRepository memberRepository;
   private final PasswordEncoder passwordEncoder;
   private final EmailService emailService;
+  @Value("${app.domain}")
+  private String domainUrl;
 
   /**
    * 회원가입을 실시합니다.
@@ -49,11 +52,11 @@ public class AuthService {
     EmailMessage emailMessage = EmailMessage.builder()
         .to(newMember.getEmail())
         .subject("WeGather 서비스 회원 가입 인증 메일")
-        .message("/check-email-token?token=" + newMember.getEmailCheckToken() +
-            "&email=" + newMember.getEmail())
         .build();
+    emailMessage.addBindingVariable("verifyMemberUrl", domainUrl + "/check-email-token?token=" + newMember.getEmailCheckToken() +
+        "&email=" + newMember.getEmail());
 
-    emailService.sendEmail(emailMessage);
+    emailService.sendEmail("account-verification-email-template", emailMessage);
   }
 
   private Member saveNewMember(SignUpRequest request) {
