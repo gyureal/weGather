@@ -1,16 +1,6 @@
 # 🗒️ [Side Project] 소모임 서비스
 > 관심사가 비슷한 사람끼리 모임을 만들고 소통할 수 있는 서비스입니다.
 
-<br/>
-
-## 🔎 서비스 둘러보기
-- URL: [wegather.me](http://wegather.me)
-- Test 계정
-  - **ID: test01**
-  - **PW: 12341234** 
-
-<br/>
-
 ## 🔧 사용 기술 (Tech Stack)
 ### Development
 <img src="https://img.shields.io/badge/java-007396?style=for-the-badge&logo=Java&logoColor=white"> <img src="https://img.shields.io/badge/springboot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white"> <img src="https://img.shields.io/badge/spring security-6DB33F?style=for-the-badge&logo=springsecurity&logoColor=white">  <img src="https://img.shields.io/badge/spring data jpa-6DB33F?style=for-the-badge&logo=spring&logoColor=white"> <img src="https://img.shields.io/badge/query dsl-007DB8?style=for-the-badge&logo=spring jpa&logoColor=white">
