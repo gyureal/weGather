@@ -24,9 +24,13 @@ JDK 버전 : JDK 11
 ### DevOps
 <img src="https://img.shields.io/badge/amazon ec2-FF9900?style=for-the-badge&logo=mamazonec2&logoColor=white"> <img src="https://img.shields.io/badge/amazon rds-527FFF?style=for-the-badge&logo=amazonrds&logoColor=white"> <img src="https://img.shields.io/badge/github actions-2088FF?style=for-the-badge&logo=githubactions&logoColor=white"> <img src="https://img.shields.io/badge/amazon s3-569A31?style=for-the-badge&logo=amazons3&logoColor=white"> <img src="https://img.shields.io/badge/amazone CodeDeploy-072240?style=for-the-badge&logo=&logoColor=white">
 
-## 📌 Backend Architecture
-<img width="797" alt="image" src="https://github.com/prebird/weGather/assets/78974381/060b500e-df8e-4a27-af6d-e3a3a5f5402f">
+## 📌 Architecture
+<img width="852" alt="image" src="https://github.com/prebird/weGather/assets/78974381/ac6fa45f-4baf-44fc-846f-2725cbdc90b3">
 
+
+
+## Frontend Repository
+[프론트엔드 레포지토리 가기](https://github.com/prebird/weGatherFrontend)
 
 
 ## 🔎 프로젝트 기능
