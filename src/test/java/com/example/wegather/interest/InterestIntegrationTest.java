@@ -42,7 +42,7 @@ public class InterestIntegrationTest extends IntegrationTest {
     ExtractableResponse<Response> response =
         RestAssured.given().log().ifValidationFails().spec(spec)
         .body(request).contentType(ContentType.JSON)
-        .when().post("/interests")
+        .when().post("/api/interests")
         .then().log().ifValidationFails()
         .extract();
 
@@ -66,7 +66,7 @@ public class InterestIntegrationTest extends IntegrationTest {
     // when
     ExtractableResponse<Response> response = RestAssured.given().log().ifValidationFails().spec(spec)
         .body(request).contentType(ContentType.JSON)
-        .when().post("/interests")
+        .when().post("/api/interests")
         .then().log().ifValidationFails()
         .extract();
 
@@ -85,7 +85,7 @@ public class InterestIntegrationTest extends IntegrationTest {
     ExtractableResponse<Response> response =
       RestAssured.given().log().ifValidationFails()
         .spec(spec)
-        .when().get("/interests")
+        .when().get("/api/interests")
         .then().log().ifValidationFails()
         .extract();
 
@@ -104,7 +104,7 @@ public class InterestIntegrationTest extends IntegrationTest {
 
     ExtractableResponse<Response> response =
         RestAssured.given().log().ifValidationFails().spec(spec)
-        .when().get("/interests/{id}", swimming.getId())
+        .when().get("/api/interests/{id}", swimming.getId())
         .then().log().ifValidationFails()
         .extract();
 
@@ -122,7 +122,7 @@ public class InterestIntegrationTest extends IntegrationTest {
     ExtractableResponse<Response> response =
       RestAssured.given().log().ifValidationFails().spec(spec)
         .contentType(ContentType.JSON)
-        .when().delete("/interests/{id}", swimming.getId())
+        .when().delete("/api/interests/{id}", swimming.getId())
         .then().log().ifValidationFails()
         .extract();
 
@@ -138,7 +138,7 @@ public class InterestIntegrationTest extends IntegrationTest {
 
     return RestAssured.given().log().ifValidationFails().spec(spec)
         .body(request).contentType(ContentType.JSON)
-        .when().post("/interests")
+        .when().post("/api/interests")
         .then().log().ifValidationFails()
         .extract().as(InterestDto.class);
   }

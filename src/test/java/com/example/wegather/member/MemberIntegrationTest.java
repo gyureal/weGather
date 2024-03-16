@@ -72,7 +72,7 @@ class MemberIntegrationTest extends IntegrationTest {
     RestAssured.given().log().ifValidationFails().spec(spec)
         .queryParam("size", size, "page", page)
         .contentType(ContentType.JSON)
-        .when().get("/members")
+        .when().get("/api/members")
         .then().log().ifValidationFails()
         .extract();
 
@@ -99,7 +99,7 @@ class MemberIntegrationTest extends IntegrationTest {
     ExtractableResponse<Response> response =
         RestAssured.given().log().ifValidationFails().spec(spec)
         .contentType(ContentType.JSON)
-        .when().get("/members/{id}", member01.getId())
+        .when().get("/api/members/{id}", member01.getId())
         .then().log().ifValidationFails()
         .extract();
 
@@ -118,7 +118,7 @@ class MemberIntegrationTest extends IntegrationTest {
     ExtractableResponse<Response> response =
         RestAssured.given().log().ifValidationFails().spec(spec)
         .contentType(ContentType.JSON)
-        .when().delete("/members/{id}", member01.getId())
+        .when().delete("/api/members/{id}", member01.getId())
         .then().log().ifValidationFails()
         .extract();
 
@@ -144,7 +144,7 @@ class MemberIntegrationTest extends IntegrationTest {
     ExtractableResponse<Response> response = RestAssured.given().log().ifValidationFails().spec(spec)
         .contentType(ContentType.JSON)
         .body(request)
-        .when().post("/members/profile/image")
+        .when().post("/api/members/profile/image")
         .then().log().ifValidationFails()
         .extract();
 
@@ -174,7 +174,7 @@ class MemberIntegrationTest extends IntegrationTest {
     ExtractableResponse<Response> response = RestAssured.given().log().ifValidationFails().spec(spec)
         .contentType(ContentType.MULTIPART)
         .multiPart("file", "fake-file.txt", fakeFileBytes)
-        .when().post("/members/profile/image/v2")
+        .when().post("/api/members/profile/image/v2")
         .then().log().ifValidationFails()
         .extract();
 
@@ -210,7 +210,7 @@ class MemberIntegrationTest extends IntegrationTest {
         RestAssured.given().log().ifValidationFails().spec(spec)
             .queryParam("interestId", interest1.getId())
             .contentType(ContentType.JSON)
-            .when().post("/members/{id}/interests", member01.getId())
+            .when().post("/api/members/{id}/interests", member01.getId())
             .then().log().ifValidationFails()
             .extract();
     return response;
@@ -230,7 +230,7 @@ class MemberIntegrationTest extends IntegrationTest {
             .spec(spec)
             .queryParam("interestId", interest1.getId())
             .contentType(ContentType.JSON)
-            .when().delete("/members/{id}/interests", member01.getId())
+            .when().delete("/api/members/{id}/interests", member01.getId())
             .then().log().ifValidationFails()
             .extract();
 
@@ -258,7 +258,7 @@ class MemberIntegrationTest extends IntegrationTest {
     // when
     ExtractableResponse<Response> response = RestAssured.given().log().ifValidationFails()
         .spec(AuthControllerTest.signIn(member02.getUsername(), memberPassword))
-        .when().get("/members/profile/smallGroups/join")
+        .when().get("/api/members/profile/smallGroups/join")
         .then().log().ifValidationFails()
         .extract();
 
@@ -278,7 +278,7 @@ class MemberIntegrationTest extends IntegrationTest {
     // when
     ExtractableResponse<Response> response = RestAssured.given().log().ifValidationFails()
         .spec(AuthControllerTest.signIn(member01.getUsername(), memberPassword))
-        .when().get("/members/profile/smallGroups/create")
+        .when().get("/api/members/profile/smallGroups/create")
         .then().log().ifValidationFails()
         .extract();
 
@@ -299,7 +299,7 @@ class MemberIntegrationTest extends IntegrationTest {
     return RestAssured.given().spec(spec)
         .body(request)
         .contentType(ContentType.JSON)
-        .when().post("/interests")
+        .when().post("/api/interests")
         .then()
         .extract().as(InterestDto.class);
   }

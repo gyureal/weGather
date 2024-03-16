@@ -39,7 +39,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 
 @RequiredArgsConstructor
-@RequestMapping("/smallGroups")
+@RequestMapping("/api/smallGroups")
 @RestController
 public class SmallGroupController {
   private final SmallGroupService smallGroupService;

@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
-@RequestMapping("/smallGroups/{id}/join")
+@RequestMapping("/api/smallGroups/{id}/join")
 @RestController
 public class SmallGroupJoinController {
   private final SmallGroupJoinService smallGroupJoinService;

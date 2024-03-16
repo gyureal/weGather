@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
-@RequestMapping("/interests")
+@RequestMapping("/api/interests")
 @RestController
 public class InterestController {
   private final InterestService interestService;

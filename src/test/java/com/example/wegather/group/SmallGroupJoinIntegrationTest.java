@@ -160,7 +160,7 @@ public class SmallGroupJoinIntegrationTest extends IntegrationTest {
         .spec(spec)
         .pathParam("id", smallGroup.getId())
         .pathParam("requestId", requestId)
-        .when().post("smallGroups/{id}/join/requests/{requestId}/reject")
+        .when().post("/api/smallGroups/{id}/join/requests/{requestId}/reject")
         .then().log().ifValidationFails().extract();
 
     assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_OK);
@@ -172,7 +172,7 @@ public class SmallGroupJoinIntegrationTest extends IntegrationTest {
     ExtractableResponse<Response> response = RestAssured.given().log().ifValidationFails()
         .spec(spec)
         .pathParam("id", smallGroupId)
-        .when().post("smallGroups/{id}/join/requests")
+        .when().post("/api/smallGroups/{id}/join/requests")
         .then().log().ifValidationFails().extract();
     return response;
   }
@@ -184,7 +184,7 @@ public class SmallGroupJoinIntegrationTest extends IntegrationTest {
         .spec(spec)
         .pathParam("id", smallGroupId)
         .pathParam("requestId", requestId)
-        .when().post("smallGroups/{id}/join/requests/{requestId}/approve")
+        .when().post("/api/smallGroups/{id}/join/requests/{requestId}/approve")
         .then().log().ifValidationFails().extract();
     return response;
   }
@@ -196,7 +196,7 @@ public class SmallGroupJoinIntegrationTest extends IntegrationTest {
         .spec(spec)
         .pathParam("id", smallGroupId)
         .queryParam("page", page)
-        .when().get("smallGroups/{id}/join/requests")
+        .when().get("/api/smallGroups/{id}/join/requests")
         .then().log().ifValidationFails().extract();
     return response;
   }

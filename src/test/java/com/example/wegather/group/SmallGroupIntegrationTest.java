@@ -133,7 +133,7 @@ public class SmallGroupIntegrationTest extends IntegrationTest {
     ExtractableResponse<Response> response = RestAssured.given().log().ifValidationFails().spec(spec)
         .pathParam("path", path)
         .contentType(ContentType.JSON)
-        .when().get("/smallGroups/{path}")
+        .when().get("/api/smallGroups/{path}")
         .then().log().ifValidationFails()
         .extract();
 
@@ -157,7 +157,7 @@ public class SmallGroupIntegrationTest extends IntegrationTest {
     // when
     ExtractableResponse<Response> response = RestAssured.given().log().ifValidationFails().spec(spec)
         .pathParam("path", path)
-        .when().get("/smallGroups/{path}/managers-and-members")
+        .when().get("/api/smallGroups/{path}/managers-and-members")
         .then().log().ifValidationFails()
         .extract();
 
@@ -196,7 +196,7 @@ public class SmallGroupIntegrationTest extends IntegrationTest {
         .pathParam("path", path)
         .contentType(ContentType.JSON)
         .body(request)
-        .when().post("/smallGroups/{path}/banner")
+        .when().post("/api/smallGroups/{path}/banner")
         .then().log().ifValidationFails()
         .extract();
 
@@ -228,7 +228,7 @@ public class SmallGroupIntegrationTest extends IntegrationTest {
         .pathParam("path", path)
         .contentType(ContentType.MULTIPART)
         .multiPart("file", "fake-file.txt", fakeFileBytes)
-        .when().post("/smallGroups/{path}/banner/v2")
+        .when().post("/api/smallGroups/{path}/banner/v2")
         .then().log().ifValidationFails()
         .extract();
 
@@ -256,7 +256,7 @@ public class SmallGroupIntegrationTest extends IntegrationTest {
         .queryParam("title", title)
         .queryParam("size", size)
         .queryParam("page", page)
-        .when().get("/smallGroups")
+        .when().get("/api/smallGroups")
         .then().log().ifValidationFails()
         .extract();
 
@@ -287,7 +287,7 @@ public class SmallGroupIntegrationTest extends IntegrationTest {
         .body(smallGroupSearchCondition)
         .queryParam("size", size, "page", page)
         .contentType(ContentType.JSON)
-        .when().get("/smallGroups")
+        .when().get("/api/smallGroups")
         .then().log().ifValidationFails()
         .extract();
 
@@ -318,7 +318,7 @@ public class SmallGroupIntegrationTest extends IntegrationTest {
         .pathParam("path", group01.getPath())
         .body(request)
         .contentType(ContentType.JSON)
-        .when().put("/smallGroups/{path}")
+        .when().put("/api/smallGroups/{path}")
         .then().log().ifValidationFails()
         .extract();
 
@@ -350,7 +350,7 @@ public class SmallGroupIntegrationTest extends IntegrationTest {
         .pathParam("path", group01.getPath())
         .body(request)
         .contentType(ContentType.JSON)
-        .when().put("/smallGroups/{path}")
+        .when().put("/api/smallGroups/{path}")
         .then().log().ifValidationFails()
         .extract();
 
@@ -381,7 +381,7 @@ public class SmallGroupIntegrationTest extends IntegrationTest {
         .pathParam("path", group01.getPath())
         .body(request)
         .contentType(ContentType.JSON)
-        .when().put("/smallGroups/{path}")
+        .when().put("/api/smallGroups/{path}")
         .then().log().ifValidationFails()
         .statusCode(HttpStatus.SC_FORBIDDEN);
   }
@@ -417,7 +417,7 @@ public class SmallGroupIntegrationTest extends IntegrationTest {
         )
           .multiPart("image", "fake-file.txt", fakeFileBytes, MULTIPART_FORM_DATA_VALUE)
         .when()
-          .put("/smallGroups/{path}/v2")
+          .put("/api/smallGroups/{path}/v2")
         .then()
           .log().ifValidationFails()
           .extract();
@@ -444,7 +444,7 @@ public class SmallGroupIntegrationTest extends IntegrationTest {
         .spec(spec)
         .pathParam("id", id)
         .contentType(ContentType.JSON)
-        .when().delete("/smallGroups/{id}")
+        .when().delete("/api/smallGroups/{id}")
         .then().log().ifValidationFails()
         .statusCode(HttpStatus.SC_NO_CONTENT);
   }
@@ -461,7 +461,7 @@ public class SmallGroupIntegrationTest extends IntegrationTest {
         .spec(spec)
         .pathParam("id", id)
         .contentType(ContentType.JSON)
-        .when().delete("/smallGroups/{id}")
+        .when().delete("/api/smallGroups/{id}")
         .then().log().ifValidationFails()
         .statusCode(HttpStatus.SC_FORBIDDEN);
   }
@@ -551,7 +551,7 @@ public class SmallGroupIntegrationTest extends IntegrationTest {
     ExtractableResponse<Response> response = RestAssured.given().log().ifValidationFails()
         .spec(spec)
         .pathParam("path", group01.getPath())
-        .when().get("/smallGroups/{path}/interests")
+        .when().get("/api/smallGroups/{path}/interests")
         .then().log().ifValidationFails()
         .extract();
 
@@ -595,7 +595,7 @@ public class SmallGroupIntegrationTest extends IntegrationTest {
     ExtractableResponse<Response> response = RestAssured.given().log().ifValidationFails()
         .spec(spec)
         .pathParam("path", group01.getPath())
-        .when().post("/smallGroups/{path}/publish")
+        .when().post("/api/smallGroups/{path}/publish")
         .then().log().ifValidationFails()
         .extract();
     return response;
@@ -632,7 +632,7 @@ public class SmallGroupIntegrationTest extends IntegrationTest {
         .spec(spec)
         .pathParam("path", path)
         .queryParam("recruitingProcess", RecruitingProcess.FCFS)
-        .when().post("/smallGroups/{path}/open-recruiting")
+        .when().post("/api/smallGroups/{path}/open-recruiting")
         .then().log().ifValidationFails()
         .extract();
     return response;
@@ -667,7 +667,7 @@ public class SmallGroupIntegrationTest extends IntegrationTest {
     ExtractableResponse<Response> response = RestAssured.given().log().ifValidationFails()
         .spec(spec)
         .pathParam("path", path)
-        .when().post("/smallGroups/{path}/close")
+        .when().post("/api/smallGroups/{path}/close")
         .then().log().ifValidationFails()
         .extract();
     return response;
@@ -678,7 +678,7 @@ public class SmallGroupIntegrationTest extends IntegrationTest {
 
     return RestAssured.given().log().ifValidationFails().spec(spec)
         .body(request).contentType(ContentType.JSON)
-        .when().post("/smallGroups")
+        .when().post("/api/smallGroups")
         .then().log().ifValidationFails()
         .extract();
   }
@@ -713,7 +713,7 @@ public class SmallGroupIntegrationTest extends IntegrationTest {
         .pathParam("path", smallGroupPath)
         .queryParam("interestName", interestName)
         .contentType(ContentType.JSON)
-        .when().post("/smallGroups/{path}/interest")
+        .when().post("/api/smallGroups/{path}/interest")
         .then().log().ifValidationFails()
         .extract();
   }
@@ -726,7 +726,7 @@ public class SmallGroupIntegrationTest extends IntegrationTest {
         .pathParam("path", smallGroupPath)
         .queryParam("interestName", interestName)
         .contentType(ContentType.JSON)
-        .when().delete("/smallGroups/{path}/interest")
+        .when().delete("/api/smallGroups/{path}/interest")
         .then().log().ifValidationFails()
         .extract();
   }
