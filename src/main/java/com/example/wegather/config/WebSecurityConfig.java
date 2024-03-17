@@ -28,7 +28,7 @@ public class WebSecurityConfig {
     http.csrf().disable();
     http.authorizeRequests()
           .antMatchers("/api/sign-up", "/api/sign-in", "/api/check-email-token", "/api/current-user", "/api/logout").permitAll()
-          .antMatchers(HttpMethod.GET, "/smallGroups", "/health").permitAll()
+          .antMatchers(HttpMethod.GET, "/api/smallGroups", "/api/health").permitAll()
           .anyRequest().authenticated()
         .and()
             .logout()
