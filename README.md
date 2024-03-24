@@ -15,7 +15,7 @@
 <img src="https://img.shields.io/badge/amazon ec2-FF9900?style=for-the-badge&logo=mamazonec2&logoColor=white"> <img src="https://img.shields.io/badge/amazon rds-527FFF?style=for-the-badge&logo=amazonrds&logoColor=white"> <img src="https://img.shields.io/badge/github actions-2088FF?style=for-the-badge&logo=githubactions&logoColor=white"> <img src="https://img.shields.io/badge/amazon s3-569A31?style=for-the-badge&logo=amazons3&logoColor=white"> <img src="https://img.shields.io/badge/amazone CodeDeploy-072240?style=for-the-badge&logo=&logoColor=white">
 
 ## 📌 Architecture
-<img width="852" alt="image" src="https://github.com/prebird/weGather/assets/78974381/ac6fa45f-4baf-44fc-846f-2725cbdc90b3">
+![image](https://github.com/prebird/weGather/assets/78974381/e8eda359-fd72-4bc3-8ea5-6f8a0b8dea2e)
 
 
 
