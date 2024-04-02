@@ -11,7 +11,7 @@ import com.example.wegather.global.upload.UploadFile;
 import com.example.wegather.group.domain.entity.SmallGroup;
 import com.example.wegather.group.domain.entity.SmallGroupInterest;
 import com.example.wegather.group.domain.repotitory.SmallGroupRepository;
-import com.example.wegather.group.domain.vo.RecruitingProcess;
+import com.example.wegather.group.domain.vo.RecruitingType;
 import com.example.wegather.group.dto.CreateSmallGroupRequest;
 import com.example.wegather.group.dto.ManagerAndMemberDto;
 import com.example.wegather.group.dto.SmallGroupDto;
@@ -612,7 +612,7 @@ public class SmallGroupIntegrationTest extends IntegrationTest {
     assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_OK);
     SmallGroup smallGroup = findSmallGroupById(path);
     assertThat(smallGroup.isRecruiting()).isTrue();
-    assertThat(smallGroup.getRecruitingProcess()).isEqualTo(RecruitingProcess.FCFS);
+    assertThat(smallGroup.getRecruitingType()).isEqualTo(RecruitingType.FCFS);
     assertThat(smallGroup.getRecruitingUpdatedDateTime()).isNotNull();
   }
 
@@ -631,7 +631,7 @@ public class SmallGroupIntegrationTest extends IntegrationTest {
     ExtractableResponse<Response> response = RestAssured.given().log().ifValidationFails()
         .spec(spec)
         .pathParam("path", path)
-        .queryParam("recruitingProcess", RecruitingProcess.FCFS)
+        .queryParam("recruitingType", RecruitingType.FCFS)
         .when().post("/api/smallGroups/{path}/open-recruiting")
         .then().log().ifValidationFails()
         .extract();

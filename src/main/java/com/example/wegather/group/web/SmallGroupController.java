@@ -2,7 +2,7 @@ package com.example.wegather.group.web;
 
 import com.example.wegather.auth.MemberDetails;
 import com.example.wegather.group.domain.service.SmallGroupService;
-import com.example.wegather.group.domain.vo.RecruitingProcess;
+import com.example.wegather.group.domain.vo.RecruitingType;
 import com.example.wegather.group.dto.CreateSmallGroupRequest;
 import com.example.wegather.group.dto.ManagerAndMemberDto;
 import com.example.wegather.group.dto.SmallGroupDto;
@@ -238,13 +238,13 @@ public class SmallGroupController {
    * 소모임의 인원 모집을 오픈합니다.
    * @param principal 로그인한 회원
    * @param path 소모임 path
-   * @param recruitingProcess 모집 방식
+   * @param recruitingType 모집 방식
    * @return
    */
   @PostMapping("/{path}/open-recruiting")
   public ResponseEntity<Void> openRecruiting(@AuthenticationPrincipal MemberDetails principal,
-      @PathVariable String path, @RequestParam RecruitingProcess recruitingProcess) {
-    smallGroupService.openRecruiting(principal, path, recruitingProcess);
+      @PathVariable String path, @RequestParam RecruitingType recruitingType) {
+    smallGroupService.openRecruiting(principal, path, recruitingType);
     return ResponseEntity.ok().build();
   }
 

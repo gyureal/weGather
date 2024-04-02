@@ -22,7 +22,7 @@ public class SmallGroupDto {
   private String banner;
   private String image;
   private boolean recruiting;
-  private String recruitingProcess;
+  private String recruitingType;
   private boolean published;
   private boolean closed;
   private boolean joinable;
@@ -44,7 +44,7 @@ public class SmallGroupDto {
         .banner(smallGroup.getBanner())
         .useBanner(smallGroup.isUseBanner())
         .recruiting(smallGroup.isRecruiting())
-        .recruitingProcess(smallGroup.getRecruitingProcess()!=null ? smallGroup.getRecruitingProcess().name() : "")
+        .recruitingType(smallGroup.getRecruitingType()!=null ? smallGroup.getRecruitingType().name() : "")
         .published(smallGroup.isPublished())
         .status(smallGroup.getStatus())
         .closed(smallGroup.isClosed())
