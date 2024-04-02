@@ -1,7 +1,7 @@
 package com.example.wegather.group.domain.entity;
 
 import com.example.wegather.global.BaseTimeEntity;
-import com.example.wegather.group.domain.vo.RecruitingProcess;
+import com.example.wegather.group.domain.vo.RecruitingType;
 import com.example.wegather.global.vo.SmallGroupStatus;
 import com.example.wegather.group.domain.vo.SmallGroupMemberType;
 import com.example.wegather.interest.domain.Interest;
@@ -39,16 +39,9 @@ import org.hibernate.annotations.DynamicInsert;
 public class SmallGroup extends BaseTimeEntity {
   @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
-  private String path;
   @ManyToOne(fetch = FetchType.LAZY)
   private Member leader;
-
-  @OneToMany(mappedBy = "smallGroup")
-  private Set<SmallGroupMember> members = new HashSet<>();
-
-  @OneToMany(fetch = FetchType.LAZY, mappedBy = "smallGroup", cascade = CascadeType.ALL, orphanRemoval = true)
-  private Set<SmallGroupInterest> smallGroupInterests = new HashSet<>();
-
+  private String path;
   private String name;
   private String shortDescription;
   @Lob
@@ -62,10 +55,14 @@ public class SmallGroup extends BaseTimeEntity {
   private LocalDateTime closedDateTime;
   private boolean recruiting = false;
   @Enumerated(EnumType.STRING)
-  private RecruitingProcess recruitingProcess;
+  private RecruitingType recruitingType;
   private boolean published = false;
   private boolean closed = false;
   private boolean useBanner = false;
+  @OneToMany(mappedBy = "smallGroup")
+  private Set<SmallGroupMember> members = new HashSet<>();
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "smallGroup", cascade = CascadeType.ALL, orphanRemoval = true)
+  private Set<SmallGroupInterest> smallGroupInterests = new HashSet<>();
 
   @Builder
   public SmallGroup(String path, String name, String shortDescription, String fullDescription ,Member leader,
@@ -173,11 +170,11 @@ public class SmallGroup extends BaseTimeEntity {
 
   /**
    * 소모임 인원 모집을 시작합니다.
-   * @param recruitingProcess 소모임 모집 방식
+   * @param recruitingType 소모임 모집 방식
    */
-  public void openRecruiting(RecruitingProcess recruitingProcess) {
+  public void openRecruiting(RecruitingType recruitingType) {
     this.recruiting = true;
-    this.recruitingProcess = recruitingProcess;
+    this.recruitingType = recruitingType;
     this.recruitingUpdatedDateTime = LocalDateTime.now();
   }
 

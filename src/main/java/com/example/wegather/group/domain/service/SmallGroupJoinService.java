@@ -9,15 +9,13 @@ import com.example.wegather.group.domain.entity.SmallGroupMember;
 import com.example.wegather.group.domain.repotitory.SmallGroupJoinRepository;
 import com.example.wegather.group.domain.repotitory.SmallGroupMemberRepository;
 import com.example.wegather.group.domain.repotitory.SmallGroupRepository;
-import com.example.wegather.group.domain.vo.RecruitingProcess;
+import com.example.wegather.group.domain.vo.RecruitingType;
 import com.example.wegather.group.dto.GroupJoinRequestDto;
 import com.example.wegather.member.domain.MemberRepository;
 import com.example.wegather.member.domain.entity.Member;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,7 +44,7 @@ public class SmallGroupJoinService {
 
     validJoinSmallGroup(smallGroup, member);
 
-    if (smallGroup.getRecruitingProcess() == RecruitingProcess.FCFS) {
+    if (smallGroup.getRecruitingType() == RecruitingType.FCFS) {
       return joinAsFCFS(smallGroup, member);
     }
     return smallGroupJoinRepository.save(SmallGroupJoin.of(smallGroup, member)).getId();

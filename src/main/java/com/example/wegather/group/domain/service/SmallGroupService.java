@@ -9,7 +9,7 @@ import com.example.wegather.global.upload.UploadFile;
 import com.example.wegather.group.domain.entity.SmallGroup;
 import com.example.wegather.group.domain.repotitory.SmallGroupJoinRepository;
 import com.example.wegather.group.domain.repotitory.SmallGroupRepository;
-import com.example.wegather.group.domain.vo.RecruitingProcess;
+import com.example.wegather.group.domain.vo.RecruitingType;
 import com.example.wegather.group.dto.CreateSmallGroupRequest;
 import com.example.wegather.group.dto.ManagerAndMemberDto;
 import com.example.wegather.group.dto.SmallGroupDto;
@@ -268,10 +268,10 @@ public class SmallGroupService {
   }
 
   @Transactional
-  public void openRecruiting(MemberDetails principal, String path, RecruitingProcess recruitingProcess) {
+  public void openRecruiting(MemberDetails principal, String path, RecruitingType recruitingType) {
     SmallGroup smallGroup = findSmallGroupByPath(path);
     validateUpdatable(principal, smallGroup);
-    smallGroup.openRecruiting(recruitingProcess);
+    smallGroup.openRecruiting(recruitingType);
   }
 
   @Transactional
