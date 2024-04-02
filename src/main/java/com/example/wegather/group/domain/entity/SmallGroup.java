@@ -1,7 +1,6 @@
 package com.example.wegather.group.domain.entity;
 
 import com.example.wegather.global.BaseTimeEntity;
-import com.example.wegather.global.vo.Address;
 import com.example.wegather.group.domain.vo.RecruitingProcess;
 import com.example.wegather.global.vo.SmallGroupStatus;
 import com.example.wegather.group.domain.vo.SmallGroupMemberType;
@@ -13,12 +12,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
-import javax.persistence.AttributeOverride;
-import javax.persistence.AttributeOverrides;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -61,14 +56,6 @@ public class SmallGroup extends BaseTimeEntity {
   private String fullDescription;
   private String image;
   private String banner;
-
-  @Embedded
-  @AttributeOverrides({
-      @AttributeOverride(name = "streetAddress", column = @Column(name = "street_address")),
-      @AttributeOverride(name = "longitude", column = @Column(name = "longitude")),
-      @AttributeOverride(name = "latitude", column = @Column(name = "latitude"))
-  })
-  private Address address;
   private Long maxMemberCount;
   private LocalDateTime recruitingUpdatedDateTime;
   private LocalDateTime publishedDateTime;
@@ -81,14 +68,13 @@ public class SmallGroup extends BaseTimeEntity {
   private boolean useBanner = false;
 
   @Builder
-  public SmallGroup(String path, String name, String shortDescription, String fullDescription ,Member leader, Address address,
+  public SmallGroup(String path, String name, String shortDescription, String fullDescription ,Member leader,
       Long maxMemberCount) {
     this.path = path;
     this.name = name;
     this.shortDescription = shortDescription;
     this.fullDescription = fullDescription;
     this.leader = leader;
-    this.address = address;
     this.maxMemberCount = maxMemberCount;
   }
 

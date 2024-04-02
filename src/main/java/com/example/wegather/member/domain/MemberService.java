@@ -6,14 +6,12 @@ import static com.example.wegather.global.exception.ErrorCode.MEMBER_NOT_FOUND;
 import static com.example.wegather.global.exception.ErrorCode.PASSWORD_NOT_MATCHED;
 
 import com.example.wegather.auth.MemberDetails;
-import com.example.wegather.group.domain.entity.SmallGroup;
 import com.example.wegather.interest.domain.InterestService;
 import com.example.wegather.member.dto.ChangeAlarmSettingsForm;
 import com.example.wegather.member.dto.ChangePasswordForm;
 import com.example.wegather.member.dto.EditProfileImageRequest;
 import com.example.wegather.member.dto.MemberProfileDto;
 import com.example.wegather.global.exception.customException.AuthenticationException;
-import com.example.wegather.global.dto.AddressRequest;
 import com.example.wegather.global.upload.StoreFile;
 import com.example.wegather.global.upload.UploadFile;
 import com.example.wegather.interest.domain.Interest;
@@ -107,14 +105,6 @@ public class MemberService {
     UploadFile uploadFile = storeFile.storeFile(multipartImage);
 
     replaceProfileImage(member, uploadFile);
-  }
-
-  @Transactional
-  public void updateMemberAddress(MemberDetails principal,Long id, AddressRequest addressRequest) {
-    Member member = getMemberById(id);
-    validateUpdatable(principal, member.getUsername());
-
-    member.changeAddress(addressRequest.convertAddressEntity());
   }
 
   @Transactional

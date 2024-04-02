@@ -1,7 +1,6 @@
 package com.example.wegather.member.domain.entity;
 
 import com.example.wegather.global.BaseTimeEntity;
-import com.example.wegather.global.vo.Address;
 import com.example.wegather.global.vo.Image;
 import com.example.wegather.global.vo.MemberType;
 import com.example.wegather.interest.domain.Interest;
@@ -44,20 +43,11 @@ public class Member extends BaseTimeEntity {
   private String username;
   private String password;
   private String email;
-
   private boolean emailVerified;
   private String emailCheckToken;
   private LocalDateTime emailCheckTokenGeneratedAt;
   private LocalDateTime joinedAt;
   private String introductionText;
-
-  @Embedded
-  @AttributeOverrides({
-      @AttributeOverride(name = "streetAddress", column = @Column(name = "street_address")),
-      @AttributeOverride(name = "longitude", column = @Column(name = "longitude")),
-      @AttributeOverride(name = "latitude", column = @Column(name = "latitude"))
-  })
-  private Address address;
   @Enumerated(EnumType.STRING)
   private MemberType memberType;
   @Embedded
@@ -70,11 +60,10 @@ public class Member extends BaseTimeEntity {
   MemberAlarmSetting memberAlarmSetting;
 
   @Builder
-  public Member(String username, String password, String email, Address address, MemberType memberType) {
+  public Member(String username, String password, String email, MemberType memberType) {
     this.username = username;
     this.password = password;
     this.email = email;
-    this.address = address;
     this.memberType = memberType;
   }
 
@@ -85,10 +74,6 @@ public class Member extends BaseTimeEntity {
 
   public void changeProfileImage(String storeImagePath) {
     profileImage = Image.of(storeImagePath);
-  }
-
-  public void changeAddress(Address address) {
-    this.address = address;
   }
 
   public void addInterest(Interest interest) {

@@ -5,7 +5,6 @@ import com.example.wegather.member.dto.ChangeAlarmSettingsForm;
 import com.example.wegather.member.dto.ChangePasswordForm;
 import com.example.wegather.member.dto.EditProfileImageRequest;
 import com.example.wegather.member.dto.MemberProfileDto;
-import com.example.wegather.global.dto.AddressRequest;
 import com.example.wegather.interest.dto.InterestDto;
 import com.example.wegather.member.domain.MemberService;
 import com.example.wegather.member.dto.EditProfileForm;
@@ -24,7 +23,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -164,22 +162,6 @@ public class MemberController {
   public ResponseEntity<Void> deleteMemberById(@PathVariable Long id) {
     memberService.deleteMember(id);
     return ResponseEntity.noContent().build();
-  }
-
-  /**
-   * 회원의 주소를 수정합니다.
-   * @param id
-   * @param addressRequest
-   * @throws IllegalArgumentException
-   *     일치하는 회원이 없을 때
-   *     주소의 형식이 맞지 않을 때
-   * @return
-   */
-  @PutMapping("/{id}/address")
-  public ResponseEntity<Void> updateMemberAddress(@AuthenticationPrincipal MemberDetails principal,
-      @PathVariable Long id, @RequestBody AddressRequest addressRequest) {
-    memberService.updateMemberAddress(principal, id, addressRequest);
-    return ResponseEntity.ok().build();
   }
 
   /**
