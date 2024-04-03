@@ -7,7 +7,7 @@ import static org.mockito.BDDMockito.then;
 
 import com.example.wegather.IntegrationTest;
 import com.example.wegather.auth.AuthControllerTest;
-import com.example.wegather.global.upload.StoreFile;
+import com.example.wegather.global.upload.repository.AbstractStoreFile;
 import com.example.wegather.global.upload.UploadFile;
 import com.example.wegather.group.SmallGroupIntegrationTest;
 import com.example.wegather.group.SmallGroupJoinIntegrationTest;
@@ -47,7 +47,7 @@ class MemberIntegrationTest extends IntegrationTest {
   SmallGroupDto smallGroup02;
   SmallGroupDto smallGroup03;
   @MockBean
-  StoreFile storeFile;
+  AbstractStoreFile storeImage;
 
   @BeforeEach
   void init() {
@@ -138,7 +138,7 @@ class MemberIntegrationTest extends IntegrationTest {
 
     // 이미지 저장 mock
     String storeFileName = "storeFileName";
-    given(storeFile.storeFile(any(), any())).willReturn(UploadFile.of("", storeFileName));
+    given(storeImage.storeFile(any(), any())).willReturn(UploadFile.of("", storeFileName));
 
     // when
     ExtractableResponse<Response> response = RestAssured.given().log().ifValidationFails().spec(spec)
@@ -151,7 +151,7 @@ class MemberIntegrationTest extends IntegrationTest {
     // then
     assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_OK);
     // 호출 검증
-    then(storeFile).should().storeFile(any(), any());
+    then(storeImage).should().storeFile(any(), any());
 
     Member member = memberRepository.findById(member01.getId())
         .orElseThrow(() -> new RuntimeException("test fail"));
@@ -168,7 +168,7 @@ class MemberIntegrationTest extends IntegrationTest {
     byte[] fakeFileBytes = fakeFileContent.getBytes();
     // 이미지 저장 mock
     String storeFileName = "storeFileName";
-    given(storeFile.storeFile(any())).willReturn(UploadFile.of("", storeFileName));
+    given(storeImage.storeFile(any())).willReturn(UploadFile.of("", storeFileName));
 
     // when
     ExtractableResponse<Response> response = RestAssured.given().log().ifValidationFails().spec(spec)
@@ -181,7 +181,7 @@ class MemberIntegrationTest extends IntegrationTest {
     // then
     assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_OK);
     // 호출 검증
-    then(storeFile).should().storeFile(any());
+    then(storeImage).should().storeFile(any());
 
     Member member = memberRepository.findById(member01.getId())
         .orElseThrow(() -> new RuntimeException("test fail"));

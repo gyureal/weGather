@@ -6,7 +6,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
 
 import com.example.wegather.auth.AuthControllerTest;
-import com.example.wegather.global.upload.StoreFile;
+import com.example.wegather.global.upload.repository.AbstractStoreFile;
 import com.example.wegather.global.upload.UploadFile;
 import com.example.wegather.group.domain.entity.SmallGroup;
 import com.example.wegather.group.domain.entity.SmallGroupInterest;
@@ -59,7 +59,8 @@ public class SmallGroupIntegrationTest extends IntegrationTest {
   @Autowired
   private MemberRepository memberRepository;
   @MockBean
-  StoreFile storeFile;
+  //StoreImage storeImage;
+  AbstractStoreFile storeImage;
 
   private static final String memberUsername = "member01";
   private static final String memberPassword = "1234";
@@ -189,7 +190,7 @@ public class SmallGroupIntegrationTest extends IntegrationTest {
         .build();
     // 이미지 저장 mock
     String storeFileName = "storeFileName";
-    given(storeFile.storeFile(any(), any())).willReturn(UploadFile.of("", storeFileName));
+    given(storeImage.storeFile(any(), any())).willReturn(UploadFile.of("", storeFileName));
 
     // when
     ExtractableResponse<Response> response = RestAssured.given().log().ifValidationFails().spec(spec)
@@ -203,7 +204,7 @@ public class SmallGroupIntegrationTest extends IntegrationTest {
     // then
     assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_OK);
     // 호출 검증지
-    then(storeFile).should().storeFile(any(), any());
+    then(storeImage).should().storeFile(any(), any());
 
     SmallGroup smallGroup = smallGroupRepository.findByPath(path)
         .orElseThrow(() -> new RuntimeException("test fail"));
@@ -221,7 +222,7 @@ public class SmallGroupIntegrationTest extends IntegrationTest {
     byte[] fakeFileBytes = fakeFileContent.getBytes();
     // 이미지 저장 mock
     String storeFileName = "storeFileName";
-    given(storeFile.storeFile(any())).willReturn(UploadFile.of("", storeFileName));
+    given(storeImage.storeFile(any())).willReturn(UploadFile.of("", storeFileName));
 
     // when
     ExtractableResponse<Response> response = RestAssured.given().log().ifValidationFails().spec(spec)
@@ -235,7 +236,7 @@ public class SmallGroupIntegrationTest extends IntegrationTest {
     // then
     assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_OK);
     // 호출 검증지
-    then(storeFile).should().storeFile(any());
+    then(storeImage).should().storeFile(any());
 
     SmallGroup smallGroup = smallGroupRepository.findByPath(path)
         .orElseThrow(() -> new RuntimeException("test fail"));
@@ -341,8 +342,8 @@ public class SmallGroupIntegrationTest extends IntegrationTest {
         .originalImageName("image.jpg")
         .build();
     String storeFileName = "new Image";
-    given(storeFile.decodeBase64Image(any())).willReturn(new byte[1]);
-    given(storeFile.storeFile(any(), any())).willReturn(new UploadFile("", storeFileName));
+    given(storeImage.decodeBase64Image(any())).willReturn(new byte[1]);
+    given(storeImage.storeFile(any(), any())).willReturn(new UploadFile("", storeFileName));
 
     ExtractableResponse<Response> response = RestAssured
         .given().log().ifValidationFails()
@@ -360,7 +361,7 @@ public class SmallGroupIntegrationTest extends IntegrationTest {
     assertThat(updated.getShortDescription()).isEqualTo(request.getShortDescription());
     assertThat(updated.getFullDescription()).isEqualTo(request.getFullDescription());
     // 이미지 업로드 메서드 호출 테스트
-    then(storeFile).should().storeFile(any(), any());
+    then(storeImage).should().storeFile(any(), any());
     // 이미지 DB 저장 테스트
     assertThat(updated.getImage()).isEqualTo(storeFileName);
   }
@@ -400,7 +401,7 @@ public class SmallGroupIntegrationTest extends IntegrationTest {
     byte[] fakeFileBytes = fakeFileContent.getBytes();
     // 이미지 저장 mock
     String storeFileName = "storeFileName";
-    given(storeFile.storeFile(any())).willReturn(UploadFile.of("", storeFileName));
+    given(storeImage.storeFile(any())).willReturn(UploadFile.of("", storeFileName));
 
     ExtractableResponse<Response> response = RestAssured
         .given().log().ifValidationFails()
@@ -428,7 +429,7 @@ public class SmallGroupIntegrationTest extends IntegrationTest {
     assertThat(updated.getShortDescription()).isEqualTo(descriptionInfo.getShortDescription());
     assertThat(updated.getFullDescription()).isEqualTo(descriptionInfo.getFullDescription());
     // 이미지 업로드 메서드 호출 테스트
-    then(storeFile).should().storeFile(any());
+    then(storeImage).should().storeFile(any());
     // 이미지 DB 저장 테스트
     assertThat(updated.getImage()).isEqualTo(storeFileName);
   }
