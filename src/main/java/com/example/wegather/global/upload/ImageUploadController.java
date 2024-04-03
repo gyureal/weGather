@@ -1,10 +1,12 @@
 package com.example.wegather.global.upload;
 
+import com.example.wegather.auth.MemberDetails;
 import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,8 +29,9 @@ public class ImageUploadController {
   }
 
   @PostMapping("/images")
-  public ResponseEntity<Void> uploadImage(@RequestParam("image") MultipartFile multipartFile) {
-    String storedFileName = imageUploadService.uploadImage(multipartFile);
+  public ResponseEntity<Void> uploadImage(@RequestParam("image") MultipartFile multipartFile,
+                                          @AuthenticationPrincipal MemberDetails memberDetails) {
+    String storedFileName = imageUploadService.uploadImage(multipartFile, memberDetails.getMemberId());
     return ResponseEntity.created(URI.create("/images/" + storedFileName)).build();
   }
 

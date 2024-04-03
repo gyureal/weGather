@@ -139,7 +139,7 @@ public class SmallGroupService {
     validateUpdatable(principal, smallGroup);
 
     if (!image.isEmpty()) { // 이미지 값이 있을 때만 저장
-      String storedFileName = imageUploadService.uploadImage(image);
+      String storedFileName = imageUploadService.uploadImage(image, principal.getMemberId());
       smallGroup.updateImage(storedFileName);
     }
 
@@ -239,7 +239,7 @@ public class SmallGroupService {
     validateUpdatable(memberDetails, smallGroup);
 
     // 이미지 업로드
-    String storedFileName = imageUploadService.uploadImage(multipartImage);
+    String storedFileName = imageUploadService.uploadImage(multipartImage, memberDetails.getMemberId());
 
     replaceBannerImage(smallGroup, storedFileName);
   }

@@ -103,7 +103,7 @@ public class MemberService {
     Member member = getMemberById(memberId);
 
     // 이미지 업로드
-    String storedFileName = imageUploadService.uploadImage(multipartImage);
+    String storedFileName = imageUploadService.uploadImage(multipartImage, memberId);
 
     replaceProfileImage(member, storedFileName);
   }

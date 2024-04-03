@@ -21,6 +21,7 @@ public enum ErrorCode {
   PHONE_NUMBER_RULE_VIOLATION("1003", "올바른 전화번호를 입력해주세요."),
   INVALID_INPUT_ERROR("1009","올바르지 않은 입력입니다."),
   EMAIL_SEND_FAIL("1010", "메일 발송에 실패했습니다."),
+  FILE_UPLOAD_HISTORY_NOT_EXISTS("1011", "파일 업로드 내역을 찾을 수 없습니다."),
 
   /**
    * 회원 파트 에러 메세지
