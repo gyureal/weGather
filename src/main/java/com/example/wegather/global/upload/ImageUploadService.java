@@ -1,6 +1,6 @@
 package com.example.wegather.global.upload;
 
-import com.example.wegather.global.upload.repository.AbstractStoreFile;
+import com.example.wegather.global.upload.repository.AbstractFileManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -9,7 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 @Service
 public class ImageUploadService {
-  private final AbstractStoreFile storeFile;
+  private final AbstractFileManager fileManager;
 
   /**
    * MultipartFile 타입의 이미지를 업로드합니다.
@@ -17,7 +17,7 @@ public class ImageUploadService {
    * @return 업로드 이미지 이름
    */
   public String uploadImage(MultipartFile multipartFile) {
-    UploadFile uploadFile = storeFile.storeFile(multipartFile);
+    UploadFile uploadFile = fileManager.storeFile(multipartFile);
     return uploadFile.getStoredFileName();
   }
 
@@ -29,14 +29,14 @@ public class ImageUploadService {
    */
   @Deprecated
   public String uploadImage(String base64EncodedImage, String originalImageName) {
-    byte[] bytesImage = storeFile.decodeBase64Image(base64EncodedImage);
-    UploadFile uploadFile = storeFile.storeFile(bytesImage, originalImageName);
+    byte[] bytesImage = fileManager.decodeBase64Image(base64EncodedImage);
+    UploadFile uploadFile = fileManager.storeFile(bytesImage, originalImageName);
     return uploadFile.getStoredFileName();
   }
 
   public void deleteImage(String storedImage) {
     if (StringUtils.hasText(storedImage)) {
-      storeFile.deleteFile(storedImage);
+      fileManager.deleteFile(storedImage);
     }
   }
 }

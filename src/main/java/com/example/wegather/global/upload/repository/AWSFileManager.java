@@ -23,7 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class StoreFileToAWS extends AbstractStoreFile {
+public class AWSFileManager extends AbstractFileManager {
 
   @Value("${application.bucket.name}")
   private String bucketName;

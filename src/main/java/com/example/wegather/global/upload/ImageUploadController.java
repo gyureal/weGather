@@ -1,6 +1,6 @@
 package com.example.wegather.global.upload;
 
-import com.example.wegather.global.upload.repository.StoreFile;
+import com.example.wegather.global.upload.repository.FileManager;
 import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,12 +20,12 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/api")
 @RestController
 public class ImageUploadController {
-  private final StoreFile storeFile;
+  private final FileManager fileManager;
   private final ImageUploadService imageUploadService;
 
   @GetMapping("/images/{filename}")
   public ResponseEntity<Resource> downloadImage(@PathVariable String filename) {
-    return ResponseEntity.ok(storeFile.getFile(filename));
+    return ResponseEntity.ok(fileManager.getFile(filename));
   }
 
   @PostMapping("/images")
@@ -36,7 +36,7 @@ public class ImageUploadController {
 
   @DeleteMapping("/images/{filename}")
   public ResponseEntity<Void> deleteImage(@PathVariable String filename) {
-    storeFile.deleteFile(filename);
+    fileManager.deleteFile(filename);
     return ResponseEntity.noContent().build();
   }
 }

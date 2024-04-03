@@ -3,7 +3,7 @@ package com.example.wegather.global.upload.repository;
 import java.util.UUID;
 import org.apache.commons.codec.binary.Base64;
 
-public abstract class AbstractStoreFile implements StoreFile {
+public abstract class AbstractFileManager implements FileManager {
 
   /**
    * Base64 파일을 decode 하여 반환합니다.
