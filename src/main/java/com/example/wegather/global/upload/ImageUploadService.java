@@ -2,6 +2,7 @@ package com.example.wegather.global.upload;
 
 import com.example.wegather.global.upload.repository.AbstractFileManager;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -10,6 +11,10 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 public class ImageUploadService {
   private final AbstractFileManager fileManager;
+
+  public Resource downloadImage(String filename) {
+    return fileManager.getFile(filename);
+  }
 
   /**
    * MultipartFile 타입의 이미지를 업로드합니다.
