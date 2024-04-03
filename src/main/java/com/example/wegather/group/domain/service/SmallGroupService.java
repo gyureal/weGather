@@ -103,10 +103,12 @@ public class SmallGroupService {
 
   /**
    * 소모임 소개 정보를 수정합니다. (base64 형식의 썸네일 이미지)
+   * **MultipartFile 타입의 입력값을 사용하는 메서드로 대체되었습니다. (@Deprecated 됨)**
    * @param principal 로그인 유저
    * @param path  소모임 path
    * @param request 소모임 소개 정보
    */
+  @Deprecated
   @Transactional
   public void editSmallGroupDescription(MemberDetails principal, String path, UpdateGroupDescriptionRequest request) {
     SmallGroup smallGroup = findSmallGroupByPath(path);
@@ -195,12 +197,14 @@ public class SmallGroupService {
 
   /**
    * 배너 이미지를 수정합니다. (base64 이미지)
+   * **MultipartFile 타입의 입력값을 사용하는 메서드로 대체되었습니다. (@Deprecated 됨)**
    * 관리자만 수정 가능합니다.
    * 수정 전 이미지는 삭제됩니다.
    * @param memberDetails
    * @param path
    * @param request
    */
+  @Deprecated
   @Transactional
   public void updateBanner(MemberDetails memberDetails, String path, UpdateBannerRequest request) {
     SmallGroup smallGroup = findSmallGroupByPath(path);

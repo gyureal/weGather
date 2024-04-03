@@ -22,10 +22,12 @@ public interface StoreFile {
 
   /**
    * byte[] 의 파일을 업로드 합니다.
+   * MultipartFile 형태의 입력값을 사용하도록 권장 (base64 입력방식은 deprecated)
    * @param bytes 이미지의 byte 배열
    * @param originalName 이미지의 원래 이름
    * @return
    */
+  @Deprecated
   UploadFile storeFile(byte[] bytes, String originalName);
 
   /**

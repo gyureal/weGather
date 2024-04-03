@@ -84,6 +84,13 @@ public class MemberController {
     return ResponseEntity.ok().build();
   }
 
+  /**
+   * MultipartFile 타입의 이미지로 입력받는 기능으로 대체되었습니다. (Deprecated)
+   * @param memberDetails
+   * @param editProfileImageRequest
+   * @return
+   */
+  @Deprecated
   @PostMapping("/profile/image")
   public ResponseEntity<Void> editProfileImage(@AuthenticationPrincipal MemberDetails memberDetails,
       @RequestBody EditProfileImageRequest editProfileImageRequest) {

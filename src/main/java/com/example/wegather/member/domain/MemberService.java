@@ -62,9 +62,11 @@ public class MemberService {
   /**
    * 프로필 이미지 수정  (base64 encoded input)
    * Base64로 인코딩된 이미지를 입력값으로 받습니다.
+   * MultipartFile 타입의 이미지로 입력받는 기능으로 대체되었습니다. (Deprecated)
    * @param memberId 회원 ID
    * @param request base64로 인코딩된 이미지 입력값
    */
+  @Deprecated
   @Transactional
   public void updateProfileImage(Long memberId, EditProfileImageRequest request) {
     Member member = getMemberById(memberId);

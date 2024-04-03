@@ -91,9 +91,11 @@ public class SmallGroupController {
 
   /**
    * 소모임 배너 수정 (base64 이미지 형식)
+   * MultipartFile 이미지로 입력받는 `/{path}/banner/v2` 로 대체되었습니다. (Deprecated 됨)
    * 소모임의 관리자만 수정 가능합니다.
    * @return
    */
+  @Deprecated
   @PostMapping("/{path}/banner")
   public ResponseEntity<Void> updateSmallGroupBanner(@AuthenticationPrincipal MemberDetails memberDetails,
       @PathVariable String path, @RequestBody @Valid UpdateBannerRequest request) {
@@ -140,10 +142,12 @@ public class SmallGroupController {
 
   /**
    * 소모임 정보를 업데이트 합니다. (base64 이미지)
+   * **MultipartFile 타입의 입력값을 사용하는 메서드로 대체되었습니다. (@Deprecated 됨)**
    * @param path 소모임 path
    * @param request 소모임 update dto
    * @return
    */
+  @Deprecated
   @PutMapping("/{path}")
   public ResponseEntity<Void> updateGroupDescription(
       @AuthenticationPrincipal MemberDetails principal,

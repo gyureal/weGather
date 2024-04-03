@@ -7,9 +7,11 @@ public abstract class AbstractStoreFile implements StoreFile {
 
   /**
    * Base64 파일을 decode 하여 반환합니다.
+   * MultipartFile 타입의 입력값을 사용하도록 권장 (base64 입력값은 Deprecated 됨)
    * @param base64File
    * @return
    */
+  @Deprecated
   public byte[] decodeBase64Image(String base64File) {
     String encodedImage = parseOnlyImageFromBase64(base64File);
     return Base64.decodeBase64(encodedImage);
@@ -17,10 +19,12 @@ public abstract class AbstractStoreFile implements StoreFile {
 
   /**
    * Base64 형태에서 파일 정보만 추출합니다.
+   * MultipartFile 타입의 입력값을 사용하도록 권장 (base64 입력값은 Deprecated 됨)
    * ex) `data:image/png;base64,iVBORw0KGgoAAAANSUh....` 에서 `data:image/png;base64,` 이후를 반환합니다.
    * @param base64File
    * @return
    */
+  @Deprecated
   private String parseOnlyImageFromBase64(String base64File) {
     return base64File.split(",")[1];
   }

@@ -27,6 +27,7 @@ public class ImageUploadService {
    * @param originalImageName
    * @return 업로드된 이미지명
    */
+  @Deprecated
   public String uploadImage(String base64EncodedImage, String originalImageName) {
     byte[] bytesImage = storeFile.decodeBase64Image(base64EncodedImage);
     UploadFile uploadFile = storeFile.storeFile(bytesImage, originalImageName);
