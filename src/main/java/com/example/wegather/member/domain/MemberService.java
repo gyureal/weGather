@@ -6,14 +6,13 @@ import static com.example.wegather.global.exception.ErrorCode.MEMBER_NOT_FOUND;
 import static com.example.wegather.global.exception.ErrorCode.PASSWORD_NOT_MATCHED;
 
 import com.example.wegather.auth.MemberDetails;
+import com.example.wegather.global.upload.ImageUploadService;
 import com.example.wegather.interest.domain.InterestService;
 import com.example.wegather.member.dto.ChangeAlarmSettingsForm;
 import com.example.wegather.member.dto.ChangePasswordForm;
 import com.example.wegather.member.dto.EditProfileImageRequest;
 import com.example.wegather.member.dto.MemberProfileDto;
 import com.example.wegather.global.exception.customException.AuthenticationException;
-import com.example.wegather.global.upload.StoreFile;
-import com.example.wegather.global.upload.UploadFile;
 import com.example.wegather.interest.domain.Interest;
 import com.example.wegather.interest.domain.InterestRepository;
 import com.example.wegather.interest.dto.InterestDto;
@@ -40,7 +39,8 @@ public class MemberService {
   private final MemberRepository memberRepository;
   private final InterestRepository interestRepository;
   private final InterestService interestService;
-  private final StoreFile storeFile;
+  //private final StoreImage storeImage;
+  private final ImageUploadService imageUploadService;
   private final PasswordEncoder passwordEncoder;
 
 
@@ -70,24 +70,23 @@ public class MemberService {
     Member member = getMemberById(memberId);
 
     // 이미지 업로드
-    byte[] imageBytes = storeFile.decodeBase64Image(request.getImage());
-    UploadFile uploadFile = storeFile.storeFile(imageBytes, request.getOriginalImageName());
+    String storedFileName = imageUploadService.uploadImage(request.getImage(), request.getOriginalImageName());
 
-    replaceProfileImage(member, uploadFile);
+    replaceProfileImage(member, storedFileName);
   }
 
   /**
    * 프로필 이미지 저장 후, 기존 이미지 삭제
    * @param member
-   * @param uploadFile
+   * @param storedFileName
    */
-  private void replaceProfileImage(Member member, UploadFile uploadFile) {
+  private void replaceProfileImage(Member member, String storedFileName) {
     String priorImage = member.getProfileImage();
-    member.changeProfileImage(uploadFile.getStoreFileName());
+    member.changeProfileImage(storedFileName);
 
     // 기존 이미지 삭제
     if(StringUtils.hasText(priorImage)) {
-      storeFile.deleteFile(priorImage);
+      imageUploadService.deleteImage(priorImage);
     }
   }
 
@@ -102,9 +101,9 @@ public class MemberService {
     Member member = getMemberById(memberId);
 
     // 이미지 업로드
-    UploadFile uploadFile = storeFile.storeFile(multipartImage);
+    String storedFileName = imageUploadService.uploadImage(multipartImage);
 
-    replaceProfileImage(member, uploadFile);
+    replaceProfileImage(member, storedFileName);
   }
 
   @Transactional

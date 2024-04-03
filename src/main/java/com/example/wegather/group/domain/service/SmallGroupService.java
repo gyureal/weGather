@@ -4,8 +4,7 @@ import static com.example.wegather.global.exception.ErrorCode.*;
 
 import com.example.wegather.auth.MemberDetails;
 import com.example.wegather.global.exception.customException.NoPermissionException;
-import com.example.wegather.global.upload.StoreFile;
-import com.example.wegather.global.upload.UploadFile;
+import com.example.wegather.global.upload.ImageUploadService;
 import com.example.wegather.group.domain.entity.SmallGroup;
 import com.example.wegather.group.domain.repotitory.SmallGroupJoinRepository;
 import com.example.wegather.group.domain.repotitory.SmallGroupRepository;
@@ -44,7 +43,7 @@ public class SmallGroupService {
   private final InterestService interestService;
   private final SmallGroupMemberRepository smallGroupMemberRepository;
   private final SmallGroupJoinRepository smallGroupJoinRepository;
-  private final StoreFile storeFile;
+  private final ImageUploadService imageUploadService;
 
   @Transactional
   public SmallGroup addSmallGroup(CreateSmallGroupRequest request, Long memberId) {
@@ -114,9 +113,8 @@ public class SmallGroupService {
     validateUpdatable(principal, smallGroup);
 
     if (StringUtils.hasText(request.getImage())) { // 이미지 값이 있을 때만 저장
-      byte[] base64Image = storeFile.decodeBase64Image(request.getImage());
-      UploadFile uploadFile = storeFile.storeFile(base64Image, request.getOriginalImageName());
-      smallGroup.updateImage(uploadFile.getStoreFileName());
+      String storedImageName = imageUploadService.uploadImage(request.getImage(), request.getOriginalImageName());
+      smallGroup.updateImage(storedImageName);
     }
 
 
@@ -139,8 +137,8 @@ public class SmallGroupService {
     validateUpdatable(principal, smallGroup);
 
     if (!image.isEmpty()) { // 이미지 값이 있을 때만 저장
-      UploadFile uploadFile = storeFile.storeFile(image);
-      smallGroup.updateImage(uploadFile.getStoreFileName());
+      String storedFileName = imageUploadService.uploadImage(image);
+      smallGroup.updateImage(storedFileName);
     }
 
     smallGroup.updateSmallGroupDescription(
@@ -209,19 +207,18 @@ public class SmallGroupService {
     validateUpdatable(memberDetails, smallGroup);
 
     // 이미지 업로드
-    byte[] imageBytes = storeFile.decodeBase64Image(request.getImage());
-    UploadFile uploadFile = storeFile.storeFile(imageBytes, request.getOriginalImageName());
+    String storedFileName = imageUploadService.uploadImage(request.getImage(), request.getOriginalImageName());
 
-    replaceBannerImage(smallGroup, uploadFile);
+    replaceBannerImage(smallGroup, storedFileName);
   }
 
-  private void replaceBannerImage(SmallGroup smallGroup, UploadFile uploadFile) {
+  private void replaceBannerImage(SmallGroup smallGroup, String storedFileName) {
     String originalImage = smallGroup.getBanner();
-    smallGroup.updateBanner(uploadFile.getStoreFileName());
+    smallGroup.updateBanner(storedFileName);
 
     // 기존 이미지 삭제
     if (StringUtils.hasText(originalImage)) {
-      storeFile.deleteFile(originalImage);
+      imageUploadService.deleteImage(originalImage);
     }
   }
 
@@ -238,9 +235,9 @@ public class SmallGroupService {
     validateUpdatable(memberDetails, smallGroup);
 
     // 이미지 업로드
-    UploadFile uploadFile = storeFile.storeFile(multipartImage);
+    String storedFileName = imageUploadService.uploadImage(multipartImage);
 
-    replaceBannerImage(smallGroup, uploadFile);
+    replaceBannerImage(smallGroup, storedFileName);
   }
 
   @Transactional

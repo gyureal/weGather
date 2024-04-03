@@ -1,5 +1,6 @@
 package com.example.wegather.global.upload;
 
+import com.example.wegather.global.upload.repository.StoreFile;
 import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,7 +12,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,8 +19,9 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 @RequestMapping("/api")
 @RestController
-public class FileController {
+public class ImageUploadController {
   private final StoreFile storeFile;
+  private final ImageUploadService imageUploadService;
 
   @GetMapping("/images/{filename}")
   public ResponseEntity<Resource> downloadImage(@PathVariable String filename) {
@@ -28,9 +29,9 @@ public class FileController {
   }
 
   @PostMapping("/images")
-  public ResponseEntity<Void> uploadImage(@RequestParam("file") MultipartFile file) {
-    UploadFile uploadFile = storeFile.storeFile(file);
-    return ResponseEntity.created(URI.create("/images/" + uploadFile.getStoreFileName())).build();
+  public ResponseEntity<Void> uploadImage(@RequestParam("image") MultipartFile multipartFile) {
+    String storedFileName = imageUploadService.uploadImage(multipartFile);
+    return ResponseEntity.created(URI.create("/images/" + storedFileName)).build();
   }
 
   @DeleteMapping("/images/{filename}")
