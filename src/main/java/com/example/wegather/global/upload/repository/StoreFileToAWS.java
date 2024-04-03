@@ -1,4 +1,4 @@
-package com.example.wegather.global.upload;
+package com.example.wegather.global.upload.repository;
 
 import static com.example.wegather.global.exception.ErrorCode.*;
 
@@ -7,8 +7,8 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
-import com.example.wegather.global.exception.ErrorCode;
 import com.example.wegather.global.exception.customException.FileUploadException;
+import com.example.wegather.global.upload.UploadFile;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,7 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class StoreFileToAWS implements StoreFile {
+public class StoreFileToAWS extends AbstractStoreFile {
 
   @Value("${application.bucket.name}")
   private String bucketName;
