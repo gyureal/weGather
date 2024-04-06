@@ -43,8 +43,7 @@ public class InterestController {
    */
   @GetMapping
   public ResponseEntity<List<InterestDto>> readAllInterests() {
-    List<InterestDto> collect = interestService.getAllInterests()
-        .stream().map(InterestDto::from).collect(Collectors.toList());
+    List<InterestDto> collect = interestService.getAllInterests();
     return ResponseEntity.ok(collect);
   }
 
@@ -54,9 +53,7 @@ public class InterestController {
    */
   @GetMapping("/whitelist")
   public ResponseEntity<List<String>> readWhitelist() {
-    return ResponseEntity.ok(
-        interestService.getAllInterests().stream()
-            .map(Interest::getName).collect(Collectors.toList()));
+    return ResponseEntity.ok(interestService.getInterestWhiteList());
   }
 
   /**
