@@ -4,7 +4,9 @@ import static com.example.wegather.global.exception.ErrorCode.INTEREST_NAME_ALRE
 import static com.example.wegather.global.exception.ErrorCode.INTEREST_NOT_FOUND;
 
 import com.example.wegather.interest.dto.CreateInterestRequest;
+import com.example.wegather.interest.dto.InterestDto;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -43,8 +45,16 @@ public class InterestService {
    * 전체 관심사를 조회합니다.
    * @return
    */
-  public List<Interest> getAllInterests() {
-    return interestRepository.findAll();
+  public List<InterestDto> getAllInterests() {
+    return interestRepository.findAll().stream().map(InterestDto::from).collect(Collectors.toList());
+  }
+
+  /**
+   * 관심사 화이트리스트를 조회합니다.
+   * @return
+   */
+  public List<String> getInterestWhiteList() {
+    return interestRepository.findAll().stream().map(Interest::getName).collect(Collectors.toList());
   }
 
   /**
