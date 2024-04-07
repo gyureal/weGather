@@ -8,8 +8,11 @@ import com.example.wegather.interest.dto.InterestDto;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class InterestService {
@@ -53,6 +56,7 @@ public class InterestService {
    * 관심사 화이트리스트를 조회합니다.
    * @return
    */
+  @Cacheable(value = "getInterestWhiteList")
   public List<String> getInterestWhiteList() {
     return interestRepository.findAll().stream().map(Interest::getName).collect(Collectors.toList());
   }

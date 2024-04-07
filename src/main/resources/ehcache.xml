@@ -13,4 +13,12 @@
     memoryStoreEvictionPolicy="LRU"
   />
 
+  <cache name="getInterestWhiteList"
+    maxElementsInMemory="10"
+    eternal="false"
+    overflowToDisk="false"
+    timeToIdleSeconds="300"
+    timeToLiveSeconds="600"
+    memoryStoreEvictionPolicy="LRU" />
+
 </ehcache>
