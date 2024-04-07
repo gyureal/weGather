@@ -67,6 +67,10 @@ dependencies {
 	// mail
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
 
+	// cache
+	implementation 'org.springframework.boot:spring-boot-starter-cache'
+	implementation group: 'net.sf.ehcache', name: 'ehcache', version: '2.10.8'
+
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 }
