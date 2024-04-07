@@ -15,6 +15,8 @@ import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -94,6 +96,30 @@ public class InterestIntegrationTest extends IntegrationTest {
     List<InterestDto> list = response.body().jsonPath().getList(".", InterestDto.class);
     assertThat(list).hasSize(2);
     assertThat(list).usingRecursiveComparison().isEqualTo(List.of(baseball, running));
+  }
+
+  @Test
+  @DisplayName("관심사 화이트리스트 조회에 성공합니다.")
+  void getWhitelist_success() {
+    // given
+    RequestSpecification spec = sigIn(member01.getUsername(), PASSWORD);
+    InterestDto baseball = insertInterest("야구", member01.getUsername());
+    InterestDto running = insertInterest("달리기", member01.getUsername());
+
+    // when
+    ExtractableResponse<Response> response =
+        RestAssured.given().log().ifValidationFails()
+            .spec(spec)
+            .when().get("/api/interests/whitelist")
+            .then().log().ifValidationFails()
+            .extract();
+
+    //then
+    assertThat(response.statusCode()).isEqualTo(HttpStatus.SC_OK);
+    List<String> list = response.body().jsonPath().getList(".", String.class);
+    assertThat(list).hasSize(2);
+    assertThat(list).usingRecursiveComparison().isEqualTo(Stream.of(baseball, running).map(InterestDto::getName).collect(
+        Collectors.toList()));
   }
 
   @Test
