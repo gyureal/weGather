@@ -1,7 +1,6 @@
 package com.example.wegather.member.domain.entity;
 
 import com.example.wegather.global.BaseTimeEntity;
-import com.example.wegather.global.vo.Image;
 import com.example.wegather.global.vo.MemberType;
 import com.example.wegather.interest.domain.Interest;
 import com.example.wegather.interest.dto.InterestDto;
@@ -11,11 +10,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import javax.persistence.AttributeOverride;
-import javax.persistence.AttributeOverrides;
 import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -50,9 +45,7 @@ public class Member extends BaseTimeEntity {
   private String introductionText;
   @Enumerated(EnumType.STRING)
   private MemberType memberType;
-  @Embedded
-  @AttributeOverride(name = "value", column = @Column(name = "profile_image"))
-  private Image profileImage;
+  private String profileImage;
   @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
   private Set<MemberInterest> memberInterests = new HashSet<>();
 
@@ -73,7 +66,7 @@ public class Member extends BaseTimeEntity {
   }
 
   public void changeProfileImage(String storeImagePath) {
-    profileImage = Image.of(storeImagePath);
+    profileImage = storeImagePath;
   }
 
   public void addInterest(Interest interest) {
@@ -97,10 +90,7 @@ public class Member extends BaseTimeEntity {
   }
 
   public String getProfileImage() {
-    if (profileImage == null) {
-      return "";
-    }
-    return profileImage.getValue();
+    return profileImage;
   }
 
   public boolean isValidToken(String token) {
